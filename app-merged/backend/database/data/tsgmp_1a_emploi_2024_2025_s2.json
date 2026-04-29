@@ -1,0 +1,266 @@
+{
+  "meta": {
+    "filiere_code": "TSGMP",
+    "filiere_label": "Technicien Spécialisé en Génie Mécanique et Productique",
+    "group_label": "TSGMP 101",
+    "academic_year": "2024-2025",
+    "session": 2,
+    "shifts": [
+      "Matin",
+      "Soir"
+    ],
+    "source": "EMPLOI FD (Session 2) 2024-2025 Site 4 - TSGMP 1A.pdf"
+  },
+  "time_slots": {
+    "Matin": [
+      [
+        "08:30",
+        "09:00"
+      ],
+      [
+        "09:00",
+        "09:30"
+      ],
+      [
+        "09:30",
+        "10:00"
+      ],
+      [
+        "10:00",
+        "10:15"
+      ],
+      [
+        "10:15",
+        "10:45"
+      ],
+      [
+        "10:45",
+        "11:15"
+      ],
+      [
+        "11:15",
+        "11:45"
+      ],
+      [
+        "11:45",
+        "12:00"
+      ]
+    ],
+    "Soir": [
+      [
+        "17:00",
+        "17:30"
+      ],
+      [
+        "17:30",
+        "18:00"
+      ],
+      [
+        "18:00",
+        "18:30"
+      ],
+      [
+        "18:30",
+        "18:45"
+      ],
+      [
+        "18:45",
+        "19:15"
+      ],
+      [
+        "19:15",
+        "19:45"
+      ],
+      [
+        "19:45",
+        "20:15"
+      ],
+      [
+        "20:15",
+        "20:30"
+      ]
+    ]
+  },
+  "seances": [
+    {
+      "day": "Monday",
+      "start": "08:30",
+      "end": "09:00",
+      "shift": "Matin",
+      "module_code": "UF1.11",
+      "module_label": "Bureautique",
+      "teacher": "M. FAKKIR YOUSSEF",
+      "room": "SALLE 1 ETAGE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.3",
+      "module_label": "Outils et Méthodes de la Qualité",
+      "teacher": "M. AZIZ OUBBAD",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Monday",
+      "start": "09:30",
+      "end": "10:00",
+      "shift": "Matin",
+      "module_code": "UF1.11",
+      "module_label": "Bureautique",
+      "teacher": "M. FAKKIR YOUSSEF",
+      "room": "SALLE 1 ETAGE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "10:00",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.3",
+      "module_label": "Outils et Méthodes de la Qualité",
+      "teacher": "M. AZIZ OUBBAD",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Tuesday",
+      "start": "08:30",
+      "end": "09:00",
+      "shift": "Matin",
+      "module_code": "UF1.13",
+      "module_label": "La Langue Anglaise",
+      "teacher": "Mme AYA EL KHOMSY",
+      "room": "SALLE 7 ETAGE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.12",
+      "module_label": "La Langue Francaise",
+      "teacher": "Mme NAIMA AHFID",
+      "room": "SALLE 7 ETAGE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:30",
+      "end": "10:00",
+      "shift": "Matin",
+      "module_code": "UF1.13",
+      "module_label": "La Langue Anglaise",
+      "teacher": "Mme AYA EL KHOMSY",
+      "room": "SALLE 7 ETAGE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "10:00",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.12",
+      "module_label": "La Langue Francaise",
+      "teacher": "Mme NAIMA AHFID",
+      "room": "SALLE 7 ETAGE 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "08:30",
+      "end": "09:00",
+      "shift": "Matin",
+      "module_code": "UF1.5-TAG",
+      "module_label": "Introduction à la méthode des plans d'expériences (Méthode Taguchi)",
+      "teacher": "M. TAYALATI FAOUZI",
+      "room": "SALLE 14 ETAGE 4"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.5",
+      "module_label": "Maitrise Statistique (MSP)",
+      "teacher": "M. MECHTALY MOHAMED",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:30",
+      "end": "10:00",
+      "shift": "Matin",
+      "module_code": "UF1.5-TAG",
+      "module_label": "Introduction à la méthode des plans d'expériences (Méthode Taguchi)",
+      "teacher": "M. TAYALATI FAOUZI",
+      "room": "SALLE 14 ETAGE 4"
+    },
+    {
+      "day": "Wednesday",
+      "start": "10:00",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.6",
+      "module_label": "Logiciel Minitab",
+      "teacher": "M. MECHTALY MOHAMED",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Thursday",
+      "start": "08:30",
+      "end": "09:00",
+      "shift": "Matin",
+      "module_code": "UF1.10",
+      "module_label": "Droit du Travail",
+      "teacher": "KASSMI MONCEF",
+      "room": "SALLE 16 ETAGE 5"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.10",
+      "module_label": "Droit du Travail",
+      "teacher": "KASSMI MONCEF",
+      "room": "SALLE 16 ETAGE 5"
+    },
+    {
+      "day": "Friday",
+      "start": "08:30",
+      "end": "09:00",
+      "shift": "Matin",
+      "module_code": "UF1.7-TOC",
+      "module_label": "Gestion des flux par contraintes (TOC)",
+      "teacher": "M. TAYALATI FAOUZI",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.7-MSA",
+      "module_label": "Métrologie et analyse des systèmes des mesures (MSA)",
+      "teacher": "BOUTHAYNA BENALLOUCHE",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "09:30",
+      "end": "10:00",
+      "shift": "Matin",
+      "module_code": "UF1.7-TOC",
+      "module_label": "Gestion des flux par contraintes (TOC)",
+      "teacher": "M. TAYALATI FAOUZI",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "10:00",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.7",
+      "module_label": "Comptabilité générale",
+      "teacher": "BOUTHAYNA BENALLOUCHE",
+      "room": "SALLE 10 ETAGE 3"
+    }
+  ]
+}

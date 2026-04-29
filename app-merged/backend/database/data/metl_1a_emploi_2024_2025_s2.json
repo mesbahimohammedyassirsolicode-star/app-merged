@@ -1,0 +1,280 @@
+{
+  "meta": {
+    "filiere_code": "METL",
+    "filiere_label": "Mastère Européen Transport et Logistique",
+    "group_label": "METL 101",
+    "academic_year": "2024-2025",
+    "session": 2,
+    "shifts": [
+      "Matin",
+      "Soir"
+    ],
+    "source": "Mastere-en-Transport-et-Logistique.pdf (modules from brochure - update with official emploi du temps)"
+  },
+  "time_slots": {
+    "Matin": [
+      [
+        "09:00",
+        "09:30"
+      ],
+      [
+        "09:30",
+        "10:15"
+      ],
+      [
+        "10:15",
+        "11:00"
+      ],
+      [
+        "11:00",
+        "11:30"
+      ],
+      [
+        "11:30",
+        "12:00"
+      ]
+    ],
+    "Soir": [
+      [
+        "14:30",
+        "15:00"
+      ],
+      [
+        "15:00",
+        "15:30"
+      ],
+      [
+        "15:30",
+        "16:00"
+      ],
+      [
+        "16:00",
+        "16:45"
+      ],
+      [
+        "16:45",
+        "17:00"
+      ],
+      [
+        "17:00",
+        "17:45"
+      ],
+      [
+        "17:45",
+        "18:00"
+      ]
+    ]
+  },
+  "seances": [
+    {
+      "day": "Monday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "M-COMPTA",
+      "module_label": "Gestion comptable et financière",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "M-DROIT",
+      "module_label": "Droit des affaires et fiscalité",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "M-COMPTA",
+      "module_label": "Gestion comptable et financière",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "M-DROIT",
+      "module_label": "Droit des affaires et fiscalité",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "M-RECH-MKT",
+      "module_label": "Recherche marketing",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "M-MKT-STRAT",
+      "module_label": "Marketing stratégique",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "M-RECH-MKT",
+      "module_label": "Recherche marketing",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "M-MKT-STRAT",
+      "module_label": "Marketing stratégique",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "M-DISTRIB",
+      "module_label": "Distribution et logistique",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "M-NEGO",
+      "module_label": "Négociation et animation des équipes de vente",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "M-DISTRIB",
+      "module_label": "Distribution et logistique",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "M-NEGO",
+      "module_label": "Négociation et animation des équipes de vente",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "M-COM",
+      "module_label": "Communication externe et gestion des moyens de communication",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "M-FIN-INT",
+      "module_label": "Commerce et finances internationaux",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Thursday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "M-COM",
+      "module_label": "Communication externe et gestion des moyens de communication",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Thursday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "M-FIN-INT",
+      "module_label": "Commerce et finances internationaux",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Friday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "M-RH",
+      "module_label": "Gestion des Ressources Humaines et des organisations",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Friday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "M-ENV",
+      "module_label": "Environnement de l'entreprise",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Friday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "M-STRAT-LOG",
+      "module_label": "Stratégies Logistiques",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Friday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "M-UC-A45",
+      "module_label": "Les entreprises, la concurrence et l'Europe (UC A4/5)",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Friday",
+      "start": "11:30",
+      "end": "12:00",
+      "shift": "Matin",
+      "module_code": "M-LV",
+      "module_label": "Langue Vivante Européenne - Niveau B2",
+      "teacher": "Formateur METL",
+      "room": "SALLE 1"
+    }
+  ]
+}

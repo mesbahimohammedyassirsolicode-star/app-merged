@@ -1,0 +1,22 @@
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[42S02]: Base table or view not found: 1932 Table 'gims_new.migrations' doesn't exist in engine (Connection: mysql, Host: 127.0.0.1, Port: 3306, Database: gims_new, SQL: select `migration` from `migrations` order by `batch` asc, `migration` asc)
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+    834▕             $exceptionType = $this->isUniqueConstraintError($e)
+    835▕                 ? UniqueConstraintViolationException::class
+    836▕                 : QueryException::class;
+    837▕ 
+  ➜ 838▕             throw new $exceptionType(
+    839▕                 $this->getNameWithReadWriteType(),
+    840▕                 $query,
+    841▕                 $this->prepareBindings($bindings),
+    842▕                 $e,
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:420
+      PDOException::("SQLSTATE[42S02]: Base table or view not found: 1932 Table 'gims_new.migrations' doesn't exist in engine")
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:420
+      PDO::prepare()
+

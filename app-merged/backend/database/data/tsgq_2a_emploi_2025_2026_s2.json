@@ -1,0 +1,310 @@
+{
+  "meta": {
+    "filiere_code": "TSGQ",
+    "filiere_label": "TECHNICIEN SPECIALISE EN GESTION DE LA QUALITE",
+    "group_label": "TSGQ 201",
+    "academic_year": "2025-2026",
+    "session": 2,
+    "shifts": [
+      "Matin",
+      "Soir"
+    ],
+    "source": "EMPLOI RAMADAN FD 2025-2026 - TSGQ 2A.pdf"
+  },
+  "time_slots": {
+    "Matin": [
+      [
+        "09:00",
+        "09:30"
+      ],
+      [
+        "09:30",
+        "10:15"
+      ],
+      [
+        "10:15",
+        "11:00"
+      ],
+      [
+        "11:00",
+        "11:30"
+      ],
+      [
+        "11:30",
+        "12:00"
+      ]
+    ],
+    "Soir": [
+      [
+        "14:30",
+        "15:00"
+      ],
+      [
+        "15:00",
+        "15:30"
+      ],
+      [
+        "15:30",
+        "16:00"
+      ],
+      [
+        "16:00",
+        "16:45"
+      ],
+      [
+        "16:45",
+        "17:00"
+      ],
+      [
+        "17:00",
+        "17:45"
+      ],
+      [
+        "17:45",
+        "18:00"
+      ]
+    ]
+  },
+  "seances": [
+    {
+      "day": "Monday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF2.1",
+      "module_label": "ISO 9001 / IATF / EN 9100",
+      "teacher": "M. AZIZ OUBBAD",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Monday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF2.4",
+      "module_label": "Audit Qualité",
+      "teacher": "M. AZIZ OUBBAD",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Monday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "ENC-PFE",
+      "module_label": "Encadrement PFE",
+      "teacher": "M. AZIZ OUBBAD",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Monday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF2.1",
+      "module_label": "ISO 9001 / IATF / EN 9100",
+      "teacher": "M. AZIZ OUBBAD",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Monday",
+      "start": "11:30",
+      "end": "12:00",
+      "shift": "Matin",
+      "module_code": "UF2.4",
+      "module_label": "Audit Qualité",
+      "teacher": "M. AZIZ OUBBAD",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.14",
+      "module_label": "La Langue Anglaise",
+      "teacher": "M. EL OUARIT KHALID",
+      "room": "SALLE 9 ETAGE 3"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.13",
+      "module_label": "La Langue Francaise",
+      "teacher": "M. LAAROUSSI OUSSAMA",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Tuesday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF1.14",
+      "module_label": "La Langue Anglaise",
+      "teacher": "M. EL OUARIT KHALID",
+      "room": "SALLE 9 ETAGE 3"
+    },
+    {
+      "day": "Tuesday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF1.13",
+      "module_label": "La Langue Francaise",
+      "teacher": "M. LAAROUSSI OUSSAMA",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF2.2",
+      "module_label": "Les outils de résolution des problèmes (MRP)",
+      "teacher": "M. MECHTALY MOHAMED",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF2.3",
+      "module_label": "Lean Six Sigma",
+      "teacher": "M. TAYALATI FAOUZI",
+      "room": "SALLE 14 ETAGE 4"
+    },
+    {
+      "day": "Wednesday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UFP-MAINT",
+      "module_label": "Gestion de la maintenance",
+      "teacher": "M. MECHTALY MOHAMED",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Wednesday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UFP-PROJ",
+      "module_label": "Gestion de projets (planification et ordonnancement)",
+      "teacher": "M. TAYALATI FAOUZI",
+      "room": "SALLE 14 ETAGE 4"
+    },
+    {
+      "day": "Wednesday",
+      "start": "11:30",
+      "end": "12:00",
+      "shift": "Matin",
+      "module_code": "UFP-ORG",
+      "module_label": "Les méthodes d'organisation du travail",
+      "teacher": "M. MECHTALY MOHAMED",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF2.8",
+      "module_label": "Excel Avancé",
+      "teacher": "M. YOUSSEF FAKKIR",
+      "room": "SALLE INFO 7"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF2.9",
+      "module_label": "SGBD",
+      "teacher": "M. YOUSSEF FAKKIR",
+      "room": "SALLE INFO 7"
+    },
+    {
+      "day": "Thursday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF2.10",
+      "module_label": "ERP",
+      "teacher": "M. YOUSSEF FAKKIR",
+      "room": "SALLE INFO 7"
+    },
+    {
+      "day": "Thursday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF2.8",
+      "module_label": "Excel Avancé",
+      "teacher": "M. YOUSSEF FAKKIR",
+      "room": "SALLE INFO 7"
+    },
+    {
+      "day": "Thursday",
+      "start": "11:30",
+      "end": "12:00",
+      "shift": "Matin",
+      "module_code": "UF2.9",
+      "module_label": "SGBD",
+      "teacher": "M. YOUSSEF FAKKIR",
+      "room": "SALLE INFO 7"
+    },
+    {
+      "day": "Friday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF2.5",
+      "module_label": "Comptabilité Analytique",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF2.6",
+      "module_label": "Gestion d'approvisionnement et de Production",
+      "teacher": "M. TAYALATI FAOUZI",
+      "room": "SALLE 7 ETAGE 2"
+    },
+    {
+      "day": "Friday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UFP-PROD",
+      "module_label": "La productique",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UFP-APQP",
+      "module_label": "Gestion d'ingénierie par APQP/PPAP",
+      "teacher": "M. TAYALATI FAOUZI",
+      "room": "SALLE 10 ETAGE 2"
+    },
+    {
+      "day": "Friday",
+      "start": "11:30",
+      "end": "12:00",
+      "shift": "Matin",
+      "module_code": "UF2-LEAN",
+      "module_label": "Lean Manufacturing",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 11 ETAGE 3"
+    }
+  ]
+}

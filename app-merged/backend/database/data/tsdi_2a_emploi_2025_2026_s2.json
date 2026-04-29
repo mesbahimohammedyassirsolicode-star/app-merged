@@ -1,0 +1,250 @@
+{
+  "meta": {
+    "filiere_code": "TSDI",
+    "filiere_label": "Technicien Spécialisé en Développement Informatique",
+    "group_label": "TSDI 201",
+    "academic_year": "2025-2026",
+    "session": 2,
+    "shifts": [
+      "Matin",
+      "Soir"
+    ],
+    "source": "EMPLOI RAMADAN TSDI 2A.pdf"
+  },
+  "time_slots": {
+    "Matin": [
+      [
+        "08:30",
+        "09:00"
+      ],
+      [
+        "09:00",
+        "09:30"
+      ],
+      [
+        "09:30",
+        "10:00"
+      ],
+      [
+        "10:00",
+        "10:15"
+      ],
+      [
+        "10:15",
+        "11:00"
+      ],
+      [
+        "11:00",
+        "11:30"
+      ],
+      [
+        "11:30",
+        "12:00"
+      ]
+    ],
+    "Soir": [
+      [
+        "15:15",
+        "16:00"
+      ],
+      [
+        "16:00",
+        "16:30"
+      ],
+      [
+        "16:30",
+        "17:30"
+      ],
+      [
+        "17:30",
+        "17:45"
+      ],
+      [
+        "18:00",
+        "18:30"
+      ],
+      [
+        "18:30",
+        "19:00"
+      ],
+      [
+        "19:00",
+        "19:30"
+      ],
+      [
+        "19:30",
+        "20:00"
+      ],
+      [
+        "20:00",
+        "20:30"
+      ],
+      [
+        "20:30",
+        "21:00"
+      ]
+    ]
+  },
+  "seances": [
+    {
+      "day": "Monday",
+      "start": "16:00",
+      "end": "16:45",
+      "shift": "Soir",
+      "module_code": "UF2.2",
+      "module_label": "Système de Gestion de Base de Données",
+      "teacher": "QAOUSS ACHRAF",
+      "room": "SALLE INFOR 8"
+    },
+    {
+      "day": "Monday",
+      "start": "16:45",
+      "end": "17:30",
+      "shift": "Soir",
+      "module_code": "UF2.8",
+      "module_label": "Déploiement d'Application",
+      "teacher": "QAOUSS ACHRAF",
+      "room": "SALLE INFOR 8"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF2.3",
+      "module_label": "Réseaux Informatique",
+      "teacher": "DIAZ NABILA",
+      "room": "SALLE INFOR 8"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:30",
+      "end": "10:00",
+      "shift": "Matin",
+      "module_code": "UF2.9",
+      "module_label": "Gestion de Projet",
+      "teacher": "DIAZ NABILA",
+      "room": "SALLE INFOR 8"
+    },
+    {
+      "day": "Tuesday",
+      "start": "10:00",
+      "end": "10:30",
+      "shift": "Matin",
+      "module_code": "UF2.3",
+      "module_label": "Réseaux Informatique",
+      "teacher": "DIAZ NABILA",
+      "room": "SALLE INFOR 8"
+    },
+    {
+      "day": "Tuesday",
+      "start": "10:30",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF2.9",
+      "module_label": "Gestion de Projet",
+      "teacher": "DIAZ NABILA",
+      "room": "SALLE INFOR 8"
+    },
+    {
+      "day": "Wednesday",
+      "start": "16:00",
+      "end": "16:45",
+      "shift": "Soir",
+      "module_code": "UF2.4",
+      "module_label": "Application Hypermédias",
+      "teacher": "HAMZAOUI RADOINE",
+      "room": "SALLE INFOR 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "16:45",
+      "end": "17:30",
+      "shift": "Soir",
+      "module_code": "UF2.5",
+      "module_label": "Programmation des Sites Web Dynamiques",
+      "teacher": "HAMZAOUI RADOINE",
+      "room": "SALLE INFOR 1"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF2.1",
+      "module_label": "Analyse et Conception Orienté Objet",
+      "teacher": "SAHIM MOHAMED",
+      "room": "SALLE INFOR 4"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:30",
+      "end": "10:00",
+      "shift": "Matin",
+      "module_code": "UF2.7",
+      "module_label": "Programmation Client Serveur - Java",
+      "teacher": "SAHIM MOHAMED",
+      "room": "SALLE INFOR 4"
+    },
+    {
+      "day": "Thursday",
+      "start": "10:00",
+      "end": "10:30",
+      "shift": "Matin",
+      "module_code": "UF2.1",
+      "module_label": "Analyse et Conception Orienté Objet",
+      "teacher": "SAHIM MOHAMED",
+      "room": "SALLE INFOR 4"
+    },
+    {
+      "day": "Thursday",
+      "start": "10:30",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF2.7",
+      "module_label": "Programmation Client Serveur - Java",
+      "teacher": "SAHIM MOHAMED",
+      "room": "SALLE INFOR 4"
+    },
+    {
+      "day": "Friday",
+      "start": "09:00",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF2.11",
+      "module_label": "Français",
+      "teacher": "LAABOUDI KHALID",
+      "room": "SALLE 10"
+    },
+    {
+      "day": "Friday",
+      "start": "10:15",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF2.12",
+      "module_label": "Anglais",
+      "teacher": "LAFRAM RACHID",
+      "room": "SALLE 10"
+    },
+    {
+      "day": "Friday",
+      "start": "15:15",
+      "end": "16:30",
+      "shift": "Soir",
+      "module_code": "UF2.11",
+      "module_label": "Français",
+      "teacher": "LAABOUDI KHALID",
+      "room": "SALLE 10"
+    },
+    {
+      "day": "Friday",
+      "start": "16:30",
+      "end": "17:45",
+      "shift": "Soir",
+      "module_code": "UF2.12",
+      "module_label": "Anglais",
+      "teacher": "LAFRAM RACHID",
+      "room": "SALLE 10"
+    }
+  ]
+}

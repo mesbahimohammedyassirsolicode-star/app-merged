@@ -1,0 +1,1169 @@
+[
+  {
+    "filiere_code": "QACB",
+    "filiere_name": "Qualification Aide Comptable et Bureautique",
+    "type": "Qualification",
+    "required_level": "Niveau 3ème",
+    "duration_years": 1,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "QACB 101"
+        ],
+        "modules": [
+          {
+            "code": "QACB-101",
+            "name": "Initiation à la Comptabilité",
+            "coefficient": 5,
+            "masse_horaire": 120
+          },
+          {
+            "code": "QACB-102",
+            "name": "Bureautique (Word, Excel, PowerPoint)",
+            "coefficient": 4,
+            "masse_horaire": 100
+          },
+          {
+            "code": "QACB-103",
+            "name": "Classement et Archivage",
+            "coefficient": 3,
+            "masse_horaire": 60
+          },
+          {
+            "code": "QACB-104",
+            "name": "Communication Professionnelle de Base",
+            "coefficient": 2,
+            "masse_horaire": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "TGI",
+    "filiere_name": "Technicien en Gestion Informatisée",
+    "type": "Technicien",
+    "required_level": "Niveau Bac",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "TGI 101"
+        ],
+        "modules": [
+          {
+            "code": "TGI-101",
+            "name": "Comptabilité Générale (Manuelle et Informatisée)",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TGI-102",
+            "name": "Architecture des Ordinateurs et Bureautique",
+            "coefficient": 3,
+            "masse_horaire": 60
+          },
+          {
+            "code": "TGI-103",
+            "name": "Gestion Commerciale et Logiciels Spécifiques",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TGI-104",
+            "name": "Techniques de Communication",
+            "coefficient": 2,
+            "masse_horaire": 40
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "TGI 201"
+        ],
+        "modules": [
+          {
+            "code": "TGI-201",
+            "name": "Logiciel de Gestion Comptable (SAGE Saari 100)",
+            "coefficient": 5,
+            "masse_horaire": 90
+          },
+          {
+            "code": "TGI-202",
+            "name": "Gestion de Paie et RH Informatisée",
+            "coefficient": 4,
+            "masse_horaire": 70
+          },
+          {
+            "code": "TGI-203",
+            "name": "Comptabilité Analytique et Gestion Financière",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TGI-204",
+            "name": "Applications Informatiques (SGBD II) et MS Project",
+            "coefficient": 3,
+            "masse_horaire": 60
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "TGNL",
+    "filiere_name": "Technicien en Gestion de la Navigation et Logistique",
+    "type": "Technicien",
+    "required_level": "Niveau Bac",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "TGNL 101",
+          "TGNL 102"
+        ],
+        "modules": [
+          {
+            "code": "TGNL-101",
+            "name": "Introduction à la Logistique",
+            "coefficient": 4,
+            "masse_horaire": 70
+          },
+          {
+            "code": "TGNL-102",
+            "name": "Géographie Mondiale et Routière",
+            "coefficient": 3,
+            "masse_horaire": 50
+          },
+          {
+            "code": "TGNL-103",
+            "name": "Transactions Commerciales Internationales",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TGNL-104",
+            "name": "Droit Maritime",
+            "coefficient": 3,
+            "masse_horaire": 60
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "TGNL 201"
+        ],
+        "modules": [
+          {
+            "code": "TGNL-201",
+            "name": "Gestion Logistique et Supply Chain",
+            "coefficient": 5,
+            "masse_horaire": 90
+          },
+          {
+            "code": "TGNL-202",
+            "name": "Gestion des Ports et Transport Maritime",
+            "coefficient": 5,
+            "masse_horaire": 100
+          },
+          {
+            "code": "TGNL-203",
+            "name": "Commerce International et Incoterms",
+            "coefficient": 4,
+            "masse_horaire": 75
+          },
+          {
+            "code": "TGNL-204",
+            "name": "Logiciel Prélude de Production",
+            "coefficient": 3,
+            "masse_horaire": 60
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "TSGE",
+    "filiere_name": "Technicien Spécialisé en Gestion des Entreprises",
+    "type": "Technicien Spécialisé",
+    "required_level": "Bac",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "TSGE 101",
+          "TSGE 102"
+        ],
+        "modules": [
+          {
+            "code": "TSGE-101",
+            "name": "Comptabilité Générale",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSGE-102",
+            "name": "Techniques de Communication et d'Expression",
+            "coefficient": 2,
+            "masse_horaire": 40
+          },
+          {
+            "code": "TSGE-103",
+            "name": "Bureautique et Systèmes d'Information",
+            "coefficient": 2,
+            "masse_horaire": 50
+          },
+          {
+            "code": "TSGE-104",
+            "name": "Gestion Commerciale",
+            "coefficient": 3,
+            "masse_horaire": 60
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "TSGE 201"
+        ],
+        "modules": [
+          {
+            "code": "TSGE-201",
+            "name": "Comptabilité Analytique d'Exploitation",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSGE-202",
+            "name": "Gestion des Ressources Humaines",
+            "coefficient": 3,
+            "masse_horaire": 60
+          },
+          {
+            "code": "TSGE-203",
+            "name": "Gestion Budgétaire et Trésorerie",
+            "coefficient": 4,
+            "masse_horaire": 75
+          },
+          {
+            "code": "TSGE-204",
+            "name": "Droit des Affaires",
+            "coefficient": 2,
+            "masse_horaire": 45
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "TSDI",
+    "filiere_name": "Technicien Spécialisé en Développement Informatique",
+    "type": "Technicien Spécialisé",
+    "required_level": "Bac",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "TSDI 101",
+          "TSDI 102"
+        ],
+        "modules": [
+          {
+            "code": "TSDI-101",
+            "name": "Algorithmique et Logique de Programmation",
+            "coefficient": 4,
+            "masse_horaire": 90
+          },
+          {
+            "code": "TSDI-102",
+            "name": "Conception et Modélisation (UML)",
+            "coefficient": 3,
+            "masse_horaire": 60
+          },
+          {
+            "code": "TSDI-103",
+            "name": "Développement Web Front-End (HTML/CSS/JS)",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSDI-104",
+            "name": "Bases de Données Relationnelles (SQL)",
+            "coefficient": 3,
+            "masse_horaire": 70
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "TSDI 201"
+        ],
+        "modules": [
+          {
+            "code": "TSDI-201",
+            "name": "Développement Orienté Objet (Java/C#)",
+            "coefficient": 5,
+            "masse_horaire": 100
+          },
+          {
+            "code": "TSDI-202",
+            "name": "Développement Back-End (PHP/Laravel)",
+            "coefficient": 5,
+            "masse_horaire": 100
+          },
+          {
+            "code": "TSDI-203",
+            "name": "Programmation Mobile",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSDI-204",
+            "name": "Gestion de Projet Informatique Agile",
+            "coefficient": 2,
+            "masse_horaire": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "TSGMP",
+    "filiere_name": "Technicien Spécialisé en Gestion des Méthodes de Production",
+    "type": "Technicien Spécialisé",
+    "required_level": "Bac",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "TSGMP 101"
+        ],
+        "modules": [
+          {
+            "code": "TSGMP-101",
+            "name": "Organisation des Entreprises",
+            "coefficient": 3,
+            "masse_horaire": 60
+          },
+          {
+            "code": "TSGMP-102",
+            "name": "Comptabilité Analytique",
+            "coefficient": 3,
+            "masse_horaire": 60
+          },
+          {
+            "code": "TSGMP-103",
+            "name": "La Productique",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSGMP-104",
+            "name": "Métrologie et Analyse des Systèmes de Mesures (MSA)",
+            "coefficient": 4,
+            "masse_horaire": 80
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "TSGMP 201"
+        ],
+        "modules": [
+          {
+            "code": "TSGMP-201",
+            "name": "ISO 9001 / IATF / EN9100",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSGMP-202",
+            "name": "Gestion des Contraintes (TOC) Flux",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSGMP-203",
+            "name": "La Gestion de la Production (KANBAN/MRP/OPT)",
+            "coefficient": 5,
+            "masse_horaire": 100
+          },
+          {
+            "code": "TSGMP-204",
+            "name": "Lean Manufacturing",
+            "coefficient": 4,
+            "masse_horaire": 90
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "TSGQ",
+    "filiere_name": "Technicien Spécialisé en Gestion de la Qualité",
+    "type": "Technicien Spécialisé",
+    "required_level": "Bac",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "TSGQ 101"
+        ],
+        "modules": [
+          {
+            "code": "TSGQ-101",
+            "name": "Introduction au Management de la Qualité",
+            "coefficient": 4,
+            "masse_horaire": 75
+          },
+          {
+            "code": "TSGQ-102",
+            "name": "Statistiques Appliquées",
+            "coefficient": 3,
+            "masse_horaire": 60
+          },
+          {
+            "code": "TSGQ-103",
+            "name": "Outils de Résolution de Problèmes (8D, Ishikawa)",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSGQ-104",
+            "name": "Techniques de Communication",
+            "coefficient": 2,
+            "masse_horaire": 40
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "TSGQ 201"
+        ],
+        "modules": [
+          {
+            "code": "TSGQ-201",
+            "name": "Maitrise Statistique des Procédés (MSP/SPC)",
+            "coefficient": 5,
+            "masse_horaire": 90
+          },
+          {
+            "code": "TSGQ-202",
+            "name": "Audit Qualité Interne",
+            "coefficient": 4,
+            "masse_horaire": 70
+          },
+          {
+            "code": "TSGQ-203",
+            "name": "Gestion des Risques Industriels (AMDEC)",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSGQ-204",
+            "name": "APQP / PPAP",
+            "coefficient": 4,
+            "masse_horaire": 75
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "TSGTL",
+    "filiere_name": "Technicien Spécialisé en Gestion de Transport et Logistique",
+    "type": "Technicien Spécialisé",
+    "required_level": "Bac",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "TSGTL 101",
+          "TSGTL 102"
+        ],
+        "modules": [
+          {
+            "code": "TSGTL-101",
+            "name": "Introduction au Management Logistique et Transport",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSGTL-102",
+            "name": "Techniques et Méthodes de Réapprovisionnement",
+            "coefficient": 4,
+            "masse_horaire": 75
+          },
+          {
+            "code": "TSGTL-103",
+            "name": "Statistique Appliquée",
+            "coefficient": 3,
+            "masse_horaire": 60
+          },
+          {
+            "code": "TSGTL-104",
+            "name": "Bureautique et ERP",
+            "coefficient": 3,
+            "masse_horaire": 50
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "TSGTL 201"
+        ],
+        "modules": [
+          {
+            "code": "TSGTL-201",
+            "name": "Organisation de la Gestion des Trafics de Marchandises",
+            "coefficient": 5,
+            "masse_horaire": 90
+          },
+          {
+            "code": "TSGTL-202",
+            "name": "Fonctionnement du Transport International",
+            "coefficient": 5,
+            "masse_horaire": 90
+          },
+          {
+            "code": "TSGTL-203",
+            "name": "Notions des Assurances et Douane",
+            "coefficient": 3,
+            "masse_horaire": 60
+          },
+          {
+            "code": "TSGTL-204",
+            "name": "Applications Informatiques (SGBD) Appliquées",
+            "coefficient": 3,
+            "masse_horaire": 60
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "TSMI",
+    "filiere_name": "Technicien Spécialisé en Maintenance Industrielle",
+    "type": "Technicien Spécialisé",
+    "required_level": "Bac",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "TSMI 101"
+        ],
+        "modules": [
+          {
+            "code": "TSMI-101",
+            "name": "Électricité et Électronique Industrielle",
+            "coefficient": 5,
+            "masse_horaire": 100
+          },
+          {
+            "code": "TSMI-102",
+            "name": "Mécanique Appliquée et Pneumatique",
+            "coefficient": 4,
+            "masse_horaire": 80
+          },
+          {
+            "code": "TSMI-103",
+            "name": "Lecture de Plans et Schémas Techniques",
+            "coefficient": 3,
+            "masse_horaire": 60
+          },
+          {
+            "code": "TSMI-104",
+            "name": "Santé et Sécurité au Travail (HSE)",
+            "coefficient": 2,
+            "masse_horaire": 40
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "TSMI 201"
+        ],
+        "modules": [
+          {
+            "code": "TSMI-201",
+            "name": "Automatisme et Informatique Industrielle",
+            "coefficient": 5,
+            "masse_horaire": 100
+          },
+          {
+            "code": "TSMI-202",
+            "name": "Diagnostic et Dépannage des Systèmes",
+            "coefficient": 5,
+            "masse_horaire": 90
+          },
+          {
+            "code": "TSMI-203",
+            "name": "Gestion de la Maintenance Assistée par Ordinateur (GMAO)",
+            "coefficient": 4,
+            "masse_horaire": 75
+          },
+          {
+            "code": "TSMI-204",
+            "name": "Maintenance Préventive et Conditionnelle",
+            "coefficient": 4,
+            "masse_horaire": 75
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "BETL",
+    "filiere_name": "Bachelor Européen Transport et Logistique",
+    "type": "Licence",
+    "required_level": "Bac+2",
+    "duration_years": 1,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "BETL 101"
+        ],
+        "modules": [
+          {
+            "code": "BETL-301",
+            "name": "Fondamentaux de la Supply Chain",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "BETL-302",
+            "name": "Logistique d'Entrepôt et Gestion des Stocks",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "BETL-303",
+            "name": "Transports Internationaux et Douane",
+            "coefficient": 5,
+            "masse_horaire": 75
+          },
+          {
+            "code": "BETL-304",
+            "name": "Anglais Professionnel Logistique",
+            "coefficient": 2,
+            "masse_horaire": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "BEDM",
+    "filiere_name": "Bachelor Européen en Marketing Digital",
+    "type": "Licence",
+    "required_level": "Bac+2",
+    "duration_years": 1,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "BEDM 101"
+        ],
+        "modules": [
+          {
+            "code": "BEDM-301",
+            "name": "Stratégie Webmarketing et E-commerce",
+            "coefficient": 5,
+            "masse_horaire": 75
+          },
+          {
+            "code": "BEDM-302",
+            "name": "Social Media Management et Community Management",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "BEDM-303",
+            "name": "Référencement Naturel et Payant (SEO/SEA)",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "BEDM-304",
+            "name": "Web Analytics et KPI",
+            "coefficient": 3,
+            "masse_horaire": 45
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "BEGI",
+    "filiere_name": "Bachelor Européen en Génie Industriel",
+    "type": "Licence",
+    "required_level": "Bac+2",
+    "duration_years": 1,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "BEGI 101"
+        ],
+        "modules": [
+          {
+            "code": "BEGI-301",
+            "name": "Optimisation des Processus Industriels (Lean, 6 Sigma)",
+            "coefficient": 5,
+            "masse_horaire": 80
+          },
+          {
+            "code": "BEGI-302",
+            "name": "Gestion de Production et Planification",
+            "coefficient": 4,
+            "masse_horaire": 70
+          },
+          {
+            "code": "BEGI-303",
+            "name": "Génie des Systèmes et Automatisation",
+            "coefficient": 4,
+            "masse_horaire": 65
+          },
+          {
+            "code": "BEGI-304",
+            "name": "Management de Projet Industriel",
+            "coefficient": 3,
+            "masse_horaire": 50
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "BESC",
+    "filiere_name": "Bachelor Européen en Supply Chain",
+    "type": "Licence",
+    "required_level": "Bac+2",
+    "duration_years": 1,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "BESC 101"
+        ],
+        "modules": [
+          {
+            "code": "BESC-301",
+            "name": "Pilotage de la Supply Chain Globale",
+            "coefficient": 5,
+            "masse_horaire": 80
+          },
+          {
+            "code": "BESC-302",
+            "name": "Systèmes d'Information et ERP Appliqués",
+            "coefficient": 4,
+            "masse_horaire": 70
+          },
+          {
+            "code": "BESC-303",
+            "name": "Achats Internationaux et Sourcing",
+            "coefficient": 4,
+            "masse_horaire": 65
+          },
+          {
+            "code": "BESC-304",
+            "name": "Logistique de Distribution et E-commerce",
+            "coefficient": 3,
+            "masse_horaire": 50
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "BEQSE",
+    "filiere_name": "Bachelor Européen en Qualité, Sécurité & Environnement",
+    "type": "Licence",
+    "required_level": "Bac+2",
+    "duration_years": 1,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "BEQSE 101"
+        ],
+        "modules": [
+          {
+            "code": "BEQSE-301",
+            "name": "Système de Management Intégré (SMI)",
+            "coefficient": 5,
+            "masse_horaire": 80
+          },
+          {
+            "code": "BEQSE-302",
+            "name": "Réglementation et Normes (ISO 9001, 14001, 45001)",
+            "coefficient": 5,
+            "masse_horaire": 80
+          },
+          {
+            "code": "BEQSE-303",
+            "name": "Évaluation et Prévention des Risques",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "BEQSE-304",
+            "name": "Audit Interne et Amélioration Continue",
+            "coefficient": 4,
+            "masse_horaire": 60
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "BEME",
+    "filiere_name": "Bachelor Européen en Management des Entreprises",
+    "type": "Licence",
+    "required_level": "Bac+2",
+    "duration_years": 1,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "BEME 101"
+        ],
+        "modules": [
+          {
+            "code": "BEME-301",
+            "name": "Management Opérationnel et Leadership",
+            "coefficient": 5,
+            "masse_horaire": 75
+          },
+          {
+            "code": "BEME-302",
+            "name": "Contrôle de Gestion et Pilotage de la Performance",
+            "coefficient": 4,
+            "masse_horaire": 70
+          },
+          {
+            "code": "BEME-303",
+            "name": "Développement Commercial et Négociation",
+            "coefficient": 4,
+            "masse_horaire": 65
+          },
+          {
+            "code": "BEME-304",
+            "name": "Création d'Entreprise et Entrepreneuriat",
+            "coefficient": 3,
+            "masse_horaire": 50
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "MEMRH",
+    "filiere_name": "Mastère Européen Management des Ressources Humaines",
+    "type": "Master",
+    "required_level": "Bac+3",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "MEMRH 101"
+        ],
+        "modules": [
+          {
+            "code": "MEMRH-401",
+            "name": "Stratégie et Politique RH",
+            "coefficient": 4,
+            "masse_horaire": 50
+          },
+          {
+            "code": "MEMRH-402",
+            "name": "Droit du Travail Approfondi",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "MEMRH-403",
+            "name": "Ingénierie de la Formation",
+            "coefficient": 3,
+            "masse_horaire": 45
+          },
+          {
+            "code": "MEMRH-404",
+            "name": "Management Interculturel",
+            "coefficient": 2,
+            "masse_horaire": 30
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "MEMRH 201"
+        ],
+        "modules": [
+          {
+            "code": "MEMRH-501",
+            "name": "Audit Social et RSE",
+            "coefficient": 4,
+            "masse_horaire": 50
+          },
+          {
+            "code": "MEMRH-502",
+            "name": "Gestion Prévisionnelle des Emplois et des Compétences (GPEC)",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "MEMRH-503",
+            "name": "Systèmes d'Information RH (SIRH)",
+            "coefficient": 3,
+            "masse_horaire": 45
+          },
+          {
+            "code": "MEMRH-504",
+            "name": "Méthodologie de Recherche et Thèse",
+            "coefficient": 6,
+            "masse_horaire": 80
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "MEMSE",
+    "filiere_name": "Mastère Européen Management et Stratégie d'Entreprise",
+    "type": "Master",
+    "required_level": "Bac+3",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "MEMSE 101"
+        ],
+        "modules": [
+          {
+            "code": "MEMSE-401",
+            "name": "Management Stratégique et Pilotage",
+            "coefficient": 5,
+            "masse_horaire": 60
+          },
+          {
+            "code": "MEMSE-402",
+            "name": "Analyse Financière et Business Plan",
+            "coefficient": 4,
+            "masse_horaire": 50
+          },
+          {
+            "code": "MEMSE-403",
+            "name": "Marketing Stratégique International",
+            "coefficient": 4,
+            "masse_horaire": 50
+          },
+          {
+            "code": "MEMSE-404",
+            "name": "Environnement Juridique des Affaires",
+            "coefficient": 3,
+            "masse_horaire": 40
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "MEMSE 201"
+        ],
+        "modules": [
+          {
+            "code": "MEMSE-501",
+            "name": "Gouvernance d'Entreprise et Éthique",
+            "coefficient": 4,
+            "masse_horaire": 50
+          },
+          {
+            "code": "MEMSE-502",
+            "name": "Conduite du Changement et Innovation",
+            "coefficient": 4,
+            "masse_horaire": 50
+          },
+          {
+            "code": "MEMSE-503",
+            "name": "Management de Projet Complexe",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "MEMSE-504",
+            "name": "Méthodologie de Recherche et Thèse Professionnelle",
+            "coefficient": 6,
+            "masse_horaire": 80
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "MEGIIQ",
+    "filiere_name": "Mastère Européen en Génie Industriel & Ingénierie Qualité",
+    "type": "Master",
+    "required_level": "Bac+3",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "MEGIIQ 101"
+        ],
+        "modules": [
+          {
+            "code": "MEGIIQ-401",
+            "name": "Conception des Systèmes de Production",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "MEGIIQ-402",
+            "name": "Fiabilité et Maintenance Avancée",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "MEGIIQ-403",
+            "name": "Ingénierie Qualité et Plans d'Expériences",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "MEGIIQ-404",
+            "name": "Outils Avancés du Lean Management",
+            "coefficient": 3,
+            "masse_horaire": 50
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "MEGIIQ 201"
+        ],
+        "modules": [
+          {
+            "code": "MEGIIQ-501",
+            "name": "Management Stratégique de la Qualité et RSE",
+            "coefficient": 5,
+            "masse_horaire": 70
+          },
+          {
+            "code": "MEGIIQ-502",
+            "name": "Industrie 4.0 et Technologies Digitales",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "MEGIIQ-503",
+            "name": "Certification et Audit Tierce Partie",
+            "coefficient": 3,
+            "masse_horaire": 50
+          },
+          {
+            "code": "MEGIIQ-504",
+            "name": "Projet de Fin d'Études (Thèse Professionnelle)",
+            "coefficient": 6,
+            "masse_horaire": 90
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "filiere_code": "METL",
+    "filiere_name": "Mastère Européen en Transport et Logistique",
+    "type": "Master",
+    "required_level": "Bac+3",
+    "duration_years": 2,
+    "niveaux": [
+      {
+        "niveau_nom": "1A",
+        "groupes_prevus": [
+          "METL 101"
+        ],
+        "modules": [
+          {
+            "code": "METL-401",
+            "name": "Management Stratégique de la Supply Chain",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "METL-402",
+            "name": "Ingénierie des Transports (Aérien, Maritime, Routier)",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "METL-403",
+            "name": "Logistique Internationale et Douane Approfondie",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "METL-404",
+            "name": "Droit des Transports et Contentieux",
+            "coefficient": 3,
+            "masse_horaire": 50
+          }
+        ]
+      },
+      {
+        "niveau_nom": "2A",
+        "groupes_prevus": [
+          "METL 201"
+        ],
+        "modules": [
+          {
+            "code": "METL-501",
+            "name": "Modélisation et Optimisation des Flux",
+            "coefficient": 5,
+            "masse_horaire": 70
+          },
+          {
+            "code": "METL-502",
+            "name": "Logistique Verte et Développement Durable",
+            "coefficient": 4,
+            "masse_horaire": 60
+          },
+          {
+            "code": "METL-503",
+            "name": "Achats Stratégiques et Négociation Internationale",
+            "coefficient": 3,
+            "masse_horaire": 50
+          },
+          {
+            "code": "METL-504",
+            "name": "Projet de Fin d'Études (Thèse Professionnelle)",
+            "coefficient": 6,
+            "masse_horaire": 90
+          }
+        ]
+      }
+    ]
+  }
+]

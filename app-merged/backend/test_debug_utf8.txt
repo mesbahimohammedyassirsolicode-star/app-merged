@@ -1,0 +1,115 @@
+﻿PHPUnit Started (PHPUnit 11.5.53 using PHP 8.5.1 (cli) on WINNT)
+Test Runner Configured
+Bootstrap Finished (C:\Users\setup game\Desktop\tgi\PFE\backend\vendor/autoload.php)
+Event Facade Sealed
+Test Suite Loaded (3 tests)
+Test Runner Started
+Test Suite Sorted
+Test Runner Execution Started (3 tests)
+Test Suite Started (Tests\Feature\RoleIsolationTest, 3 tests)
+Test Preparation Started (Tests\Feature\RoleIsolationTest::test_student_cannot_access_admin_dashboard)
+Before Test Method Called (Tests\Feature\RoleIsolationTest::setUp)
+Before Test Method Errored (Tests\Feature\RoleIsolationTest::setUp)
+Illuminate\Database\Migrations\Migration@anonymous(): Argument #1 ($table) must be of type Blueprint, Illuminate\Database\Schema\Blueprint given, called in C:\Users\setup game\Desktop\tgi\PFE\backend\vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php on line 109
+Before Test Method Finished:
+- Tests\Feature\RoleIsolationTest::setUp
+Test Preparation Failed (Tests\Feature\RoleIsolationTest::test_student_cannot_access_admin_dashboard)
+Test Errored (Tests\Feature\RoleIsolationTest::test_student_cannot_access_admin_dashboard)
+Illuminate\Database\Migrations\Migration@anonymous(): Argument #1 ($table) must be of type Blueprint, Illuminate\Database\Schema\Blueprint given, called in C:\Users\setup game\Desktop\tgi\PFE\backend\vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php on line 109
+After Test Method Called (Tests\Feature\RoleIsolationTest::tearDown)
+After Test Method Finished:
+- Tests\Feature\RoleIsolationTest::tearDown
+Test Preparation Started (Tests\Feature\RoleIsolationTest::test_teacher_can_only_see_their_assigned_evaluations)
+Before Test Method Called (Tests\Feature\RoleIsolationTest::setUp)
+Before Test Method Errored (Tests\Feature\RoleIsolationTest::setUp)
+Illuminate\Database\Migrations\Migration@anonymous(): Argument #1 ($table) must be of type Blueprint, Illuminate\Database\Schema\Blueprint given, called in C:\Users\setup game\Desktop\tgi\PFE\backend\vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php on line 109
+Before Test Method Finished:
+- Tests\Feature\RoleIsolationTest::setUp
+Test Preparation Failed (Tests\Feature\RoleIsolationTest::test_teacher_can_only_see_their_assigned_evaluations)
+Test Errored (Tests\Feature\RoleIsolationTest::test_teacher_can_only_see_their_assigned_evaluations)
+Illuminate\Database\Migrations\Migration@anonymous(): Argument #1 ($table) must be of type Blueprint, Illuminate\Database\Schema\Blueprint given, called in C:\Users\setup game\Desktop\tgi\PFE\backend\vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php on line 109
+After Test Method Called (Tests\Feature\RoleIsolationTest::tearDown)
+After Test Method Finished:
+- Tests\Feature\RoleIsolationTest::tearDown
+Test Preparation Started (Tests\Feature\RoleIsolationTest::test_student_can_only_see_their_own_grades)
+Before Test Method Called (Tests\Feature\RoleIsolationTest::setUp)
+Before Test Method Errored (Tests\Feature\RoleIsolationTest::setUp)
+Illuminate\Database\Migrations\Migration@anonymous(): Argument #1 ($table) must be of type Blueprint, Illuminate\Database\Schema\Blueprint given, called in C:\Users\setup game\Desktop\tgi\PFE\backend\vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php on line 109
+Before Test Method Finished:
+- Tests\Feature\RoleIsolationTest::setUp
+Test Preparation Failed (Tests\Feature\RoleIsolationTest::test_student_can_only_see_their_own_grades)
+Test Errored (Tests\Feature\RoleIsolationTest::test_student_can_only_see_their_own_grades)
+Illuminate\Database\Migrations\Migration@anonymous(): Argument #1 ($table) must be of type Blueprint, Illuminate\Database\Schema\Blueprint given, called in C:\Users\setup game\Desktop\tgi\PFE\backend\vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php on line 109
+After Test Method Called (Tests\Feature\RoleIsolationTest::tearDown)
+After Test Method Finished:
+- Tests\Feature\RoleIsolationTest::tearDown
+After Last Test Method Called (Tests\Feature\RoleIsolationTest::tearDownAfterClass)
+After Last Test Method Finished:
+- Tests\Feature\RoleIsolationTest::tearDownAfterClass
+Test Suite Finished (Tests\Feature\RoleIsolationTest, 3 tests)
+Test Runner Execution Finished
+
+   FAIL  Tests\Feature\RoleIsolationTest
+  Ô¿» student cannot access admin dashboard
+  Ô¿» teacher can only see their assigned evaluations
+  Ô¿» student can only see their own grades
+  ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ  
+   FAILEDÔÇª  TypeError   
+  Illuminate\Database\Migrations\Migration@anonymous(): Argument #1 ($table) must be of type Blueprint, Illuminate\Database\Schema\Blueprint given, called in C:\Users\setup game\Desktop\tgi\PFE\backend\vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php on line 109
+
+  at vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php:109
+    105Ôûò         $this->grammar = $connection->getSchemaGrammar();
+    106Ôûò         $this->table = $table;
+    107Ôûò 
+    108Ôûò         if (! is_null($callback)) {
+  Ô×£ 109Ôûò             $callback($this);
+    110Ôûò         }
+    111Ôûò     }
+    112Ôûò 
+    113Ôûò     /**
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php:109
+  2   vendor\laravel\framework\src\Illuminate\Container\Container.php:1168
+
+  ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ  
+   FAILEDÔÇª  TypeError   
+  Illuminate\Database\Migrations\Migration@anonymous(): Argument #1 ($table) must be of type Blueprint, Illuminate\Database\Schema\Blueprint given, called in C:\Users\setup game\Desktop\tgi\PFE\backend\vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php on line 109
+
+  at vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php:109
+    105Ôûò         $this->grammar = $connection->getSchemaGrammar();
+    106Ôûò         $this->table = $table;
+    107Ôûò 
+    108Ôûò         if (! is_null($callback)) {
+  Ô×£ 109Ôûò             $callback($this);
+    110Ôûò         }
+    111Ôûò     }
+    112Ôûò 
+    113Ôûò     /**
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php:109
+  2   vendor\laravel\framework\src\Illuminate\Container\Container.php:1168
+
+  ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ  
+   FAILEDÔÇª  TypeError   
+  Illuminate\Database\Migrations\Migration@anonymous(): Argument #1 ($table) must be of type Blueprint, Illuminate\Database\Schema\Blueprint given, called in C:\Users\setup game\Desktop\tgi\PFE\backend\vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php on line 109
+
+  at vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php:109
+    105Ôûò         $this->grammar = $connection->getSchemaGrammar();
+    106Ôûò         $this->table = $table;
+    107Ôûò 
+    108Ôûò         if (! is_null($callback)) {
+  Ô×£ 109Ôûò             $callback($this);
+    110Ôûò         }
+    111Ôûò     }
+    112Ôûò 
+    113Ôûò     /**
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Schema\Blueprint.php:109
+  2   vendor\laravel\framework\src\Illuminate\Container\Container.php:1168
+
+
+  Tests:    3 failed (0 assertions)
+  Duration: 0.92s
+
+Test Runner Finished
+PHPUnit Finished (Shell Exit Code: 2)

@@ -1,0 +1,98 @@
+﻿Running php artisan migrate:fresh --seed with SQLite...
+
+  Dropping all tables  10.85ms DONE
+
+   INFO  Preparing database.  
+
+  Creating migration table  7.84ms DONE
+
+   INFO  Running migrations.  
+
+  0001_01_01_000000_create_users_table  27.84ms DONE
+  0001_01_01_000001_create_cache_table  16.15ms DONE
+  0001_01_01_000002_create_jobs_table  17.99ms DONE
+  2026_02_11_000000_create_annees_scolaires_table  4.38ms DONE
+  2026_02_12_000001_create_niveaux_table  3.77ms DONE
+  2026_02_12_000002_create_filieres_table  8.16ms DONE
+  2026_02_12_000003_create_groupes_table  4.43ms DONE
+  2026_02_12_000004_create_modules_table  8.09ms DONE
+  2026_02_13_082732_create_administrators_table  5.18ms DONE
+  2026_02_13_082733_create_student_parents_table  7.06ms DONE
+  2026_02_13_082734_create_formateurs_table  8.09ms DONE
+  2026_02_13_082734_create_stagiaires_table  7.40ms DONE
+  2026_02_13_082758_create_affectations_table  4.01ms DONE
+  2026_02_13_082759_create_evaluations_table  6.05ms DONE
+  2026_02_13_082759_create_seances_table  4.02ms DONE
+  2026_02_13_082760_create_absences_table  3.82ms DONE
+  2026_02_13_082800_create_notes_table  5.25ms DONE
+  2026_02_13_082800_create_syllabus_items_table  3.96ms DONE
+  2026_02_13_082801_create_feedback_table  11.81ms DONE
+  2026_02_13_082801_create_notifications_table  4.01ms DONE
+  2026_02_13_082801_create_progressions_table  4.90ms DONE
+  2026_02_13_082829_create_groupe_stagiaire_table  3.83ms DONE
+  2026_02_13_083626_create_personal_access_tokens_table  18.16ms DONE
+  2026_02_13_100000_create_roles_and_permissions_tables  43.37ms DONE
+  2026_02_13_100001_create_stages_table  13.29ms DONE
+  2026_02_13_100002_create_attendances_table  33.63ms DONE
+  2026_02_13_100004_add_feedback_anonymous_token_and_index  1.11ms DONE
+  2026_02_13_120000_create_audit_logs_table  8.83ms DONE
+  2026_02_14_000000_make_stagiaires_cin_required_and_unique  65.82ms DONE
+  2026_02_14_100000_add_ofppt_eligibility_fields_to_stagiaires  10.39ms DONE
+  2026_02_15_000000_extend_niveau_formation_for_private_centers  28.45ms DONE
+  2026_02_16_000000_add_filiere_id_to_stagiaires  30.16ms DONE
+  2026_02_17_000000_add_filiere_id_and_groupe_id_to_seances  46.81ms DONE
+  2026_02_18_000000_add_groupe_id_to_stagiaires  32.52ms DONE
+  2026_02_19_000001_create_teacher_module_table  17.97ms DONE
+  2026_02_19_000002_create_module_groupe_table  16.69ms DONE
+  2026_02_19_000003_align_teacher_module_schema_with_final_contract  2.95ms DONE
+  2026_02_24_210000_align_attendances_schema_with_dashboard_queries  82.20ms DONE
+  2026_02_24_220100_convert_legacy_formateur_and_stagiaire_roles  9.25ms DONE
+  2026_03_24_234507_add_type_to_notifications_table  4.37ms DONE
+  2026_03_24_235202_create_messages_table  3.85ms DONE
+
+
+   INFO  Seeding database.  
+
+  Database\Seeders\RolePermissionSeeder  RUNNING  
+  Database\Seeders\RolePermissionSeeder  292 ms DONE  
+
+  Database\Seeders\AdminAccountSeeder  RUNNING  
+  Database\Seeders\AdminAccountSeeder  727 ms DONE  
+
+  Database\Seeders\SyncUserRolesSeeder  RUNNING  
+  Database\Seeders\SyncUserRolesSeeder  1 ms DONE  
+
+  Database\Seeders\GimsAcademicSeeder  RUNNING  
+Academic structure synchronization completed successfully.
+  Database\Seeders\GimsAcademicSeeder  1,619 ms DONE  
+
+  Database\Seeders\DemoDataSeeder  RUNNING  
+Starting Demo Data Seeder...
+Year created: 2025-2026
+Teachers created.
+  Database\Seeders\DemoDataSeeder  2,748 ms DONE  
+
+  Database\Seeders\Tsge1ATimetableSeeder  RUNNING  
+Seeding TSGE 1A timetable (2024-2025 Session 2)...
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.role (Connection: sqlite, Database: C:\Users\setup game\Desktop\files\tgi\PFE\app-merged\backend\database\database.sqlite, SQL: insert into "users" ("email", "name", "password", "updated_at", "created_at") values (fakkir_youssef@gims.ma, FAKKIR YOUSSEF, $2y$12$1dCyvYO7tH92i9TTc9Idt.MWr7Ky/IkhBnlT9K2cSKB4C4yoV32P2, 2026-04-02 21:14:18, 2026-04-02 21:14:18))
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+    834Ôûò             $exceptionType = $this->isUniqueConstraintError($e)
+    835Ôûò                 ? UniqueConstraintViolationException::class
+    836Ôûò                 : QueryException::class;
+    837Ôûò 
+  Ô×£ 838Ôûò             throw new $exceptionType(
+    839Ôûò                 $this->getNameWithReadWriteType(),
+    840Ôûò                 $query,
+    841Ôûò                 $this->prepareBindings($bindings),
+    842Ôûò                 $e,
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:584
+      PDOException::("SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.role")
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:584
+      PDOStatement::execute()
+

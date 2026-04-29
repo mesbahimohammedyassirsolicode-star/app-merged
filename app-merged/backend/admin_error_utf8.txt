@@ -1,0 +1,22 @@
+﻿
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[42S02]: Base table or view not found: 1932 Table 'gims.users' doesn't exist in engine (Connection: mysql, Host: localhost, Port: 3306, Database: gims, SQL: select `email`, `name`, `role` from `users` where `role` = admin and `users`.`deleted_at` is null)
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:838
+    834Ôûò             $exceptionType = $this->isUniqueConstraintError($e)
+    835Ôûò                 ? UniqueConstraintViolationException::class
+    836Ôûò                 : QueryException::class;
+    837Ôûò 
+  Ô×£ 838Ôûò             throw new $exceptionType(
+    839Ôûò                 $this->getNameWithReadWriteType(),
+    840Ôûò                 $query,
+    841Ôûò                 $this->prepareBindings($bindings),
+    842Ôûò                 $e,
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:420
+      PDOException::("SQLSTATE[42S02]: Base table or view not found: 1932 Table 'gims.users' doesn't exist in engine")
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:420
+      PDO::prepare()
+

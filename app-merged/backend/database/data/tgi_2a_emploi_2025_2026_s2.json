@@ -1,0 +1,340 @@
+{
+  "meta": {
+    "filiere_code": "TGI",
+    "filiere_label": "TECHNICIEN EN GESTION INFORMATISEE",
+    "group_label": "TGI 201",
+    "academic_year": "2025-2026",
+    "session": 2,
+    "shifts": [
+      "Matin",
+      "Soir"
+    ],
+    "source": "EMPLOI RAMADAN FD 2025-2026 - TGI 2A.pdf"
+  },
+  "time_slots": {
+    "Matin": [
+      [
+        "09:00",
+        "09:30"
+      ],
+      [
+        "09:30",
+        "10:15"
+      ],
+      [
+        "10:15",
+        "11:00"
+      ],
+      [
+        "11:00",
+        "11:30"
+      ],
+      [
+        "11:30",
+        "12:00"
+      ]
+    ],
+    "Soir": [
+      [
+        "14:30",
+        "15:00"
+      ],
+      [
+        "15:00",
+        "15:30"
+      ],
+      [
+        "15:30",
+        "16:00"
+      ],
+      [
+        "16:00",
+        "16:45"
+      ],
+      [
+        "16:45",
+        "17:00"
+      ],
+      [
+        "17:00",
+        "17:45"
+      ],
+      [
+        "17:45",
+        "18:00"
+      ]
+    ]
+  },
+  "seances": [
+    {
+      "day": "Monday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF2.6",
+      "module_label": "Gestion Budgétaire",
+      "teacher": "M. KAMARI YOUSSEF",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Monday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF2.3",
+      "module_label": "LEAN MANUFACTURING",
+      "teacher": "M. KAMARI YOUSSEF",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Monday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "ENC-PFE",
+      "module_label": "Encadrement PFE",
+      "teacher": "M. KAMARI YOUSSEF",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Monday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF2.6",
+      "module_label": "Gestion Budgétaire",
+      "teacher": "M. KAMARI YOUSSEF",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Monday",
+      "start": "11:30",
+      "end": "12:00",
+      "shift": "Matin",
+      "module_code": "UF2.3",
+      "module_label": "LEAN MANUFACTURING",
+      "teacher": "M. KAMARI YOUSSEF",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.14",
+      "module_label": "La Langue Anglaise",
+      "teacher": "M. EL OUARIT KHALID",
+      "room": "SALLE 9 ETAGE 3"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.13",
+      "module_label": "La Langue Francaise",
+      "teacher": "M. LAAROUSSI OUSSAMA",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Tuesday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF1.14",
+      "module_label": "La Langue Anglaise",
+      "teacher": "M. EL OUARIT KHALID",
+      "room": "SALLE 9 ETAGE 3"
+    },
+    {
+      "day": "Tuesday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF1.13",
+      "module_label": "La Langue Francaise",
+      "teacher": "M. LAAROUSSI OUSSAMA",
+      "room": "SALLE 10 ETAGE 3"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF2.9",
+      "module_label": "Excel Avancé et Outlook",
+      "teacher": "M. OMAR BEKKOUR",
+      "room": "SALLE INFO 1 ETG 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF2.10",
+      "module_label": "Application Info (SGBD)",
+      "teacher": "M. AKACH HAMID",
+      "room": "SALLE INFO 1 ETG 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF2.11",
+      "module_label": "ERP & Sys d'information",
+      "teacher": "M. OMAR BEKKOUR",
+      "room": "SALLE INFO 1 ETG 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF2.8-PROG",
+      "module_label": "Programmation informatique",
+      "teacher": "M. AKACH HAMID",
+      "room": "SALLE INFO 1 ETG 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "11:30",
+      "end": "12:00",
+      "shift": "Matin",
+      "module_code": "UF2.8-RES",
+      "module_label": "Reseaux informatique",
+      "teacher": "M. AKACH HAMID",
+      "room": "SALLE INFO 1 ETG 1"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF2.1",
+      "module_label": "Diagnostic Financier",
+      "teacher": "KASSMI MONCEF",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF2.7",
+      "module_label": "SAGE PAIE",
+      "teacher": "KASSMI MONCEF",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Thursday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "ENC-PFE",
+      "module_label": "Encadrement PFE",
+      "teacher": "KASSMI MONCEF",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Thursday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF2.1",
+      "module_label": "Diagnostic Financier",
+      "teacher": "KASSMI MONCEF",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Thursday",
+      "start": "11:30",
+      "end": "12:00",
+      "shift": "Matin",
+      "module_code": "UF2.7",
+      "module_label": "SAGE PAIE",
+      "teacher": "KASSMI MONCEF",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF2.2",
+      "module_label": "Comptabilité Analytique",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF2.4",
+      "module_label": "Gestion d'approvisionnement et de Production",
+      "teacher": "M. BILAL EL MORABIT",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "ENC-PFE",
+      "module_label": "Encadrement PFE",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF2.5",
+      "module_label": "Fiscalité",
+      "teacher": "M. BILAL EL MORABIT",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "14:30",
+      "end": "15:00",
+      "shift": "Soir",
+      "module_code": "UF2.2",
+      "module_label": "Comptabilité Analytique",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "15:00",
+      "end": "15:30",
+      "shift": "Soir",
+      "module_code": "UF2.4",
+      "module_label": "Gestion d'approvisionnement et de Production",
+      "teacher": "M. BILAL EL MORABIT",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "15:30",
+      "end": "16:00",
+      "shift": "Soir",
+      "module_code": "ENC-PFE",
+      "module_label": "Encadrement PFE",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 11 ETAGE 3"
+    },
+    {
+      "day": "Friday",
+      "start": "16:00",
+      "end": "16:45",
+      "shift": "Soir",
+      "module_code": "UF2.5",
+      "module_label": "Fiscalité",
+      "teacher": "M. BILAL EL MORABIT",
+      "room": "SALLE 11 ETAGE 3"
+    }
+  ]
+}

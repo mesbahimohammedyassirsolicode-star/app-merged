@@ -1,0 +1,270 @@
+{
+  "meta": {
+    "filiere_code": "BEGI",
+    "filiere_label": "Bachelor Européen en Génie Industriel",
+    "group_label": "BEGI 101",
+    "academic_year": "2024-2025",
+    "session": 2,
+    "shifts": [
+      "Matin",
+      "Soir"
+    ],
+    "source": "Bachelor-Europeen-en-Genie-Industriel.pdf (modules from brochure - update with official emploi du temps)"
+  },
+  "time_slots": {
+    "Matin": [
+      [
+        "09:00",
+        "09:30"
+      ],
+      [
+        "09:30",
+        "10:15"
+      ],
+      [
+        "10:15",
+        "11:00"
+      ],
+      [
+        "11:00",
+        "11:30"
+      ],
+      [
+        "11:30",
+        "12:00"
+      ]
+    ],
+    "Soir": [
+      [
+        "14:30",
+        "15:00"
+      ],
+      [
+        "15:00",
+        "15:30"
+      ],
+      [
+        "15:30",
+        "16:00"
+      ],
+      [
+        "16:00",
+        "16:45"
+      ],
+      [
+        "16:45",
+        "17:00"
+      ],
+      [
+        "17:00",
+        "17:45"
+      ],
+      [
+        "17:45",
+        "18:00"
+      ]
+    ]
+  },
+  "seances": [
+    {
+      "day": "Monday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "M1-PIC",
+      "module_label": "Gestion industrielle (PIC et PDP)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "M1-MRP",
+      "module_label": "Outils de la gestion de production (MRP-OPT-TOC)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "M1-PIC",
+      "module_label": "Gestion industrielle (PIC et PDP)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "M1-MRP",
+      "module_label": "Outils de la gestion de production (MRP-OPT-TOC)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "M1-ORD",
+      "module_label": "Ordonnancement et gestion de projet",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "M1-MAINT",
+      "module_label": "Management de la maintenance (GMAO et FDM)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "M1-ORD",
+      "module_label": "Ordonnancement et gestion de projet",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "M1-MAINT",
+      "module_label": "Management de la maintenance (GMAO et FDM)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "M1-QUAL",
+      "module_label": "Outils du management de la qualité",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "M1-STAT",
+      "module_label": "Statistique appliquée aux processus (Capabilité et Minitab)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "M1-QUAL",
+      "module_label": "Outils du management de la qualité",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Wednesday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "M1-STAT",
+      "module_label": "Statistique appliquée aux processus (Capabilité et Minitab)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "M2-METRO",
+      "module_label": "Métrologie et systèmes de mesure",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "M2-RO",
+      "module_label": "Recherche opérationnelle",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Thursday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "M2-METRO",
+      "module_label": "Métrologie et systèmes de mesure",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Thursday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "M2-RO",
+      "module_label": "Recherche opérationnelle",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Friday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "M2-LV",
+      "module_label": "Langue Vivante Européenne (Anglais & Français)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Friday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "M2-CULTURE",
+      "module_label": "Culture Européenne (UC A2/A3)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Friday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "M2-PFE",
+      "module_label": "Projet de fin d'études",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    },
+    {
+      "day": "Friday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "M2-LV",
+      "module_label": "Langue Vivante Européenne (Anglais & Français)",
+      "teacher": "Formateur BEGI",
+      "room": "SALLE 1"
+    }
+  ]
+}

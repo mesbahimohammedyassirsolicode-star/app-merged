@@ -1,0 +1,44 @@
+Databases: atlas_commerce, codequest_db, gestion_produits, gims, gims_new, information_schema, mysql, performance_schema, phpmyadmin, test, womens_clothing_shop
+
+Tables in gims:
+
+Tables in gims_new:
+  absences
+  administrators
+  affectations
+  annees_scolaires
+  attendances
+  audit_logs
+  cache
+  cache_locks
+  evaluations
+  failed_jobs
+  feedbacks
+  filieres
+  formateurs
+  groupe_stagiaire
+  groupes
+  job_batches
+  jobs
+  messages
+  migrations
+  module_groupe
+  modules
+  niveaux
+  notes
+  notifications
+  parents
+  password_reset_tokens
+  permission_role
+  permissions
+  personal_access_tokens
+  progressions
+  role_user
+  roles
+  seances
+  sessions
+  stages
+  stagiaires
+  syllabus_items
+  teacher_module
+  users

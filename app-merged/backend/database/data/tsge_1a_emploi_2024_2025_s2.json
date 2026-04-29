@@ -1,0 +1,310 @@
+{
+  "meta": {
+    "filiere_code": "TSGE",
+    "filiere_label": "TECHNICIEN SPECIALISE EN GESTION DES ENTREPRISES",
+    "group_label": "TSGE 101",
+    "academic_year": "2024-2025",
+    "session": 2,
+    "shifts": [
+      "Matin",
+      "Soir"
+    ],
+    "source": "EMPLOI RAMADAN FD 2024-2025 - TSGE 1A.pdf"
+  },
+  "time_slots": {
+    "Matin": [
+      [
+        "09:00",
+        "09:30"
+      ],
+      [
+        "09:30",
+        "10:15"
+      ],
+      [
+        "10:15",
+        "11:00"
+      ],
+      [
+        "11:00",
+        "11:30"
+      ],
+      [
+        "11:30",
+        "12:00"
+      ]
+    ],
+    "Soir": [
+      [
+        "14:30",
+        "15:00"
+      ],
+      [
+        "15:00",
+        "15:30"
+      ],
+      [
+        "15:30",
+        "16:00"
+      ],
+      [
+        "16:00",
+        "16:45"
+      ],
+      [
+        "16:45",
+        "17:00"
+      ],
+      [
+        "17:00",
+        "17:45"
+      ],
+      [
+        "17:45",
+        "18:00"
+      ]
+    ]
+  },
+  "seances": [
+    {
+      "day": "Monday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.11",
+      "module_label": "Architecture des Ordinateurs",
+      "teacher": "M. FAKKIR YOUSSEF",
+      "room": "SALLE 1 ETAGE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.12",
+      "module_label": "Bureautique",
+      "teacher": "M. FAKKIR YOUSSEF",
+      "room": "SALLE 1 ETAGE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF1.11",
+      "module_label": "Architecture des Ordinateurs",
+      "teacher": "M. FAKKIR YOUSSEF",
+      "room": "SALLE 1 ETAGE 1"
+    },
+    {
+      "day": "Monday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF1.12",
+      "module_label": "Bureautique",
+      "teacher": "M. FAKKIR YOUSSEF",
+      "room": "SALLE 1 ETAGE 1"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.14",
+      "module_label": "La Langue Anglaise",
+      "teacher": "M. HIMICHE MOHAMED",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Tuesday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.13",
+      "module_label": "La Langue Francaise",
+      "teacher": "M. LAAROUSSI OUSSAMA",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Tuesday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF1.14",
+      "module_label": "La Langue Anglaise",
+      "teacher": "M. HIMICHE MOHAMED",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Tuesday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF1.13",
+      "module_label": "La Langue Francaise",
+      "teacher": "M. LAAROUSSI OUSSAMA",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.3-ORG",
+      "module_label": "Organisation des entreprises",
+      "teacher": "M. SALAH EDDINE KORAICHI",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Wednesday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.3-MF",
+      "module_label": "Mathematiques financieres",
+      "teacher": "M. AZDOUD MOHAMMED",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Wednesday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF1.6",
+      "module_label": "Gestion des ressources humaines",
+      "teacher": "M. SALAH EDDINE KORAICHI",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Wednesday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF1.3-MF",
+      "module_label": "Mathematiques financieres",
+      "teacher": "M. AZDOUD MOHAMMED",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.9",
+      "module_label": "Droit des affaires",
+      "teacher": "M. KASSMI MONCEF",
+      "room": "SALLE 16 ETAGE 5"
+    },
+    {
+      "day": "Thursday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.10",
+      "module_label": "Droit du travail",
+      "teacher": "M. KASSMI MONCEF",
+      "room": "SALLE 16 ETAGE 5"
+    },
+    {
+      "day": "Thursday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF1.9",
+      "module_label": "Droit des affaires",
+      "teacher": "M. KASSMI MONCEF",
+      "room": "SALLE 16 ETAGE 5"
+    },
+    {
+      "day": "Thursday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF1.10",
+      "module_label": "Droit du travail",
+      "teacher": "M. KASSMI MONCEF",
+      "room": "SALLE 16 ETAGE 5"
+    },
+    {
+      "day": "Friday",
+      "start": "09:00",
+      "end": "09:30",
+      "shift": "Matin",
+      "module_code": "UF1.2",
+      "module_label": "Comptabilité générale",
+      "teacher": "M. BILAL EL MORABIT",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Friday",
+      "start": "09:30",
+      "end": "10:15",
+      "shift": "Matin",
+      "module_code": "UF1.8",
+      "module_label": "Sage Compta",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Friday",
+      "start": "10:15",
+      "end": "11:00",
+      "shift": "Matin",
+      "module_code": "UF1.4-STAT",
+      "module_label": "Statistiques",
+      "teacher": "M. BILAL EL MORABIT",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Friday",
+      "start": "11:00",
+      "end": "11:30",
+      "shift": "Matin",
+      "module_code": "UF1.4-MKT",
+      "module_label": "Marketing",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Friday",
+      "start": "14:30",
+      "end": "15:00",
+      "shift": "Soir",
+      "module_code": "UF1.2",
+      "module_label": "Comptabilité générale",
+      "teacher": "M. BILAL EL MORABIT",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Friday",
+      "start": "15:00",
+      "end": "15:30",
+      "shift": "Soir",
+      "module_code": "UF1.8",
+      "module_label": "Sage Compta",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Friday",
+      "start": "15:30",
+      "end": "16:00",
+      "shift": "Soir",
+      "module_code": "UF1.4-STAT",
+      "module_label": "Statistiques",
+      "teacher": "M. BILAL EL MORABIT",
+      "room": "SALLE 5 ETAGE 2"
+    },
+    {
+      "day": "Friday",
+      "start": "16:00",
+      "end": "16:45",
+      "shift": "Soir",
+      "module_code": "UF1.4-MKT",
+      "module_label": "Marketing",
+      "teacher": "M. EL HADI HRAIRA",
+      "room": "SALLE 5 ETAGE 2"
+    }
+  ]
+}
