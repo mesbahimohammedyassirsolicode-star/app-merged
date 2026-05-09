@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Calendar, BookOpen, ClipboardCheck, PenLine, AlertTriangle } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import type { TeacherDashboardData } from '../../api/dashboardService';
+import { analyticsApi } from '../../api/api/analytics';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { EmptyState } from '../ui/empty-state';
@@ -13,6 +15,10 @@ interface TeacherDashboardProps {
 export default function TeacherDashboard({ data, userName }: TeacherDashboardProps) {
   const navigate = useNavigate();
   const { todays_sessions, assigned_modules, attendance, teaching_scope } = data;
+  const { data: analytics } = useQuery({
+    queryKey: ['analytics', 'teacher-overview'],
+    queryFn: () => analyticsApi.overview(),
+  });
 
   return (
     <div className="space-y-6">
@@ -161,6 +167,28 @@ export default function TeacherDashboard({ data, userName }: TeacherDashboardPro
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>AI - Etudiants a risque</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {analytics?.ai.at_risk_students?.length ? (
+            <ul className="space-y-2">
+              {analytics.ai.at_risk_students.slice(0, 5).map((student) => (
+                <li key={student.student_id} className="rounded-lg border border-slate-200 px-3 py-2 text-sm">
+                  <p className="font-medium text-slate-800">{student.student_name}</p>
+                  <p className="text-slate-500">
+                    Score risque: {student.risk_score} | Prediction: {student.prediction} | Note: {student.average_grade}/20
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <EmptyState title="No data available" description="Aucun risque detecte sur votre perimetre." />
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

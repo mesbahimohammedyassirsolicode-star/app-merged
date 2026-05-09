@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/button';
 import {
@@ -15,53 +16,155 @@ import {
   UserCircle,
   FolderOpen,
   Link2,
+  FileDown,
+  Bot,
   X,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Sidebar from '../components/layout/Sidebar';
 import Topbar from '../components/layout/Topbar';
+import { notificationsApi } from '../api/api/notifications';
+import { hasAnyPermission, PERMISSIONS, type PermissionSlug } from '../lib/rbac';
 
-const navItems: { label: string; icon: typeof Home; href: string; roles?: string[] }[] = [
-  { label: 'Tableau de bord', icon: Home, href: '/dashboard' },
-  { label: 'Utilisateurs', icon: Users, href: '/users', roles: ['admin', 'directeur', 'secretariat'] },
-  { label: 'Affectation parent-stagiaires', icon: Link2, href: '/admin/parent-links', roles: ['admin'] },
-  { label: 'Années scolaires', icon: Calendar, href: '/academic/years', roles: ['admin', 'directeur', 'secretariat'] },
-  { label: 'Filières', icon: BookOpen, href: '/academic/filieres', roles: ['admin', 'directeur', 'secretariat'] },
+const navItems: {
+  label: string;
+  icon: typeof Home;
+  href: string;
+  roles?: string[];
+  anyPermission?: PermissionSlug[];
+}[] = [
+  { label: 'Tableau de bord', icon: Home, href: '/dashboard', anyPermission: [PERMISSIONS.DASHBOARD_READ] },
+  {
+    label: 'Utilisateurs',
+    icon: Users,
+    href: '/users',
+    roles: ['admin', 'directeur', 'secretariat'],
+    anyPermission: [PERMISSIONS.USERS_MANAGE],
+  },
+  {
+    label: 'Affectation parent-stagiaires',
+    icon: Link2,
+    href: '/admin/parent-links',
+    roles: ['admin'],
+    anyPermission: [PERMISSIONS.ADMIN_PARENT_LINKS],
+  },
+  {
+    label: 'Années scolaires',
+    icon: Calendar,
+    href: '/academic/years',
+    roles: ['admin', 'directeur', 'secretariat'],
+    anyPermission: [PERMISSIONS.ACADEMIC_MANAGE],
+  },
+  {
+    label: 'Filières',
+    icon: BookOpen,
+    href: '/academic/filieres',
+    roles: ['admin', 'directeur', 'secretariat'],
+    anyPermission: [PERMISSIONS.ACADEMIC_MANAGE],
+  },
   { label: 'Mon groupe', icon: Users, href: '/group', roles: ['student', 'stagiaire'] },
   {
     label: 'Groupes',
     icon: Users,
     href: '/groups',
-    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur'],
+    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'parent'],
+    anyPermission: [PERMISSIONS.GROUPS_MANAGE, PERMISSIONS.GROUPS_READ, PERMISSIONS.PARENT_PORTAL],
   },
   {
     label: 'Modules',
     icon: BookOpen,
     href: '/modules',
-    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire'],
+    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent'],
+    anyPermission: [PERMISSIONS.MODULES_MANAGE, PERMISSIONS.MODULES_READ_CATALOG],
   },
   {
     label: 'Fichiers de cours',
     icon: FolderOpen,
     href: '/course-files',
     roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent'],
+    anyPermission: [PERMISSIONS.COURSE_FILES_READ],
   },
-  { label: 'Présences', icon: ClipboardList, href: '/attendance' },
-  { label: 'Emploi du temps', icon: Calendar, href: '/timetable', roles: ['admin', 'teacher', 'student'] },
-  { label: 'Progression', icon: BarChart, href: '/progress' },
-  { label: 'Évaluations', icon: BarChart, href: '/evaluations' },
-  { label: 'Stages', icon: Briefcase, href: '/stages' },
-  { label: 'Avis (anonyme)', icon: MessageSquare, href: '/feedback' },
-  { label: 'Notifications', icon: Bell, href: '/notifications' },
-  { label: 'Mes enfants', icon: UserCircle, href: '/parent/children', roles: ['parent'] },
+  {
+    label: 'Présences',
+    icon: ClipboardList,
+    href: '/attendance',
+    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire'],
+    anyPermission: [PERMISSIONS.ATTENDANCE_READ, PERMISSIONS.ATTENDANCE_WRITE],
+  },
+  {
+    label: 'Emploi du temps',
+    icon: Calendar,
+    href: '/timetable',
+    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire'],
+    anyPermission: [PERMISSIONS.TIMETABLE_READ],
+  },
+  {
+    label: 'Progression',
+    icon: BarChart,
+    href: '/progress',
+    roles: ['student', 'stagiaire'],
+    anyPermission: [PERMISSIONS.PROGRESS_READ],
+  },
+  {
+    label: 'Évaluations',
+    icon: BarChart,
+    href: '/evaluations',
+    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent'],
+    anyPermission: [PERMISSIONS.EVALUATIONS_READ, PERMISSIONS.EVALUATIONS_WRITE],
+  },
+  {
+    label: 'Saisie des notes',
+    icon: ClipboardList,
+    href: '/grades-entry',
+    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur'],
+    anyPermission: [PERMISSIONS.GRADES_WRITE],
+  },
+  {
+    label: 'Stages',
+    icon: Briefcase,
+    href: '/stages',
+    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur'],
+    anyPermission: [PERMISSIONS.STAGES_MANAGE],
+  },
+  { label: 'Messages', icon: MessageSquare, href: '/messages', anyPermission: [PERMISSIONS.MESSAGES_USE] },
+  { label: 'Avis (anonyme)', icon: MessageSquare, href: '/feedback', anyPermission: [PERMISSIONS.FEEDBACK_SUBMIT] },
+  { label: 'Notifications', icon: Bell, href: '/notifications', anyPermission: [PERMISSIONS.NOTIFICATIONS_READ] },
+  {
+    label: 'AI Assistant',
+    icon: Bot,
+    href: '/ai-assistant',
+    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'parent'],
+    anyPermission: [PERMISSIONS.AI_USE],
+  },
+  { label: 'Mon profil', icon: UserCircle, href: '/profile' },
+  {
+    label: 'Exports CSV',
+    icon: FileDown,
+    href: '/exports',
+    roles: ['admin', 'directeur', 'secretariat', 'teacher', 'formateur'],
+    anyPermission: [PERMISSIONS.EXPORTS_RUN],
+  },
+  {
+    label: 'Mes enfants',
+    icon: UserCircle,
+    href: '/parent/children',
+    roles: ['parent'],
+    anyPermission: [PERMISSIONS.PARENT_PORTAL],
+  },
 ];
 
 export default function DashboardLayout() {
-  const { user, logout } = useAuth();
+  const { user, permissions, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: notificationData } = useQuery({
+    queryKey: ['notifications', 'unread', user?.id],
+    queryFn: () => notificationsApi.list({ page: 1, per_page: 1 }),
+    enabled: !!user,
+    refetchInterval: 30000,
+  });
 
   // Performance: useCallback for stable references passed to memoized Sidebar
   const handleLogout = useCallback(async () => {
@@ -69,10 +172,16 @@ export default function DashboardLayout() {
     navigate('/login');
   }, [logout, navigate]);
 
-  const canSee = (roles?: string[]) => {
-    if (!roles) return true;
-    if (!user?.role) return false;
-    return roles.includes(user.role);
+  const canSee = (roles?: string[], anyPermission?: PermissionSlug[]) => {
+    if (roles?.length) {
+      if (!user?.role || !roles.includes(user.role)) {
+        return false;
+      }
+    }
+    if (anyPermission?.length) {
+      return hasAnyPermission(permissions, anyPermission);
+    }
+    return true;
   };
 
   const resolvedAttendanceHref =
@@ -85,14 +194,14 @@ export default function DashboardLayout() {
   // a new sidebarItems array reference.
   const visibleNav = useMemo(() =>
     navItems
-      .filter((item) => canSee(item.roles))
+      .filter((item) => canSee(item.roles, item.anyPermission))
       .map((item) =>
         item.href === '/attendance'
           ? { ...item, href: resolvedAttendanceHref }
           : item
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user?.role, resolvedAttendanceHref]
+    [user?.role, permissions, resolvedAttendanceHref]
   );
 
   const activeItem = visibleNav.find(
@@ -166,6 +275,8 @@ export default function DashboardLayout() {
           logoutLabel={t('auth.logout')}
           onLogout={handleLogout}
           onOpenMobileNav={() => setMobileOpen(true)}
+          unreadNotifications={notificationData?.meta?.unread_count ?? 0}
+          onOpenNotifications={() => navigate('/notifications')}
         />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <Outlet />

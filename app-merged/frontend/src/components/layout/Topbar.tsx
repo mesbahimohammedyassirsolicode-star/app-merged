@@ -1,4 +1,4 @@
-import { LogOut, Menu } from 'lucide-react';
+import { Bell, LogOut, Menu } from 'lucide-react';
 import { Button } from '../ui/button';
 
 interface TopbarProps {
@@ -9,6 +9,8 @@ interface TopbarProps {
   logoutLabel: string;
   onLogout: () => void;
   onOpenMobileNav: () => void;
+  unreadNotifications?: number;
+  onOpenNotifications: () => void;
 }
 
 export default function Topbar({
@@ -19,6 +21,8 @@ export default function Topbar({
   logoutLabel,
   onLogout,
   onOpenMobileNav,
+  unreadNotifications = 0,
+  onOpenNotifications,
 }: TopbarProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/90 backdrop-blur">
@@ -40,6 +44,14 @@ export default function Topbar({
         </div>
 
         <div className="flex items-center gap-3">
+          <Button variant="secondary" size="icon" onClick={onOpenNotifications} aria-label="Open notifications" className="relative">
+            <Bell className="h-4 w-4" />
+            {unreadNotifications > 0 ? (
+              <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-rose-500 px-1 text-center text-[10px] font-semibold text-white">
+                {unreadNotifications > 99 ? '99+' : unreadNotifications}
+              </span>
+            ) : null}
+          </Button>
           <div className="hidden text-right sm:block">
             <p className="max-w-[180px] truncate text-sm font-semibold text-slate-800">{userName}</p>
             <p className="text-xs capitalize text-slate-500">{userRole}</p>

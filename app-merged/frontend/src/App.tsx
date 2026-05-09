@@ -1,10 +1,10 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import DashboardLayout from './layouts/DashboardLayout';
 import { Loader2 } from 'lucide-react';
 import type { User } from './types/auth';
-import { resolveDashboardPath } from './lib/rbac';
+import { hasAnyPermission, resolveDashboardPath, type PermissionSlug } from './lib/rbac';
 
 // ── Performance: Code-split all pages via React.lazy ──────────────────────────
 // Each page becomes a separate chunk loaded on-demand, reducing initial bundle
@@ -23,6 +23,7 @@ const EvaluationsPage = lazy(() => import('./pages/EvaluationsPage'));
 const StagesPage = lazy(() => import('./pages/StagesPage'));
 const FeedbackPage = lazy(() => import('./pages/FeedbackPage'));
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'));
+const AiAssistantPage = lazy(() => import('./pages/AiAssistantPage'));
 const ParentChildrenPage = lazy(() => import('./pages/parent/ParentChildrenPage'));
 const ParentChildDetailPage = lazy(() => import('./pages/parent/ParentChildDetailPage'));
 const AdminParentStagiaireLinkPage = lazy(() => import('./pages/admin/AdminParentStagiaireLinkPage'));
@@ -32,6 +33,11 @@ const TimetablePage = lazy(() => import('./pages/TimetablePage'));
 const ProgressPage = lazy(() => import('./pages/ProgressPage'));
 const GroupPage = lazy(() => import('./pages/GroupPage'));
 const CourseFilesPage = lazy(() => import('./pages/CourseFilesPage'));
+const GradeEntryPage = lazy(() => import('./pages/GradeEntryPage'));
+const MessagesPage = lazy(() => import('./pages/MessagesPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const DataExportsPage = lazy(() => import('./pages/DataExportsPage'));
+const ForbiddenPage = lazy(() => import('./pages/ForbiddenPage'));
 
 /** Shared loading spinner for lazy-loaded page chunks */
 function PageFallback() {
@@ -62,13 +68,20 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * FIXED: Role-based route guard. Redirects to /dashboard with a 403-style behaviour
- * when an authenticated user does not have the required role. Prevents users from
- * manually navigating to admin-only pages and seeing partial UI even though the API
- * would reject any data fetch.
+ * Role + optional permission guard. Unauthorized users see a dedicated 403 page
+ * (no sensitive UI); API remains the source of truth for data.
  */
-function RoleRoute({ children, roles }: { children: React.ReactNode; roles: User['role'][] }) {
-  const { user, isLoading } = useAuth();
+function RoleRoute({
+  children,
+  roles,
+  anyPermission,
+}: {
+  children: React.ReactNode;
+  roles: User['role'][];
+  anyPermission?: PermissionSlug[];
+}) {
+  const { user, permissions, isLoading } = useAuth();
+  const location = useLocation();
 
   if (isLoading) {
     return (
@@ -79,7 +92,11 @@ function RoleRoute({ children, roles }: { children: React.ReactNode; roles: User
   }
 
   if (!user || !roles.includes(user.role)) {
-    return <Navigate to={resolveDashboardPath(user?.role)} replace />;
+    return <Navigate to="/forbidden" replace state={{ from: location.pathname }} />;
+  }
+
+  if (anyPermission && anyPermission.length > 0 && !hasAnyPermission(permissions, anyPermission)) {
+    return <Navigate to="/forbidden" replace state={{ from: location.pathname }} />;
   }
 
   return <>{children}</>;
@@ -195,13 +212,19 @@ export default function App() {
         <Route
           path="/groups"
           element={
-            <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
+            <RoleRoute
+              roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'parent']}
+              anyPermission={['groups.read', 'groups.manage', 'parent.portal']}
+            >
               <GroupsPage />
             </RoleRoute>
           }
         />
         <Route path="/groups/:id" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire']}>
+          <RoleRoute
+            roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent']}
+            anyPermission={['groups.read', 'groups.manage', 'parent.portal']}
+          >
             <GroupDetailPage />
           </RoleRoute>
         } />
@@ -211,7 +234,10 @@ export default function App() {
           </RoleRoute>
         } />
         <Route path="/timetable" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire']}>
+          <RoleRoute
+            roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire']}
+            anyPermission={['timetable.read']}
+          >
             <TimetablePage />
           </RoleRoute>
         } />
@@ -221,7 +247,10 @@ export default function App() {
           </RoleRoute>
         } />
         <Route path="/modules" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire']}>
+          <RoleRoute
+            roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent']}
+            anyPermission={['modules.manage', 'modules.read_catalog']}
+          >
             <ModulesPage />
           </RoleRoute>
         } />
@@ -256,6 +285,26 @@ export default function App() {
         } />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/ai-assistant" element={
+          <RoleRoute
+            roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'parent']}
+            anyPermission={['ai.use']}
+          >
+            <AiAssistantPage />
+          </RoleRoute>
+        } />
+        <Route path="/grades-entry" element={
+          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
+            <GradeEntryPage />
+          </RoleRoute>
+        } />
+        <Route path="/messages" element={<MessagesPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/exports" element={
+          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
+            <DataExportsPage />
+          </RoleRoute>
+        } />
 
         {/* FIXED: Parent-only routes wrapped in RoleRoute */}
         <Route path="/parent/children" element={
@@ -268,6 +317,8 @@ export default function App() {
             <ParentChildDetailPage />
           </RoleRoute>
         } />
+
+        <Route path="/forbidden" element={<ForbiddenPage />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

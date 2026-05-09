@@ -30,6 +30,7 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'Gérer les utilisateurs', 'slug' => 'users.manage', 'group' => 'users'],
             ['name' => 'Gérer la structure académique', 'slug' => 'academic.manage', 'group' => 'academic'],
             ['name' => 'Gérer les groupes et inscriptions', 'slug' => 'groups.manage', 'group' => 'groups'],
+            ['name' => 'Consulter les groupes', 'slug' => 'groups.read', 'group' => 'groups'],
             ['name' => 'Gérer les modules et syllabus', 'slug' => 'modules.manage', 'group' => 'modules'],
             ['name' => 'Gérer les affectations', 'slug' => 'affectations.manage', 'group' => 'affectations'],
             ['name' => 'Saisir les présences', 'slug' => 'attendance.write', 'group' => 'attendance'],
@@ -38,6 +39,22 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'Consulter les notes', 'slug' => 'grades.read', 'group' => 'grades'],
             ['name' => 'Gérer les stages', 'slug' => 'stages.manage', 'group' => 'stages'],
             ['name' => 'Consulter les feedbacks', 'slug' => 'feedbacks.read', 'group' => 'feedbacks'],
+            ['name' => 'Consulter emploi du temps', 'slug' => 'timetable.read', 'group' => 'timetable'],
+            ['name' => 'Gérer emploi du temps', 'slug' => 'timetable.manage', 'group' => 'timetable'],
+            ['name' => 'Catalogue modules (lecture)', 'slug' => 'modules.read_catalog', 'group' => 'modules'],
+            ['name' => 'Lire évaluations', 'slug' => 'evaluations.read', 'group' => 'grades'],
+            ['name' => 'Gérer évaluations', 'slug' => 'evaluations.write', 'group' => 'grades'],
+            ['name' => 'Exports données', 'slug' => 'exports.run', 'group' => 'exports'],
+            ['name' => 'Tableaux de bord analytiques', 'slug' => 'analytics.read', 'group' => 'analytics'],
+            ['name' => 'Assistant IA', 'slug' => 'ai.use', 'group' => 'ai'],
+            ['name' => 'Messagerie', 'slug' => 'messages.use', 'group' => 'messages'],
+            ['name' => 'Notifications', 'slug' => 'notifications.read', 'group' => 'notifications'],
+            ['name' => 'Liaisons parent-stagiaires', 'slug' => 'admin.parent_links', 'group' => 'admin'],
+            ['name' => 'Fichiers de cours (lecture)', 'slug' => 'course_files.read', 'group' => 'files'],
+            ['name' => 'Progression (lecture)', 'slug' => 'progress.read', 'group' => 'progress'],
+            ['name' => 'Tableau de bord', 'slug' => 'dashboard.read', 'group' => 'dashboard'],
+            ['name' => 'Espace parent', 'slug' => 'parent.portal', 'group' => 'parent'],
+            ['name' => 'Soumettre un avis', 'slug' => 'feedback.submit', 'group' => 'feedbacks'],
         ];
 
         foreach ($permissions as $permission) {
@@ -60,8 +77,62 @@ class RolePermissionSeeder extends Seeder
                     'grades.read',
                     'modules.manage',
                     'affectations.manage',
+                    'groups.read',
+                    'stages.manage',
+                    'timetable.read',
+                    'timetable.manage',
+                    'modules.read_catalog',
+                    'evaluations.read',
+                    'evaluations.write',
+                    'exports.run',
+                    'analytics.read',
+                    'ai.use',
+                    'messages.use',
+                    'notifications.read',
+                    'course_files.read',
+                    'progress.read',
+                    'dashboard.read',
                 ])->pluck('id')
             );
+        }
+
+        $studentRoles = Role::whereIn('slug', ['student', 'stagiaire'])->get();
+        $studentPermIds = Permission::whereIn('slug', [
+            'grades.read',
+            'groups.read',
+            'timetable.read',
+            'modules.read_catalog',
+            'evaluations.read',
+            'attendance.read',
+            'course_files.read',
+            'progress.read',
+            'messages.use',
+            'notifications.read',
+            'dashboard.read',
+            'feedback.submit',
+        ])->pluck('id');
+        foreach ($studentRoles as $r) {
+            $r->permissions()->sync($studentPermIds);
+        }
+
+        $parentRole = Role::where('slug', 'parent')->first();
+        if ($parentRole) {
+            $parentRole->permissions()->sync(Permission::whereIn('slug', [
+                'grades.read',
+                'groups.read',
+                'modules.read_catalog',
+                'evaluations.read',
+                'attendance.read',
+                'course_files.read',
+                'progress.read',
+                'messages.use',
+                'notifications.read',
+                'dashboard.read',
+                'analytics.read',
+                'ai.use',
+                'parent.portal',
+                'feedback.submit',
+            ])->pluck('id'));
         }
     }
 }

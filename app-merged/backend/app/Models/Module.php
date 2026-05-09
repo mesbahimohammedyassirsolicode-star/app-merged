@@ -43,6 +43,19 @@ class Module extends Model
             ->withTimestamps();
     }
 
+    /**
+     * Alias used by API resources expecting English naming.
+     */
+    public function groups(): BelongsToMany
+    {
+        return $this->groupes();
+    }
+
+    public function trainers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'module_trainer', 'module_id', 'user_id')->withTimestamps();
+    }
+
     public function syllabusItems(): HasMany
     {
         return $this->hasMany(SyllabusItem::class);

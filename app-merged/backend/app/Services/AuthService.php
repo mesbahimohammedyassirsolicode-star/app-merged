@@ -28,8 +28,8 @@ class AuthService
         }
 
         $this->loadUserProfile($user);
-        $user->load('roles:id,name,slug');
-        $permissions = $user->roles()->with('permissions:id,slug')->get()->pluck('permissions')->flatten()->pluck('slug')->unique()->values();
+        $user->load(['roles.permissions:id,slug']);
+        $permissions = $user->effectivePermissionSlugs();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return [
@@ -38,7 +38,7 @@ class AuthService
             'role' => (string) $user->role,
             'user' => $user,
             'roles' => $user->roles,
-            'permissions' => $permissions,
+            'permissions' => $permissions->all(),
         ];
     }
 
@@ -67,14 +67,14 @@ class AuthService
     public function getUserProfileData(User $user): array
     {
         $this->loadUserProfile($user);
-        $user->load('roles:id,name,slug');
-        $permissions = $user->roles()->with('permissions:id,slug')->get()->pluck('permissions')->flatten()->pluck('slug')->unique()->values();
+        $user->load(['roles.permissions:id,slug']);
+        $permissions = $user->effectivePermissionSlugs();
 
         return [
             'role' => (string) $user->role,
             'user' => $user,
             'roles' => $user->roles,
-            'permissions' => $permissions,
+            'permissions' => $permissions->all(),
         ];
     }
 }

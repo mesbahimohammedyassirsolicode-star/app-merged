@@ -51,6 +51,8 @@ class AttendanceRiskController extends BaseApiController
             if (! $isLinkedChild) {
                 return $this->error('Acces refuse.', 403);
             }
+        } elseif (! in_array($user->role, ['admin', 'directeur', 'secretariat'], true)) {
+            return $this->error('Acces refuse.', 403);
         }
 
         $data = $this->attendanceRiskService->summaryForStagiaire($stagiaire, (int) $anneeId);

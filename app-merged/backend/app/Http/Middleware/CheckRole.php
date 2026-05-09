@@ -16,11 +16,25 @@ class CheckRole
         'admin',
         'directeur',
         'secretariat',
+        'trainer',
         'teacher',
         'formateur',
         'student',
         'stagiaire',
         'parent',
+    ];
+
+    /**
+     * Canonical RBAC aliases.
+     *
+     * - trainer => teacher|formateur
+     * - student => student|stagiaire
+     */
+    private const ROLE_ALIASES = [
+        'trainer' => ['trainer', 'teacher', 'formateur'],
+        'student' => ['student', 'stagiaire'],
+        'admin' => ['admin'],
+        'parent' => ['parent'],
     ];
 
     public function handle(Request $request, Closure $next, string ...$roles): Response
@@ -47,7 +61,7 @@ class CheckRole
             return response()->json(['message' => 'Role utilisateur invalide.'], Response::HTTP_FORBIDDEN);
         }
 
-        if (! in_array($userRole, $allowedRoles, true)) {
+        if (! $this->hasAnyRole($userRole, $allowedRoles)) {
             return response()->json(['message' => 'Acces refuse.'], Response::HTTP_FORBIDDEN);
         }
 
@@ -92,5 +106,20 @@ class CheckRole
         }
 
         return array_values(array_unique($resolved));
+    }
+
+    /**
+     * @param  array<int, string>  $allowedRoles
+     */
+    private function hasAnyRole(string $userRole, array $allowedRoles): bool
+    {
+        foreach ($allowedRoles as $allowedRole) {
+            $resolved = self::ROLE_ALIASES[$allowedRole] ?? [$allowedRole];
+            if (in_array($userRole, $resolved, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

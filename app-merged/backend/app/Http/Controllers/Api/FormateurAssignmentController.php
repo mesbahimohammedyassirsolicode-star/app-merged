@@ -159,6 +159,11 @@ class FormateurAssignmentController extends Controller
                 ->where('academic_year', (int) $validated['academic_year'])
                 ->delete();
 
+            $userId = (int) Formateur::query()->whereKey((int) $validated['teacher_id'])->value('user_id');
+            if ($userId > 0) {
+                DB::table('module_trainer')->where('user_id', $userId)->delete();
+            }
+
             $rows = collect($validated['module_ids'])
                 ->map(fn ($moduleId) => (int) $moduleId)
                 ->unique()
@@ -174,6 +179,24 @@ class FormateurAssignmentController extends Controller
 
             if (! empty($rows)) {
                 DB::table('teacher_module')->insert($rows);
+            }
+
+            if ($userId > 0) {
+                $moduleTrainerRows = collect($validated['module_ids'])
+                    ->map(fn ($moduleId) => (int) $moduleId)
+                    ->unique()
+                    ->values()
+                    ->map(fn ($moduleId) => [
+                        'user_id' => $userId,
+                        'module_id' => $moduleId,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ])
+                    ->all();
+
+                if (! empty($moduleTrainerRows)) {
+                    DB::table('module_trainer')->insert($moduleTrainerRows);
+                }
             }
         });
 

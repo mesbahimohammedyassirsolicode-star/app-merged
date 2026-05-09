@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Filiere;
+use App\Services\ObjectScopeService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,6 +19,10 @@ use Illuminate\Http\Request;
  */
 class TimetableDataController extends BaseApiController
 {
+    public function __construct(
+        private ObjectScopeService $objectScopeService
+    ) {}
+
     private const DAY_OFFSETS = [
         'monday' => 0,
         'tuesday' => 1,
@@ -41,8 +47,10 @@ class TimetableDataController extends BaseApiController
      * GET /api/v1/timetable-data/filieres
      * Returns one entry per filière extracted from the emploi JSON files.
      */
-    public function filieres(): JsonResponse
+    public function filieres(Request $request): JsonResponse
     {
+        $allowed = array_flip($this->objectScopeService->accessibleTimetableFiliereCodes($request->user()));
+
         $items = [];
         $seen = [];
 
@@ -56,6 +64,10 @@ class TimetableDataController extends BaseApiController
             $code = strtoupper(trim((string) ($meta['filiere_code'] ?? '')));
 
             if ($code === '' || isset($seen[$code])) {
+                continue;
+            }
+
+            if (! isset($allowed[$code])) {
                 continue;
             }
 
@@ -84,6 +96,8 @@ class TimetableDataController extends BaseApiController
      */
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Filiere::class);
+
         $code = strtoupper(trim((string) ($request->query('filiere_code', ''))));
         $weekStart = $request->query('week_start');
 
@@ -93,6 +107,7 @@ class TimetableDataController extends BaseApiController
             return $this->success($this->emptyPayload($start, $end, null));
         }
 
+        $this->objectScopeService->assertCanReadTimetableCode($request->user(), $code);
         $data = $this->findByCode($code);
 
         if (! $data) {

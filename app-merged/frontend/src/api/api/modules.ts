@@ -56,6 +56,33 @@ export interface MyModulesPayload {
   };
 }
 
+export interface TrainerStudent {
+  id: number;
+  name: string;
+}
+
+export interface TrainerGroup {
+  id: number;
+  label: string;
+  students: TrainerStudent[];
+}
+
+export interface TrainerModule {
+  id: number;
+  code: string;
+  label: string;
+  groups: TrainerGroup[];
+  groupes: TrainerGroup[];
+}
+
+interface TrainerModuleResponse {
+  id: number;
+  code: string;
+  label: string;
+  groups?: TrainerGroup[];
+  groupes?: TrainerGroup[];
+}
+
 export const modulesApi = {
   list: (params?: { filiere_id?: number }) =>
     api.get<ApiResponse<Module[]>>('/modules', { params }).then(unwrapData),
@@ -93,4 +120,21 @@ export const modulesApi = {
     params?: { academic_year?: number; date?: string },
   ) =>
     api.put<ApiResponse<MyModuleRow>>(`/modules/${moduleId}/progress`, body, { params }).then(unwrapData),
+  trainerModules: async (): Promise<TrainerModule[]> => {
+    const modules = await api.get<ApiResponse<TrainerModuleResponse[]>>('/trainer/modules').then(unwrapData);
+
+    return modules.map((module) => {
+      const normalizedGroups = Array.isArray(module.groups)
+        ? module.groups
+        : (Array.isArray(module.groupes) ? module.groupes : []);
+
+      return {
+        id: module.id,
+        code: module.code,
+        label: module.label,
+        groups: normalizedGroups,
+        groupes: normalizedGroups,
+      };
+    });
+  },
 };

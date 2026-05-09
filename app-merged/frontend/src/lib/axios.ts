@@ -1,6 +1,23 @@
 import axios from 'axios';
 
-const baseURL = (import.meta.env.VITE_API_URL || 'http://localhost:8000/api').replace(/\/$/, '') + '/v1';
+function resolveApiBaseUrl(): string {
+    const envApiUrl = import.meta.env.VITE_API_URL;
+
+    if (import.meta.env.DEV === true) {
+        const devBase = (envApiUrl || 'http://localhost:8000/api').replace(/\/$/, '');
+        return `${devBase}/v1`;
+    }
+
+    if (!envApiUrl || !envApiUrl.startsWith('https://')) {
+        throw new Error(
+            'Invalid VITE_API_URL: production builds require an HTTPS URL (e.g. https://api.example.com/api).'
+        );
+    }
+
+    return `${envApiUrl.replace(/\/$/, '')}/v1`;
+}
+
+const baseURL = resolveApiBaseUrl();
 
 const api = axios.create({
     baseURL,

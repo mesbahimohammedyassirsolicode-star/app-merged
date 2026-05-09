@@ -2,15 +2,48 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Formateur;
+use App\Models\Stage;
+use App\Services\ObjectScopeService;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Gate;
 
-class StoreStageRequest extends FormRequest
+class StoreStageRequest extends ApiFormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+        if (! $user || ! Gate::forUser($user)->allows('create', Stage::class)) {
+            return false;
+        }
+
+        $stagiaireId = (int) $this->input('stagiaire_id');
+        if ($stagiaireId > 0) {
+            try {
+                app(ObjectScopeService::class)->findScopedStagiaireOrFail($user, $stagiaireId);
+            } catch (AuthorizationException) {
+                return false;
+            }
+        }
+
+        if (! in_array((string) $user->role, ['teacher', 'formateur'], true)) {
+            return true;
+        }
+
+        $formateurId = (int) $this->input('formateur_id');
+        if ($formateurId <= 0) {
+            return true;
+        }
+
+        return Formateur::query()
+            ->whereKey($formateurId)
+            ->where('user_id', (int) $user->id)
+            ->exists();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [

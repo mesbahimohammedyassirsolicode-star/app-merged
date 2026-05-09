@@ -11,13 +11,21 @@ class EnsurePermission
     public function handle(Request $request, Closure $next, string $permission): Response
     {
         if (! $request->user()) {
-            return response()->json(['message' => 'Non authentifié.'], 401);
+            return response()->json([
+                'success' => false,
+                'message' => 'Non authentifie.',
+                'errors' => (object) [],
+            ], 401);
         }
 
-        if ($request->user()->hasPermission($permission)) {
+        if ($request->user()->hasEffectivePermission($permission)) {
             return $next($request);
         }
 
-        return response()->json(['message' => 'Accès refusé.'], 403);
+        return response()->json([
+            'success' => false,
+            'message' => 'Acces refuse.',
+            'errors' => (object) [],
+        ], 403);
     }
 }

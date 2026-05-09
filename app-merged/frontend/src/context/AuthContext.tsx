@@ -11,15 +11,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const [user, setUser] = useState<User | null>(null);
+    const [permissions, setPermissions] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const { user: userData } = await authService.getMe();
+                const { user: userData, permissions: perm } = await authService.getMe();
                 setUser(userData);
+                setPermissions(perm ?? []);
             } catch {
                 setUser(null);
+                setPermissions([]);
             } finally {
                 setIsLoading(false);
             }
@@ -32,6 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setAccessToken(null);
             queryClient.clear();
             setUser(null);
+            setPermissions([]);
             navigate('/login', { replace: true });
         };
         window.addEventListener('auth:unauthorized', handleUnauthorized);
@@ -43,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setAccessToken(response.access_token);
         queryClient.clear();
         setUser(response.user);
+        setPermissions(response.permissions ?? []);
         return response.user;
     };
 
@@ -53,11 +58,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setAccessToken(null);
             queryClient.clear();
             setUser(null);
+            setPermissions([]);
         }
     };
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, logout }}>
+        <AuthContext.Provider value={{ user, permissions, isAuthenticated: !!user, isLoading, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

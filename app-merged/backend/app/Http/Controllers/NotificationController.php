@@ -13,12 +13,16 @@ class NotificationController extends Controller
         $paginator = Notification::where('user_id', $request->user()->id)
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
+        $unreadCount = Notification::where('user_id', $request->user()->id)
+            ->whereNull('read_at')
+            ->count();
 
         return $this->success($paginator->items(), [
             'current_page' => $paginator->currentPage(),
             'last_page' => $paginator->lastPage(),
             'per_page' => $paginator->perPage(),
             'total' => $paginator->total(),
+            'unread_count' => $unreadCount,
         ]);
     }
 
@@ -30,5 +34,14 @@ class NotificationController extends Controller
         $notification->update(['read_at' => now()]);
 
         return $this->success($notification->fresh());
+    }
+
+    public function markAllAsRead(Request $request)
+    {
+        Notification::where('user_id', $request->user()->id)
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
+        return $this->success(['marked' => true]);
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -89,9 +90,55 @@ class User extends Authenticatable
         return $this->roles()->whereHas('permissions', fn ($q) => $q->where('slug', $slug))->exists();
     }
 
+    /**
+     * DB permissions merged with config/rbac.php fallback (single source for API + middleware).
+     */
+    public function effectivePermissionSlugs(): Collection
+    {
+        $role = strtolower(trim((string) ($this->role ?? '')));
+        $aliases = (array) config('rbac.role_slug_aliases', []);
+        $lookupRoles = array_values(array_unique(array_filter([$role, $aliases[$role] ?? null])));
+
+        $fromConfig = collect();
+        foreach ($lookupRoles as $r) {
+            $fromConfig = $fromConfig->merge((array) config('rbac.role_permissions.'.$r, []));
+        }
+
+        $fromDb = collect();
+        if ($this->relationLoaded('roles')) {
+            foreach ($this->roles as $roleModel) {
+                $fromDb = $fromDb->merge(
+                    $roleModel->relationLoaded('permissions')
+                        ? $roleModel->permissions->pluck('slug')
+                        : $roleModel->permissions()->pluck('slug')
+                );
+            }
+        } else {
+            $fromDb = $this->roles()->with('permissions')->get()
+                ->flatMap(fn (Role $roleModel) => $roleModel->permissions->pluck('slug'));
+        }
+
+        return $fromDb->merge($fromConfig)->unique()->values();
+    }
+
+    public function hasEffectivePermission(string $slug): bool
+    {
+        return $this->effectivePermissionSlugs()->contains($slug);
+    }
+
     public function modules(): BelongsToMany
     {
+        return $this->belongsToMany(Module::class, 'module_trainer', 'user_id', 'module_id')->withTimestamps();
+    }
+
+    public function legacyModules(): BelongsToMany
+    {
         return $this->belongsToMany(Module::class, 'formateur_module', 'user_id', 'module_id')->withTimestamps();
+    }
+
+    public function trainerModules(): BelongsToMany
+    {
+        return $this->belongsToMany(Module::class, 'module_trainer', 'user_id', 'module_id')->withTimestamps();
     }
 
     public function groups(): BelongsToMany

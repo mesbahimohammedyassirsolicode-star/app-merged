@@ -26,7 +26,9 @@ class CourseFileController extends Controller
             $query->where('groupe_id', (int) $request->input('groupe_id'));
         }
         if ($request->filled('module_id')) {
-            $query->where('module_id', (int) $request->input('module_id'));
+            $moduleId = (int) $request->input('module_id');
+            $this->courseFileService->assertTrainerCanScopeModule($request->user(), $moduleId);
+            $query->where('module_id', $moduleId);
         }
 
         $perPage = (int) $request->input('per_page', 20);

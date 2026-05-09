@@ -3,6 +3,7 @@ import { Users, AlertTriangle, GraduationCap } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import type { ParentDashboardData } from '../../api/dashboardService';
 import { parentApi } from '../../api/api/parent';
+import { analyticsApi } from '../../api/api/analytics';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { EmptyState } from '../ui/empty-state';
@@ -19,6 +20,10 @@ export default function ParentDashboard({ data, userName }: ParentDashboardProps
     const { data: stagiaires, isLoading: isLoadingStagiaires } = useQuery({
         queryKey: ['parent', 'stagiaires', 'dashboard'],
         queryFn: parentApi.getStagiaires,
+    });
+    const { data: analytics } = useQuery({
+        queryKey: ['analytics', 'parent-overview'],
+        queryFn: () => analyticsApi.overview(),
     });
     const total = stagiaires?.length ?? 0;
 
@@ -38,6 +43,16 @@ export default function ParentDashboard({ data, userName }: ParentDashboardProps
                     <CardContent>
                         <p className="text-3xl font-semibold tracking-tight text-slate-900">{total}</p>
                         <p className="mt-1 text-xs text-slate-500">Comptes liés à votre profil</p>
+                    </CardContent>
+                </Card>
+                <Card className="border-slate-200 shadow-sm">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium text-slate-700">Taux de présence</CardTitle>
+                        <Users className="h-5 w-5 text-emerald-600" aria-hidden />
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-3xl font-semibold tracking-tight text-slate-900">{analytics?.kpis.attendance_rate ?? 0}%</p>
+                        <p className="mt-1 text-xs text-slate-500">Moyenne enfants suivis</p>
                     </CardContent>
                 </Card>
             </div>
@@ -169,6 +184,16 @@ export default function ParentDashboard({ data, userName }: ParentDashboardProps
                     <div className="flex flex-wrap gap-3">
                         <Button onClick={() => navigate('/parent/children')}>Liste des stagiaires</Button>
                     </div>
+                    {analytics?.ai.recommendations?.length ? (
+                        <div className="mt-4 rounded-lg border border-indigo-200 bg-indigo-50 p-3">
+                            <p className="text-sm font-semibold text-indigo-900">Recommandations intelligentes</p>
+                            <ul className="mt-2 space-y-1 text-xs text-indigo-800">
+                                {analytics.ai.recommendations.map((recommendation) => (
+                                    <li key={recommendation}>- {recommendation}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    ) : null}
                 </CardContent>
             </Card>
         </div>

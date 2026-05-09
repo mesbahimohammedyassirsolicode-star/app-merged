@@ -3,31 +3,76 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
-use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
+    public function __construct(
+        private NotificationService $notificationService
+    ) {}
+
     /**
      * Get inbox for the current user.
      */
     public function index(Request $request)
     {
-        $messages = Message::with(['sender', 'receiver'])
-            ->where('receiver_id', $request->user()->id)
-            ->orWhere('sender_id', $request->user()->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $userId = (int) $request->user()->id;
+        $peerId = (int) $request->integer('peer_id', 0);
 
-        return $this->success(
-            $messages->items(),
-            [
+        if ($peerId > 0) {
+            $messages = Message::query()
+                ->with(['sender:id,name', 'receiver:id,name'])
+                ->where(function ($q) use ($userId, $peerId) {
+                    $q->where('sender_id', $userId)->where('receiver_id', $peerId);
+                })
+                ->orWhere(function ($q) use ($userId, $peerId) {
+                    $q->where('sender_id', $peerId)->where('receiver_id', $userId);
+                })
+                ->orderBy('created_at')
+                ->paginate(50);
+
+            return $this->success($messages->items(), [
                 'current_page' => $messages->currentPage(),
                 'last_page' => $messages->lastPage(),
                 'per_page' => $messages->perPage(),
                 'total' => $messages->total(),
-            ]
-        );
+            ]);
+        }
+
+        $messages = Message::query()
+            ->with(['sender:id,name', 'receiver:id,name'])
+            ->where('sender_id', $userId)
+            ->orWhere('receiver_id', $userId)
+            ->latest('created_at')
+            ->get();
+
+        $conversations = $messages
+            ->groupBy(function (Message $message) use ($userId) {
+                return (int) ($message->sender_id === $userId ? $message->receiver_id : $message->sender_id);
+            })
+            ->map(function ($items, $peerId) use ($userId) {
+                $latest = $items->sortByDesc('created_at')->first();
+                $unread = $items->where('receiver_id', $userId)->whereNull('read_at')->count();
+                $peer = (int) $peerId === (int) $latest->sender_id ? $latest->sender : $latest->receiver;
+
+                return [
+                    'peer' => [
+                        'id' => (int) $peer->id,
+                        'name' => (string) $peer->name,
+                    ],
+                    'last_message' => [
+                        'id' => (int) $latest->id,
+                        'content' => (string) $latest->content,
+                        'created_at' => $latest->created_at,
+                        'sender_id' => (int) $latest->sender_id,
+                    ],
+                    'unread_count' => $unread,
+                ];
+            })
+            ->values();
+
+        return $this->success($conversations);
     }
 
     /**
@@ -46,7 +91,19 @@ class MessageController extends Controller
             'content' => $request->content,
         ]);
 
-        return $this->created($message);
+        if ($message->receiver) {
+            $this->notificationService->notify(
+                $message->receiver,
+                'Nouveau message',
+                'Vous avez recu un nouveau message de '.$request->user()->name.'.',
+                'message_received',
+                null,
+                [],
+                ['message_id' => (int) $message->id, 'sender_id' => (int) $message->sender_id]
+            );
+        }
+
+        return $this->created($message->load(['sender:id,name', 'receiver:id,name']));
     }
 
     /**

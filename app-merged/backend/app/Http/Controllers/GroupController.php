@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Groupe;
 use App\Models\Niveau;
+use App\Models\Stagiaire;
 use App\Models\User;
 use App\Services\AttendanceService;
 use Illuminate\Http\Request;
@@ -30,6 +31,13 @@ class GroupController extends Controller
                 $query->whereRaw('0 = 1');
             } else {
                 $query->whereIn('id', $groupeIds);
+            }
+        } elseif ($user->role === 'parent') {
+            $parentGroupIds = $this->parentLinkedGroupeIds($user);
+            if ($parentGroupIds === []) {
+                $query->whereRaw('0 = 1');
+            } else {
+                $query->whereIn('id', $parentGroupIds);
             }
         } elseif ($request->filled('niveau_id')) {
             $query->where('niveau_id', (int) $request->niveau_id);
@@ -112,6 +120,15 @@ class GroupController extends Controller
             return $this->success($group->load(['filiere', 'niveau.filiere', 'anneeScolaire', 'stagiaires.user'])->loadCount('students'));
         }
 
+        if ($user->role === 'parent') {
+            $parentGroupIds = $this->parentLinkedGroupeIds($user);
+            if (! in_array((int) $group->id, $parentGroupIds, true)) {
+                abort(403, 'Acces refuse a ce groupe.');
+            }
+
+            return $this->success($group->load(['filiere', 'niveau.filiere', 'anneeScolaire', 'stagiaires.user'])->loadCount('students'));
+        }
+
         return $this->success($group->load(['filiere', 'niveau.filiere', 'anneeScolaire', 'stagiaires.user'])->loadCount('students'));
     }
 
@@ -176,6 +193,31 @@ class GroupController extends Controller
     private function isStudentRole(?string $role): bool
     {
         return $role === 'student' || $role === 'stagiaire';
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function parentLinkedGroupeIds(User $user): array
+    {
+        $user->loadMissing('parent');
+        $parent = $user->parent;
+        if (! $parent) {
+            return [];
+        }
+
+        $ids = $parent->stagiaires()
+            ->with('groupes:id')
+            ->get()
+            ->flatMap(fn (Stagiaire $s) => $s->groupes->pluck('id'))
+            ->merge($parent->stagiaires()->pluck('groupe_id'))
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values()
+            ->all();
+
+        return $ids;
     }
 
     private function teacherGroupIds(User $user): array

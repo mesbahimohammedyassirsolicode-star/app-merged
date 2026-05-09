@@ -27,11 +27,15 @@ class GradesSummaryController extends BaseApiController
         $groupe = Groupe::findOrFail((int) $groupId);
 
         $user = $request->user();
-        if ($user->role === 'teacher' || $user->role === 'formateur') {
+        if (in_array($user->role, ['admin', 'directeur', 'secretariat'], true)) {
+            // full access
+        } elseif ($user->role === 'teacher' || $user->role === 'formateur') {
             $isAssigned = $this->hasTeacherModuleGroupAccess($user->id, $module->id, $groupe->id);
             if (! $isAssigned) {
                 return $this->error('Acces refuse.', 403);
             }
+        } else {
+            return $this->error('Acces refuse.', 403);
         }
 
         $data = $this->gradesSummaryService->summaryForModuleGroup($module, $groupe);
@@ -69,6 +73,8 @@ class GradesSummaryController extends BaseApiController
             if (! $isLinkedChild) {
                 return $this->error('Acces refuse.', 403);
             }
+        } elseif (! in_array($user->role, ['admin', 'directeur', 'secretariat'], true)) {
+            return $this->error('Acces refuse.', 403);
         }
 
         $data = $this->gradesSummaryService->summaryForStagiaireAndModule($stagiaire, $module, $groupe);

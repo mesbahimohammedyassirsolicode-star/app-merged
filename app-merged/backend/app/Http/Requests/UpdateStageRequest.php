@@ -2,15 +2,24 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Stage;
+use Illuminate\Support\Facades\Gate;
 
-class UpdateStageRequest extends FormRequest
+class UpdateStageRequest extends ApiFormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+        $stage = $this->route('stage');
+
+        return $user !== null
+            && $stage instanceof Stage
+            && Gate::forUser($user)->allows('update', $stage);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [

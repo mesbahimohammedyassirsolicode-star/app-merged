@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Models\CourseFile;
+use App\Models\Module;
 use App\Models\Stagiaire;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\UploadedFile;
@@ -119,12 +121,14 @@ class CourseFileService
         $uid = (int) $user->id;
 
         if ($moduleId !== null) {
-            $teaches = DB::table('teacher_module')
-                ->where('teacher_id', $fid)
-                ->where('module_id', $moduleId)
+            $teaches = Module::query()
+                ->whereKey($moduleId)
+                ->where(function (Builder $m) use ($uid, $fid) {
+                    $this->applyTrainerModuleScope($m, $uid, $fid);
+                })
                 ->exists();
             if (! $teaches) {
-                throw ValidationException::withMessages(['module_id' => 'Vous n’êtes pas affecté à ce module.']);
+                throw new AuthorizationException('Forbidden.');
             }
         }
 
@@ -148,7 +152,25 @@ class CourseFileService
             return;
         }
 
-        throw ValidationException::withMessages(['groupe_id' => 'Vous n’êtes pas autorisé à publier pour ce groupe.']);
+        throw new AuthorizationException('Forbidden.');
+    }
+
+    public function assertTrainerCanScopeModule(User $user, int $moduleId): void
+    {
+        if (! in_array((string) $user->role, ['teacher', 'formateur'], true)) {
+            return;
+        }
+
+        $ownsModule = Module::query()
+            ->whereKey($moduleId)
+            ->where(function (Builder $m) use ($user) {
+                $this->applyTrainerModuleScope($m, (int) $user->id, (int) ($user->formateur?->id ?? 0));
+            })
+            ->exists();
+
+        if (! $ownsModule) {
+            throw new AuthorizationException('Forbidden.');
+        }
     }
 
     public function store(User $uploader, UploadedFile $file, array $meta): CourseFile
@@ -224,40 +246,12 @@ class CourseFileService
 
     private function scopeForTeacher(Builder $q, User $user): Builder
     {
-        $formateurId = $user->formateur?->id;
-        if (! $formateurId) {
+        if (! $user->formateur?->id) {
             return $q->whereRaw('1 = 0');
         }
 
-        $uid = (int) $user->id;
-        $fid = (int) $formateurId;
-
-        return $q->where(function (Builder $outer) use ($uid, $fid) {
-            $outer->where(function (Builder $w) use ($fid) {
-                $w->whereNull('course_files.module_id')
-                    ->orWhereExists(function ($s) use ($fid) {
-                        $s->selectRaw('1')
-                            ->from('teacher_module')
-                            ->whereColumn('teacher_module.module_id', 'course_files.module_id')
-                            ->where('teacher_module.teacher_id', $fid);
-                    });
-            })->where(function (Builder $w) use ($uid, $fid) {
-                $w->whereNull('course_files.groupe_id')
-                    ->orWhereExists(function ($s) use ($uid) {
-                        $s->selectRaw('1')
-                            ->from('formateur_group')
-                            ->whereColumn('formateur_group.groupe_id', 'course_files.groupe_id')
-                            ->where('formateur_group.user_id', $uid);
-                    })
-                    ->orWhereExists(function ($s) use ($fid) {
-                        $s->selectRaw('1')
-                            ->from('module_groupe')
-                            ->join('teacher_module', 'teacher_module.module_id', '=', 'module_groupe.module_id')
-                            ->whereColumn('module_groupe.groupe_id', 'course_files.groupe_id')
-                            ->whereColumn('module_groupe.module_id', 'course_files.module_id')
-                            ->where('teacher_module.teacher_id', $fid);
-                    });
-            });
+        return $q->whereHas('module', function (Builder $m) use ($user) {
+            $this->applyTrainerModuleScope($m, (int) $user->id, (int) ($user->formateur?->id ?? 0));
         });
     }
 
@@ -350,44 +344,28 @@ class CourseFileService
 
     private function teacherCanAccessFile(User $user, CourseFile $file): bool
     {
-        $formateurId = $user->formateur?->id;
-        if (! $formateurId) {
+        if (! $user->formateur?->id) {
             return false;
         }
-        $fid = (int) $formateurId;
-        $uid = (int) $user->id;
 
-        if ($file->module_id !== null) {
-            $teaches = DB::table('teacher_module')
-                ->where('teacher_id', $fid)
-                ->where('module_id', $file->module_id)
-                ->exists();
-            if (! $teaches) {
-                return false;
-            }
-        }
-
-        if ($file->groupe_id === null) {
-            return true;
-        }
-
-        $inGroup = DB::table('formateur_group')
-            ->where('user_id', $uid)
-            ->where('groupe_id', $file->groupe_id)
+        return CourseFile::query()
+            ->whereKey($file->id)
+            ->whereHas('module', function (Builder $m) use ($user) {
+                $this->applyTrainerModuleScope($m, (int) $user->id, (int) ($user->formateur?->id ?? 0));
+            })
             ->exists();
+    }
 
-        if ($inGroup) {
-            return true;
-        }
-
-        if ($file->module_id !== null) {
-            return DB::table('module_groupe')
-                ->where('groupe_id', $file->groupe_id)
-                ->where('module_id', $file->module_id)
-                ->exists();
-        }
-
-        return false;
+    private function applyTrainerModuleScope(Builder $moduleQuery, int $userId, int $formateurId): void
+    {
+        $moduleQuery
+            ->whereHas('trainers', fn (Builder $t) => $t->where('users.id', $userId))
+            ->orWhereExists(function ($sq) use ($formateurId) {
+                $sq->selectRaw('1')
+                    ->from('teacher_module')
+                    ->whereColumn('teacher_module.module_id', 'modules.id')
+                    ->where('teacher_module.teacher_id', $formateurId);
+            });
     }
 
     private function studentCanAccessFile(User $user, CourseFile $file): bool
