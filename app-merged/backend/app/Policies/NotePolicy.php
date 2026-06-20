@@ -9,7 +9,7 @@ class NotePolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        if ($user->role === 'admin') {
+        if ($user->hasAnyRole('admin')) {
             return true;
         }
 
@@ -23,15 +23,15 @@ class NotePolicy
 
     public function view(User $user, Note $note): bool
     {
-        if ($user->role === 'teacher') {
+        if ($user->hasAnyRole('formateur')) {
             return (int) $note->evaluation->affectation->formateur->user_id === (int) $user->id;
         }
 
-        if ($user->role === 'student') {
+        if ($user->hasAnyRole('stagiaire')) {
             return (int) $note->stagiaire->user_id === (int) $user->id;
         }
 
-        if ($user->role === 'parent') {
+        if ($user->hasAnyRole('parent')) {
             return $user->parent->children()->where('stagiaires.id', $note->stagiaire_id)->exists();
         }
 
@@ -40,18 +40,18 @@ class NotePolicy
 
     public function create(User $user): bool
     {
-        return $user->role === 'teacher';
+        return $user->hasAnyRole('formateur');
     }
 
     public function update(User $user, Note $note): bool
     {
-        return $user->role === 'teacher'
+        return $user->hasAnyRole('formateur')
             && (int) $note->evaluation->affectation->formateur->user_id === (int) $user->id;
     }
 
     public function delete(User $user, Note $note): bool
     {
-        return $user->role === 'teacher'
+        return $user->hasAnyRole('formateur')
             && (int) $note->evaluation->affectation->formateur->user_id === (int) $user->id;
     }
 }

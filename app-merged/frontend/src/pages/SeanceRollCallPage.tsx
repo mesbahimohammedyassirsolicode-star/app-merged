@@ -68,7 +68,7 @@ export default function SeanceRollCallPage() {
       <Button variant="ghost" size="sm" onClick={() => navigate('/attendance/seances')}>
         <ArrowLeft className="w-4 h-4 mr-2" /> Retour
       </Button>
-      <h1 className="text-2xl font-bold text-gray-900">Appel — Séance #{id}</h1>
+      <h1 className="text-2xl font-bold text-theme-text-primary">Appel — Séance #{id}</h1>
       {isLoading ? (
         <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary-600" /></div>
       ) : (

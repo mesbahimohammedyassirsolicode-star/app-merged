@@ -74,7 +74,9 @@ class CheckRole
      */
     private function resolveUserRole(object $user): ?string
     {
-        $role = strtolower(trim((string) ($user->role ?? '')));
+        $role = method_exists($user, 'canonicalRole')
+            ? $user->canonicalRole()
+            : strtolower(trim((string) ($user->role ?? '')));
         if ($role !== '' && in_array($role, self::ALLOWED_ROLES, true)) {
             return $role;
         }

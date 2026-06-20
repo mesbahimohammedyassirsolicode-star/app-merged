@@ -56,7 +56,7 @@ export default function TakeAttendancePage() {
     () => [
       columnHelper.accessor('name', {
         header: 'Stagiaire',
-        cell: (info) => <span className="font-medium text-gray-900">{info.getValue()}</span>,
+        cell: (info) => <span className="font-medium text-theme-text-primary">{info.getValue()}</span>,
       }),
       columnHelper.display({
         id: 'status',
@@ -65,7 +65,7 @@ export default function TakeAttendancePage() {
           const r = row.original;
           return (
             <div className="flex flex-wrap gap-3 text-sm">
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-transparent px-2 py-1 hover:bg-gray-50">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-transparent px-2 py-1 hover:bg-theme-surface">
                 <input
                   type="radio"
                   name={`status-${r.studentId}`}
@@ -74,7 +74,7 @@ export default function TakeAttendancePage() {
                 />
                 Présent
               </label>
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-transparent px-2 py-1 hover:bg-gray-50">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-transparent px-2 py-1 hover:bg-theme-surface">
                 <input
                   type="radio"
                   name={`status-${r.studentId}`}
@@ -83,7 +83,7 @@ export default function TakeAttendancePage() {
                 />
                 Absent
               </label>
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-transparent px-2 py-1 hover:bg-gray-50">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-transparent px-2 py-1 hover:bg-theme-surface">
                 <input
                   type="radio"
                   name={`status-${r.studentId}`}
@@ -105,7 +105,7 @@ export default function TakeAttendancePage() {
             disabled={row.original.status !== 'late'}
             value={row.original.minutesLate}
             onChange={(e) => updateRow(row.original.studentId, { minutesLate: e.target.value })}
-            className="w-24 rounded border border-gray-300 px-2 py-1 text-sm disabled:bg-gray-100"
+            className="w-24 rounded border border-theme-border px-2 py-1 text-sm disabled:bg-theme-surface"
           />
         ),
       }),
@@ -116,7 +116,7 @@ export default function TakeAttendancePage() {
             type="text"
             value={row.original.note}
             onChange={(e) => updateRow(row.original.studentId, { note: e.target.value })}
-            className="min-w-[140px] max-w-xs rounded border border-gray-300 px-2 py-1 text-sm"
+            className="min-w-[140px] max-w-xs rounded border border-theme-border px-2 py-1 text-sm"
             placeholder="—"
           />
         ),
@@ -133,9 +133,9 @@ export default function TakeAttendancePage() {
 
   if (!canTakeAttendance) {
     return (
-      <div className="rounded-lg border border-amber-200 bg-amber-50 px-6 py-10 text-center">
-        <p className="font-semibold text-amber-800">Accès restreint</p>
-        <p className="mt-1 text-sm text-amber-700">
+      <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-6 py-10 text-center">
+        <p className="font-semibold text-amber-400">Accès restreint</p>
+        <p className="mt-1 text-sm text-amber-400">
           La prise de présence est réservée aux formateurs.
         </p>
       </div>
@@ -146,23 +146,23 @@ export default function TakeAttendancePage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Présences</h1>
-          <p className="text-sm text-gray-600">
+          <h1 className="text-2xl font-bold text-theme-text-primary">Présences</h1>
+          <p className="text-sm text-theme-text-secondary">
             Module, groupe et date · enregistrement groupé sécurisé par rôle
           </p>
         </div>
         <div className="flex flex-wrap gap-4 text-sm">
-          <div className="rounded-lg bg-emerald-50 px-3 py-2 ring-1 ring-emerald-100">
+          <div className="rounded-lg bg-emerald-500/10 px-3 py-2 ring-1 ring-emerald-100">
             <span className="text-emerald-800 font-semibold">{summaryCounts.present}</span>
-            <span className="text-emerald-700"> présents</span>
+            <span className="text-emerald-400"> présents</span>
           </div>
-          <div className="rounded-lg bg-rose-50 px-3 py-2 ring-1 ring-rose-100">
+          <div className="rounded-lg bg-rose-500/10 px-3 py-2 ring-1 ring-rose-100">
             <span className="text-rose-800 font-semibold">{summaryCounts.absent}</span>
-            <span className="text-rose-700"> absents</span>
+            <span className="text-rose-400"> absents</span>
           </div>
-          <div className="rounded-lg bg-amber-50 px-3 py-2 ring-1 ring-amber-100">
+          <div className="rounded-lg bg-amber-500/10 px-3 py-2 ring-1 ring-amber-100">
             <span className="text-amber-900 font-semibold">{summaryCounts.late}</span>
-            <span className="text-amber-800"> retards</span>
+            <span className="text-amber-400"> retards</span>
           </div>
         </div>
       </div>
@@ -170,7 +170,7 @@ export default function TakeAttendancePage() {
       <Card>
         <CardHeader>
           <CardTitle>Séance</CardTitle>
-          <p className="text-xs font-normal text-gray-500">
+          <p className="text-xs font-normal text-theme-text-secondary">
             {needsFiliereStep
               ? 'Choisissez d’abord la filière : seuls les modules et groupes de cette filière sont proposés.'
               : 'Sélectionnez le module, le groupe et la date de séance.'}
@@ -181,7 +181,7 @@ export default function TakeAttendancePage() {
             <div className="space-y-1">
               <label className="text-sm font-medium">Filière</label>
               <select
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className="w-full rounded-md border border-theme-border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
                 value={filiereId}
                 onChange={(e) => setFiliereId(e.target.value ? Number(e.target.value) : '')}
                 disabled={assignmentsLoading}
@@ -200,7 +200,7 @@ export default function TakeAttendancePage() {
           <div className="space-y-1">
             <label className="text-sm font-medium">Module</label>
             <select
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="w-full rounded-md border border-theme-border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               value={moduleId}
               onChange={(e) => setModuleId(e.target.value ? Number(e.target.value) : '')}
               disabled={assignmentsLoading || (needsFiliereStep && filiereId === '')}
@@ -218,7 +218,7 @@ export default function TakeAttendancePage() {
           <div className="space-y-1">
             <label className="text-sm font-medium">Groupe</label>
             <select
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="w-full rounded-md border border-theme-border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               value={groupId}
               onChange={(e) => setGroupId(e.target.value ? Number(e.target.value) : '')}
               disabled={!moduleId || (needsFiliereStep && filiereId === '')}
@@ -239,7 +239,7 @@ export default function TakeAttendancePage() {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className="w-full rounded-md border border-theme-border px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             />
             {errors.date && <p className="text-xs text-red-600">{errors.date}</p>}
           </div>
@@ -250,9 +250,9 @@ export default function TakeAttendancePage() {
         <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle>Liste des stagiaires</CardTitle>
           <div className="flex flex-wrap items-center gap-2">
-            <label className="text-xs font-medium uppercase tracking-wide text-gray-500">Filtrer</label>
+            <label className="text-xs font-medium uppercase tracking-wide text-theme-text-secondary">Filtrer</label>
             <select
-              className="rounded-md border border-gray-300 px-2 py-1 text-sm"
+              className="rounded-md border border-theme-border px-2 py-1 text-sm"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as 'all' | AttendanceStatus)}
             >
@@ -279,26 +279,26 @@ export default function TakeAttendancePage() {
           {(groupLoading || assignmentsLoading || detectLoading) && (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
-              <span className="ml-3 text-sm text-gray-600">Chargement…</span>
+              <span className="ml-3 text-sm text-theme-text-secondary">Chargement…</span>
             </div>
           )}
 
           {!groupLoading && !detectLoading && rows.length === 0 && (
-            <p className="rounded-md border border-dashed border-gray-200 bg-gray-50 px-4 py-8 text-center text-sm text-gray-600">
+            <p className="rounded-md border border-dashed border-theme-border bg-theme-surface px-4 py-8 text-center text-sm text-theme-text-secondary">
               Sélectionnez un groupe pour afficher les stagiaires.
             </p>
           )}
 
           {rows.length > 0 && !groupLoading && (
-            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-              <table className="min-w-full divide-y divide-gray-200 text-sm">
-                <thead className="bg-gray-50">
+            <div className="overflow-x-auto rounded-lg border border-theme-border shadow-sm">
+              <table className="min-w-full divide-y divide-theme-border text-sm">
+                <thead className="bg-theme-surface">
                   {table.getHeaderGroups().map((hg) => (
                     <tr key={hg.id}>
                       {hg.headers.map((header) => (
                         <th
                           key={header.id}
-                          className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600"
+                          className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-theme-text-secondary"
                         >
                           {header.isPlaceholder
                             ? null
@@ -308,18 +308,18 @@ export default function TakeAttendancePage() {
                     </tr>
                   ))}
                 </thead>
-                <tbody className="divide-y divide-gray-100 bg-white">
+                <tbody className="divide-y divide-theme-border glass-panel">
                   {table.getRowModel().rows.length === 0 ? (
                     <tr>
-                      <td colSpan={columns.length} className="px-4 py-8 text-center text-gray-500">
+                      <td colSpan={columns.length} className="px-4 py-8 text-center text-theme-text-secondary">
                         Aucun stagiaire pour ce filtre.
                       </td>
                     </tr>
                   ) : (
                     table.getRowModel().rows.map((row) => (
-                      <tr key={row.original.studentId} className="hover:bg-gray-50/80">
+                      <tr key={row.original.studentId} className="hover:bg-theme-surface">
                         {row.getVisibleCells().map((cell) => (
-                          <td key={cell.id} className="whitespace-nowrap px-4 py-3 align-top text-gray-800">
+                          <td key={cell.id} className="whitespace-nowrap px-4 py-3 align-top text-theme-text-primary">
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </td>
                         ))}
@@ -342,12 +342,12 @@ export default function TakeAttendancePage() {
       </Card>
 
       {sessionMessage && (
-        <div className="rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+        <div className="rounded-md border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-green-800">
           {sessionMessage}
         </div>
       )}
       {sessionWarning && (
-        <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        <div className="rounded-md border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-900">
           {sessionWarning}
         </div>
       )}

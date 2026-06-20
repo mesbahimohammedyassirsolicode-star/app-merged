@@ -1,0 +1,79 @@
+@startuml UseCase_Cabinet_Medical
+
+left to right direction
+title Diagramme de Cas d'Utilisation — Cabinet Médical
+
+' === DESIGN & STYLING ===
+skinparam {
+    BackgroundColor white
+    Shadowing true
+    RoundCorner 10
+    ArrowColor #2C3E50
+    BorderColor #34495E
+    
+    ActorBackgroundColor #ECF0F1
+    ActorBorderColor #2980B9
+    ActorFontColor #2C3E50
+    
+    UseCaseBackgroundColor #D6EAF8
+    UseCaseBorderColor #2980B9
+    UseCaseFontColor #2C3E50
+    
+    PackageBackgroundColor #F8F9F9
+    PackageBorderColor #BDC3C7
+}
+
+' Acteurs
+actor "Visiteur /\nPatient" as V
+actor "Administrateur" as A
+actor "Système" as S
+
+' Site Public
+package "Site Public" {
+    usecase "Consulter la vitrine" as UC1
+    usecase "Prendre rendez-vous" as UC2
+    usecase "Afficher le ticket\nconfirmé (QR Code)" as UC3
+    usecase "Suivre l'état\ndu rendez-vous" as UC7
+    usecase "Consulter le ticket\nen attente" as UC8
+}
+
+' Espace Administrateur
+package "Espace Administrateur" {
+    usecase "S'authentifier" as UC4
+    usecase "Gérer les\nrendez-vous" as UC5
+    usecase "Confirmer / Annuler\nun rendez-vous" as UC9
+    usecase "Gérer le planning\n(créneaux & exceptions)" as UC6
+}
+
+' Notifications Système
+package "Notifications Système" {
+    usecase "Envoyer l'email\nde confirmation" as UC10
+    usecase "Générer le QR Code\net la référence" as UC11
+}
+
+' Associations - Visiteur / Patient
+V --> UC1
+V --> UC2
+V --> UC3
+V --> UC7
+V --> UC8
+
+' Associations - Administrateur
+A --> UC4
+A --> UC5
+A --> UC9
+A --> UC6
+
+' Relations includes / extends
+UC5 ..> UC9 : <<include>>
+UC9 ..> UC10 : <<include>>
+UC9 ..> UC11 : <<include>>
+UC2 ..> UC7 : <<include>>
+UC10 ..> UC3 : <<enable>>
+
+' Système
+S --> UC2
+S --> UC10
+S --> UC11
+
+@enduml

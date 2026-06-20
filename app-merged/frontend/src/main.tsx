@@ -5,20 +5,21 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { queryClient } from './lib/query-client';
 import { AuthProvider } from './context/AuthContext';
-import { ErrorBoundary } from './components/ErrorBoundary';
+import { ThemeProvider } from './context/ThemeContext';
 import App from './App';
 import './i18n';
 import './index.css';
+import './styles/semantic.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <ErrorBoundary>
+          <ThemeProvider>
             <App />
-          </ErrorBoundary>
-          <Toaster richColors position="top-right" />
+            <Toaster richColors position="top-right" />
+          </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

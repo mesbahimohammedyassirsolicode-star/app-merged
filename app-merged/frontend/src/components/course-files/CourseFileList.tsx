@@ -43,7 +43,7 @@ function getFileIcon(mimeType: string) {
   if (mimeType.includes('video') || mimeType.includes('mp4')) return <Video className="h-8 w-8 text-blue-500" />;
   if (mimeType.includes('image')) return <ImageIcon className="h-8 w-8 text-emerald-500" />;
   if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('tar')) return <FileArchive className="h-8 w-8 text-amber-500" />;
-  return <FileIcon className="h-8 w-8 text-gray-500" />;
+  return <FileIcon className="h-8 w-8 text-theme-text-secondary" />;
 }
 
 export default function CourseFileList({
@@ -116,29 +116,29 @@ export default function CourseFileList({
   const sortedGroupKeys = Object.keys(groupedFiles).sort();
 
   return (
-    <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden">
-      <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4 space-y-4">
+    <Card className="border border-theme-border shadow-sm rounded-2xl overflow-hidden">
+      <CardHeader className="bg-theme-surface border-b border-theme-border pb-4 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2 text-gray-800">
+          <CardTitle className="text-lg font-semibold flex items-center gap-2 text-theme-text-primary">
             <FolderTree className="h-5 w-5 text-primary-600" />
             Liste des ressources
           </CardTitle>
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
             <div className="relative w-full sm:w-64">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-theme-text-secondary pointer-events-none" />
               <input
                 type="text"
                 placeholder="Rechercher un fichier..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 h-9 flex rounded-md border border-input bg-background/50 px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-500"
+                className="w-full pl-10 h-9 rounded-md border border-input bg-background/50 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-500"
               />
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setSortBy(sortBy === 'date' ? 'name' : 'date')}
-              className="text-gray-600 shrink-0 w-full sm:w-auto h-9"
+              className="text-theme-text-secondary shrink-0 w-full sm:w-auto h-9"
             >
               <ArrowUpDown className="mr-2 h-4 w-4" />
               Tri: {sortBy === 'date' ? 'Plus récent' : 'A-Z'}
@@ -148,22 +148,22 @@ export default function CourseFileList({
       </CardHeader>
       <CardContent className="p-0">
         {isLoading && (
-          <div className="flex items-center justify-center py-12 text-gray-500 gap-2">
+          <div className="flex items-center justify-center py-12 text-theme-text-secondary gap-2">
             <Loader2 className="h-5 w-5 animate-spin" />
             Chargement des fichiers…
           </div>
         )}
         {!isLoading && processedFiles.length === 0 && (
           <div className="py-16 text-center">
-            <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-              <FileIcon className="h-8 w-8 text-gray-400" />
+            <div className="mx-auto w-16 h-16 bg-theme-surface rounded-full flex items-center justify-center mb-4">
+              <FileIcon className="h-8 w-8 text-theme-text-secondary" />
             </div>
-            <p className="text-sm text-gray-500 font-medium">Aucun fichier trouvé</p>
-            <p className="text-xs text-gray-400 mt-1">Essayez de modifier vos critères de recherche.</p>
+            <p className="text-sm text-theme-text-secondary font-medium">Aucun fichier trouvé</p>
+            <p className="text-xs text-theme-text-secondary mt-1">Essayez de modifier vos critères de recherche.</p>
           </div>
         )}
         {!isLoading && processedFiles.length > 0 && (
-          <div className="divide-y divide-gray-100/50 p-4 sm:p-6 space-y-8">
+          <div className="divide-y divide-theme-border/50 p-4 sm:p-6 space-y-8">
             {sortedGroupKeys.map((key) => (
               <div key={key} className="pt-2 first:pt-0">
                 <div className="mb-4 inline-flex items-center rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs font-semibold text-primary-800 shadow-sm">
@@ -171,33 +171,33 @@ export default function CourseFileList({
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {groupedFiles[key].map((f) => (
-                    <div key={f.id} className="group relative flex flex-col rounded-xl border border-gray-200 bg-white hover:bg-gray-50/50 hover:shadow-md transition-all duration-200 overflow-hidden">
+                    <div key={f.id} className="group relative flex flex-col rounded-xl border border-theme-border glass-panel hover:bg-theme-hover-card-bg hover:shadow-md transition-all duration-200 overflow-hidden">
                       <div className="p-4 flex gap-4 items-start flex-1">
-                        <div className="shrink-0 p-2 bg-gray-50 rounded-lg group-hover:bg-white transition-colors border border-gray-100">
+                        <div className="shrink-0 p-2 bg-theme-surface rounded-lg group-hover:glass-panel transition-colors border border-theme-border">
                           {getFileIcon(f.mime_type)}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <h4 className="font-semibold text-gray-900 text-sm line-clamp-2 leading-tight" title={f.title || f.original_name}>
+                          <h4 className="font-semibold text-theme-text-primary text-sm line-clamp-2 leading-tight" title={f.title || f.original_name}>
                             {f.title || f.original_name}
                           </h4>
-                          <p className="text-xs text-gray-500 truncate mt-1" title={f.original_name}>
+                          <p className="text-xs text-theme-text-secondary truncate mt-1" title={f.original_name}>
                             {f.original_name}
                           </p>
-                          <div className="mt-2 flex items-center gap-2 text-xs font-medium text-gray-500">
-                            <span className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">{formatBytes(f.size_bytes)}</span>
+                          <div className="mt-2 flex items-center gap-2 text-xs font-medium text-theme-text-secondary">
+                            <span className="bg-theme-surface px-1.5 py-0.5 rounded text-theme-text-secondary">{formatBytes(f.size_bytes)}</span>
                             {f.uploader && (
                               <span className="truncate">~ {f.uploader.name}</span>
                             )}
                           </div>
                         </div>
                       </div>
-                      <div className="bg-gray-50/50 border-t border-gray-100 px-4 py-2 flex items-center justify-end gap-2">
+                      <div className="bg-theme-surface border-t border-theme-border px-4 py-2 flex items-center justify-end gap-2">
                         {canManageDelete(f, user) && (
                           <Button
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full"
+                            className="h-8 w-8 text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded-full"
                             onClick={() => onDelete(f.id)}
                             title="Supprimer"
                           >

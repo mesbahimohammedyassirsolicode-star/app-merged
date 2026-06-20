@@ -298,7 +298,7 @@ export default function UserFormModal({ isOpen, onClose, editingUser, currentUse
                                         {isLoadingProgram ? (
                                             <div className="flex justify-center"><Loader2 className="w-4 h-4 animate-spin" /></div>
                                         ) : filteredModules.map((m: { id: number, code: string, label: string }) => (
-                                            <label key={m.id} className="flex items-center space-x-2 text-xs hover:bg-gray-50 p-1 rounded cursor-pointer">
+                                            <label key={m.id} className="flex items-center space-x-2 text-xs hover:bg-theme-surface p-1 rounded cursor-pointer">
                                                 <input
                                                     type="checkbox"
                                                     value={m.id}
@@ -308,7 +308,7 @@ export default function UserFormModal({ isOpen, onClose, editingUser, currentUse
                                                         if (e.target.checked) setValue('modules', [...current, m.id]);
                                                         else setValue('modules', current.filter((id) => id !== m.id));
                                                     }}
-                                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                    className="rounded border-theme-border text-blue-400 focus:ring-blue-500"
                                                 />
                                                 <span>[{m.code}] {m.label}</span>
                                             </label>
@@ -321,7 +321,7 @@ export default function UserFormModal({ isOpen, onClose, editingUser, currentUse
                                         {isLoadingProgram ? (
                                             <div className="flex justify-center"><Loader2 className="w-4 h-4 animate-spin" /></div>
                                         ) : filteredGroups.map((g: { id: number, label: string }) => (
-                                            <label key={g.id} className="flex items-center space-x-2 text-xs hover:bg-gray-50 p-1 rounded cursor-pointer">
+                                            <label key={g.id} className="flex items-center space-x-2 text-xs hover:bg-theme-surface p-1 rounded cursor-pointer">
                                                 <input
                                                     type="checkbox"
                                                     value={g.id}
@@ -331,7 +331,7 @@ export default function UserFormModal({ isOpen, onClose, editingUser, currentUse
                                                         if (e.target.checked) setValue('groups', [...current, g.id]);
                                                         else setValue('groups', current.filter((id) => id !== g.id));
                                                     }}
-                                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                    className="rounded border-theme-border text-blue-400 focus:ring-blue-500"
                                                 />
                                                 <span>{g.label}</span>
                                             </label>

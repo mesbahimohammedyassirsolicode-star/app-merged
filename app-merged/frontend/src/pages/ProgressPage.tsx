@@ -23,7 +23,7 @@ export default function ProgressPage() {
 
   if (!stagiaireId) {
     return (
-      <div className="p-6 text-gray-500">
+      <div className="p-6 text-theme-text-secondary">
         Cette page est réservée aux stagiaires (progression du syllabus par module).
       </div>
     );
@@ -31,13 +31,13 @@ export default function ProgressPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Progression — Syllabus</h1>
+      <h1 className="text-2xl font-bold text-theme-text-primary">Progression — Syllabus</h1>
       {isLoading ? (
         <div className="flex justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
         </div>
       ) : !data?.by_module?.length ? (
-        <div className="rounded-xl border border-dashed border-gray-200 bg-white py-12 text-center text-sm text-gray-500">
+        <div className="rounded-xl border border-dashed border-theme-border glass-panel py-12 text-center text-sm text-theme-text-secondary">
           Aucune donnee de progression disponible.
         </div>
       ) : (
@@ -49,7 +49,7 @@ export default function ProgressPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-4">
-                  <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="flex-1 h-3 bg-theme-surface rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary-600 rounded-full transition-all"
                       style={{ width: `${m.progress_percent}%` }}
@@ -57,7 +57,7 @@ export default function ProgressPage() {
                   </div>
                   <span className="text-sm font-medium">{m.progress_percent}%</span>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-theme-text-secondary mt-2">
                   {m.completed_count} / {m.total_count} éléments
                 </p>
               </CardContent>

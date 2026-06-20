@@ -32,8 +32,8 @@ export default function ParentChildDetailPage() {
         <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary-600" /></div>
       ) : (
         <>
-          <h1 className="text-2xl font-bold text-gray-900">{data.child.name ?? `Enfant #${id}`}</h1>
-          <p className="text-sm text-gray-600">
+          <h1 className="text-2xl font-bold text-theme-text-primary">{data.child.name ?? `Enfant #${id}`}</h1>
+          <p className="text-sm text-theme-text-secondary">
             {data.child.filiere?.label ?? 'Filière non définie'}
             {data.child.groups.length ? ` · ${data.child.groups.map((g) => g.label ?? 'Groupe').join(', ')}` : ''}
           </p>
@@ -49,7 +49,7 @@ export default function ParentChildDetailPage() {
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-500">Aucune note.</p>
+                <p className="text-theme-text-secondary">Aucune note.</p>
               )}
             </CardContent>
           </Card>
@@ -61,14 +61,14 @@ export default function ParentChildDetailPage() {
               {Array.isArray(data.timetable) && data.timetable.length > 0 ? (
                 <ul className="space-y-2">
                   {data.timetable.slice(0, 8).map((row) => (
-                    <li key={row.id} className="rounded-lg border border-gray-200 px-3 py-2">
-                      <p className="font-medium text-gray-800">{row.module?.label ?? 'Module'}</p>
-                      <p className="text-gray-600">{row.date} · {row.start_time} - {row.end_time}</p>
+                    <li key={row.id} className="rounded-lg border border-theme-border px-3 py-2">
+                      <p className="font-medium text-theme-text-primary">{row.module?.label ?? 'Module'}</p>
+                      <p className="text-theme-text-secondary">{row.date} · {row.start_time} - {row.end_time}</p>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-500">Aucune séance planifiée.</p>
+                <p className="text-theme-text-secondary">Aucune séance planifiée.</p>
               )}
             </CardContent>
           </Card>
@@ -80,14 +80,14 @@ export default function ParentChildDetailPage() {
               {Array.isArray(data.absences) && data.absences.length > 0 ? (
                 <ul className="space-y-2">
                   {data.absences.slice(0, 10).map((row) => (
-                    <li key={row.id} className="rounded-lg border border-gray-200 px-3 py-2">
-                      <p className="font-medium text-gray-800">{row.module?.label ?? 'Module'}</p>
-                      <p className="text-gray-600">{row.date} · {row.group?.label ?? 'Groupe non défini'}</p>
+                    <li key={row.id} className="rounded-lg border border-theme-border px-3 py-2">
+                      <p className="font-medium text-theme-text-primary">{row.module?.label ?? 'Module'}</p>
+                      <p className="text-theme-text-secondary">{row.date} · {row.group?.label ?? 'Groupe non défini'}</p>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-500">Aucune absence.</p>
+                <p className="text-theme-text-secondary">Aucune absence.</p>
               )}
             </CardContent>
           </Card>

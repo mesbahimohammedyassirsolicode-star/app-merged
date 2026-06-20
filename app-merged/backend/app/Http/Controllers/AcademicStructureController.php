@@ -7,6 +7,7 @@ use App\Models\Filiere;
 use App\Models\Groupe;
 use App\Models\Module;
 use App\Models\Niveau;
+use App\Services\FiliereGroupStandardizationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -120,6 +121,23 @@ class AcademicStructureController extends Controller
         $filiere->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function standardizeFiliereGroups(
+        Request $request,
+        Filiere $filiere,
+        FiliereGroupStandardizationService $service
+    ) {
+        $validated = $request->validate([
+            'academic_year_id' => 'nullable|exists:annees_scolaires,id',
+        ]);
+
+        $result = $service->standardize(
+            $filiere,
+            isset($validated['academic_year_id']) ? (int) $validated['academic_year_id'] : null
+        );
+
+        return $this->success($result);
     }
 
     /**

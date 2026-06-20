@@ -24,11 +24,11 @@ export default function ParentChildrenPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">{t('nav.parentChildren')}</h1>
+      <h1 className="text-2xl font-bold text-theme-text-primary">{t('nav.parentChildren')}</h1>
       {isLoading ? (
         <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary-600" /></div>
       ) : !data?.length ? (
-        <div className="rounded-xl border border-dashed border-gray-200 bg-white py-12 text-center text-sm text-gray-500">
+        <div className="rounded-xl border border-dashed border-theme-border glass-panel py-12 text-center text-sm text-theme-text-secondary">
           Aucun stagiaire lié pour le moment.
         </div>
       ) : (
@@ -38,7 +38,7 @@ export default function ParentChildrenPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg">{c.user?.name ?? `Stagiaire #${c.id}`}</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-gray-600">
+              <CardContent className="text-sm text-theme-text-secondary">
                 <p>CEF : {c.cef_number}</p>
                 <p>Statut : {c.status}</p>
                 {c.groupes?.length ? <p>Groupes : {c.groupes.map((g: { label: string }) => g.label).join(', ')}</p> : null}

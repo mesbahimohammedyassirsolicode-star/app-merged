@@ -40,7 +40,7 @@ export default function GroupAttendanceRiskPage() {
       <Button variant="ghost" size="sm" onClick={() => navigate('/groups')}>
         <ArrowLeft className="w-4 h-4 mr-2" /> Retour aux groupes
       </Button>
-      <h1 className="text-2xl font-bold text-gray-900">
+      <h1 className="text-2xl font-bold text-theme-text-primary">
         Présences — {group?.label ?? 'Groupe'} (seuil {THRESHOLD}%)
       </h1>
       {isLoading ? (
@@ -48,20 +48,20 @@ export default function GroupAttendanceRiskPage() {
           <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
         </div>
       ) : !summary?.length ? (
-        <div className="rounded-xl border border-dashed border-gray-200 bg-white py-12 text-center text-sm text-gray-500">
+        <div className="rounded-xl border border-dashed border-theme-border glass-panel py-12 text-center text-sm text-theme-text-secondary">
           Aucune donnee de presence disponible.
         </div>
       ) : (
         <div className="space-y-4">
           {summary?.map((row) => (
-            <Card key={row.stagiaire_id} className={row.is_risk ? 'border-amber-200 bg-amber-50/50' : ''}>
+            <Card key={row.stagiaire_id} className={row.is_risk ? 'border-amber-500/20 bg-amber-500/10/50' : ''}>
               <CardHeader className="pb-2 flex flex-row items-center justify-between">
                 <CardTitle className="text-lg">
                   {row.stagiaire?.user?.name ?? `Stagiaire #${row.stagiaire_id}`}
                 </CardTitle>
                 <div className="flex items-center gap-2">
                   {row.is_risk ? (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-medium bg-amber-100 text-amber-800">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-medium bg-amber-100 text-amber-400">
                       <AlertTriangle className="w-4 h-4" /> À risque
                     </span>
                   ) : (
@@ -69,16 +69,16 @@ export default function GroupAttendanceRiskPage() {
                       <CheckCircle className="w-4 h-4" /> OK
                     </span>
                   )}
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-theme-text-secondary">
                     Taux global : <strong>{row.global_rate_percent}%</strong>
                     {!row.can_sit_exam && (
-                      <span className="ml-2 text-amber-700">(examen bloqué)</span>
+                      <span className="ml-2 text-amber-400">(examen bloqué)</span>
                     )}
                   </span>
                 </div>
               </CardHeader>
               <CardContent className="text-sm">
-                <p className="text-gray-600 mb-2">Par module :</p>
+                <p className="text-theme-text-secondary mb-2">Par module :</p>
                 <ul className="space-y-1">
                   {row.by_affectation?.map((a) => (
                     <li key={a.affectation_id}>

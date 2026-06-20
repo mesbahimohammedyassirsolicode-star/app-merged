@@ -16,11 +16,12 @@ class SyncUserRolesSeeder extends Seeder
         // [MERGED] Combined slug mappings from V1 and V2
         $slugByRole = [
             'admin' => 'admin',           // V1 admin
-            'teacher' => 'teacher',       // V1 teacher
-            'student' => 'student',       // V1 student
+            'teacher' => 'formateur',     // normalize legacy teacher
+            'student' => 'stagiaire',     // normalize legacy student
             'directeur' => 'directeur',   // V2 admin
             'formateur' => 'formateur',   // V2 formateur
             'stagiaire' => 'stagiaire',   // V2 stagiaire
+            'secretariat' => 'secretariat',
             'parent' => 'parent',
         ];
 

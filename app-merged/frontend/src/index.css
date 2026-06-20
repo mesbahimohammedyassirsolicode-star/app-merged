@@ -1,25 +1,233 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    color-scheme: light;
+    --theme-background: 248 250 252;
+    --theme-surface: 255 255 255;
+    --theme-card: 255 255 255;
+    --theme-surface-muted: 248 250 252;
+    --theme-text-primary: 15 23 42;
+    --theme-text-secondary: 71 85 105;
+    --theme-border: 226 232 240;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 224.3 76.3% 48%;
+    --radius: 0.75rem;
+    --card-background: 255 255 255;
+    --card-foreground: 15 23 42;
+    --hover-card-background: 241 245 249;
+    --hover-card-foreground: 15 23 42;
+  }
+
+  :root.dark {
+    color-scheme: dark;
+    --theme-background: 2 8 23;
+    --theme-surface: 15 23 42;
+    --theme-card: 17 24 39;
+    --theme-surface-muted: 15 23 42;
+    --theme-text-primary: 248 250 252;
+    --theme-text-secondary: 203 213 225;
+    --theme-border: 51 65 85;
+    --card-background: 17 24 39;
+    --card-foreground: 248 250 252;
+    --hover-card-background: 30 41 59;
+    --hover-card-foreground: 248 250 252;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    background: #0f172a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+  }
+
   html, body, #root {
     height: 100%;
   }
+
   body {
-    @apply font-sans antialiased text-gray-900 bg-gray-50;
+    @apply font-sans antialiased text-theme-text-primary bg-theme-background relative overflow-x-hidden;
+    font-family: 'Outfit', 'Inter', sans-serif;
+  }
+
+  /* Global Select Styling */
+  select {
+    @apply bg-theme-surface text-theme-text-primary border-theme-border rounded-xl px-4 py-2 transition-colors duration-200;
+    color-scheme: light dark;
+  }
+
+  select option {
+    @apply bg-theme-surface text-theme-text-primary;
+    padding: 10px;
+  }
+
+  .dark select option {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+  }
+
+  /* Browser-specific fixes for light selects */
+  select:focus {
+    @apply ring-2 ring-blue-500/30 border-blue-500;
+  }
+
+  /* Global Input Styling for modern light mode aesthetics */
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"] {
+    @apply rounded-xl border border-theme-border bg-theme-surface px-3 py-2 text-sm text-theme-text-primary placeholder:text-theme-text-secondary shadow-sm transition-all duration-200;
+    color-scheme: light dark;
+  }
+
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="date"]:focus,
+  input[type="time"]:focus,
+  input[type="datetime-local"]:focus,
+  input[type="search"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus {
+    @apply ring-2 ring-blue-500/20 border-blue-500 outline-none;
+  }
+
+  /* Browser autofill/autocomplete overrides */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    -webkit-text-fill-color: #1e293b !important;
+    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover,
+  .dark input:-webkit-autofill:focus,
+  .dark textarea:-webkit-autofill,
+  .dark textarea:-webkit-autofill:hover,
+  .dark textarea:-webkit-autofill:focus,
+  .dark select:-webkit-autofill,
+  .dark select:-webkit-autofill:hover,
+  .dark select:-webkit-autofill:focus {
+    -webkit-text-fill-color: #f8fafc !important;
+    -webkit-box-shadow: 0 0 0px 1000px #0f172a inset !important;
+  }
+
+  /* Clean light background with subtle gradient accent */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      circle at 20% 50%,
+      rgba(59, 130, 246, 0.03) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(124, 58, 237, 0.02) 0%,
+      transparent 50%
+    );
+    pointer-events: none;
+    z-index: -1;
+    transition: background 0.3s ease;
+  }
+
+  .dark body::before {
+    background: radial-gradient(
+      circle at 20% 50%,
+      rgba(59, 130, 246, 0.07) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(124, 58, 237, 0.05) 0%,
+      transparent 50%
+    );
   }
 }
 
 @layer components {
+  /* Premium Input Styling */
   .app-control {
-    @apply rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2;
+    @apply rounded-[12px] border border-theme-border bg-theme-surface px-4 py-2.5 text-sm text-theme-text-primary shadow-sm transition-all duration-300;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500;
+    @apply placeholder:text-slate-400 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
-  .app-control-ghost {
-    @apply rounded-lg px-2 py-1 text-sm text-slate-600 transition-colors duration-200 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300;
+  .app-control:hover:not(:disabled) {
+    @apply border-theme-text-secondary bg-theme-surface;
+  }
+
+  /* Premium Table Styling */
+  .app-table-container {
+    @apply overflow-hidden rounded-xl border border-theme-border bg-theme-card shadow-sm;
   }
 
   .app-table {
@@ -27,18 +235,353 @@
   }
 
   .app-table thead {
-    @apply border-b border-slate-200 bg-slate-50 text-slate-600;
+    @apply border-b border-theme-border bg-theme-surface-muted text-theme-text-secondary font-medium;
   }
 
   .app-table th {
-    @apply px-5 py-4 text-xs font-semibold uppercase tracking-wide;
+    @apply px-6 py-4 text-xs uppercase tracking-wider;
   }
 
   .app-table td {
-    @apply px-5 py-4 align-top;
+    @apply px-6 py-4 align-middle border-b border-theme-border text-theme-text-primary;
   }
 
   .app-table tbody tr {
-    @apply border-b border-slate-100 transition-colors hover:bg-slate-50/70;
+    @apply transition-all duration-200 hover:bg-theme-surface-muted;
   }
+
+  /* Glass Container - Updated for Light Mode */
+  .glass-panel {
+    @apply rounded-2xl border border-theme-border bg-theme-card shadow-sm transition-all duration-300;
+  }
+
+  .glass-panel:hover {
+    @apply border-theme-text-secondary shadow-md;
+  }
+
+  /* Smooth transitions */
+  * {
+    @apply transition-colors duration-200;
+  }
+}
+
+/* Keyframe animations for loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.2) 60%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* Global text color utilities */
+.text-primary-dark {
+  color: #1E293B;
+}
+
+.dark .text-primary-dark {
+  color: #f8fafc;
+}
+
+.text-secondary-light {
+  color: #64748B;
+}
+
+.dark .text-secondary-light {
+  color: #94a3b8;
+}
+
+/* Focus ring utilities for light mode */
+  .focus-ring-light {
+    @apply focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500;
+  }
+
+/* Accessible hover card and search bar refresh.
+   Uses high-contrast, opaque surfaces and explicit focus rings so pop-up text and search controls remain readable. */
+:root {
+  --hover-card-bg: #f8fafc;
+  --hover-card-bg-hover: #ffffff;
+  --hover-card-text: #1e293b;
+  --hover-card-muted-text: #334155;
+  --hover-card-border: #cbd5e1;
+  --hover-card-focus-ring: #2563eb;
+  --hover-card-font-size: 0.875rem;
+  --hover-card-line-height: 1.5;
+  --hover-card-radius: 0.5rem;
+  --hover-card-padding-y: 0.75rem;
+  --hover-card-padding-x: 0.875rem;
+  --hover-card-shadow: 0 10px 24px -12px rgba(15, 23, 42, 0.28), 0 4px 8px -4px rgba(15, 23, 42, 0.16);
+
+  --search-bar-bg: #ffffff;
+  --search-bar-bg-hover: #f9fafb;
+  --search-bar-text: #1e293b;
+  --search-bar-placeholder: #475569;
+  --search-bar-border: #cbd5e1;
+  --search-bar-border-hover: #94a3b8;
+  --search-bar-focus: #2563eb;
+  --search-bar-focus-soft: rgba(37, 99, 235, 0.18);
+  --search-bar-font-size: 0.875rem;
+  --search-bar-line-height: 1.5;
+  --search-bar-radius: 0.375rem;
+  --search-bar-padding-y: 0.625rem;
+  --search-bar-padding-x: 0.875rem;
+  --search-bar-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.dark {
+  --hover-card-bg: #0f172a;
+  --hover-card-bg-hover: #111c33;
+  --hover-card-text: #f8fafc;
+  --hover-card-muted-text: #e2e8f0;
+  --hover-card-border: #475569;
+  --hover-card-focus-ring: #60a5fa;
+  --hover-card-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.58), 0 6px 14px -8px rgba(0, 0, 0, 0.5);
+
+  --search-bar-bg: #0f172a;
+  --search-bar-bg-hover: #111c33;
+  --search-bar-text: #f8fafc;
+  --search-bar-placeholder: #cbd5e1;
+  --search-bar-border: #475569;
+  --search-bar-border-hover: #94a3b8;
+  --search-bar-focus: #60a5fa;
+  --search-bar-focus-soft: rgba(96, 165, 250, 0.22);
+  --search-bar-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.hover-card,
+.tooltip,
+[role="tooltip"],
+[data-hover-card],
+[data-radix-popper-content-wrapper] .hover-card {
+  background-color: var(--hover-card-bg);
+  color: var(--hover-card-text);
+  border: 1px solid var(--hover-card-border);
+  border-radius: var(--hover-card-radius);
+  box-shadow: var(--hover-card-shadow);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: var(--hover-card-font-size);
+  line-height: var(--hover-card-line-height);
+  padding: var(--hover-card-padding-y) var(--hover-card-padding-x);
+  max-width: min(22rem, calc(100vw - 2rem));
+  overflow-wrap: anywhere;
+}
+
+.hover-card:hover,
+.tooltip:hover,
+[role="tooltip"]:hover,
+[data-hover-card]:hover {
+  background-color: var(--hover-card-bg-hover);
+  border-color: var(--hover-card-focus-ring);
+}
+
+.hover-card:focus-visible,
+.tooltip:focus-visible,
+[role="tooltip"]:focus-visible,
+[data-hover-card]:focus-visible {
+  outline: 2px solid var(--hover-card-focus-ring);
+  outline-offset: 2px;
+}
+
+.hover-card :where(p, span, li, small, strong),
+.tooltip :where(p, span, li, small, strong),
+[role="tooltip"] :where(p, span, li, small, strong),
+[data-hover-card] :where(p, span, li, small, strong) {
+  color: inherit;
+}
+
+.hover-card :where(.muted, .secondary, .description, small),
+.tooltip :where(.muted, .secondary, .description, small),
+[role="tooltip"] :where(.muted, .secondary, .description, small),
+[data-hover-card] :where(.muted, .secondary, .description, small) {
+  color: var(--hover-card-muted-text);
+}
+
+.search-bar {
+  align-items: center;
+  background-color: var(--search-bar-bg);
+  border: 1px solid var(--search-bar-border);
+  border-radius: var(--search-bar-radius);
+  box-shadow: var(--search-bar-shadow);
+  color: var(--search-bar-text);
+  display: flex;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 var(--search-bar-padding-x);
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.search-bar:hover {
+  background-color: var(--search-bar-bg-hover);
+  border-color: var(--search-bar-border-hover);
+}
+
+.search-bar:focus-within {
+  background-color: var(--search-bar-bg);
+  border-color: var(--search-bar-focus);
+  box-shadow: 0 0 0 3px var(--search-bar-focus-soft), var(--search-bar-shadow);
+}
+
+.search-bar input,
+input.search-bar,
+input[type="search"],
+input[aria-label*="search" i],
+input[aria-label*="rechercher" i],
+input[placeholder*="search" i],
+input[placeholder*="rechercher" i] {
+  background-color: var(--search-bar-bg);
+  border: 1px solid var(--search-bar-border);
+  border-radius: var(--search-bar-radius);
+  box-shadow: var(--search-bar-shadow);
+  color: var(--search-bar-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: var(--search-bar-font-size);
+  line-height: var(--search-bar-line-height);
+  min-height: 2.75rem;
+  padding: var(--search-bar-padding-y) var(--search-bar-padding-x);
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.search-bar input {
+  border: 0;
+  box-shadow: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.search-bar input::placeholder,
+input.search-bar::placeholder,
+input[type="search"]::placeholder,
+input[aria-label*="search" i]::placeholder,
+input[aria-label*="rechercher" i]::placeholder,
+input[placeholder*="search" i]::placeholder,
+input[placeholder*="rechercher" i]::placeholder {
+  color: var(--search-bar-placeholder);
+  opacity: 1;
+}
+
+.search-bar input:hover,
+input.search-bar:hover,
+input[type="search"]:hover,
+input[aria-label*="search" i]:hover,
+input[aria-label*="rechercher" i]:hover,
+input[placeholder*="search" i]:hover,
+input[placeholder*="rechercher" i]:hover {
+  background-color: var(--search-bar-bg-hover);
+  border-color: var(--search-bar-border-hover);
+}
+
+.search-bar input:focus,
+.search-bar input:focus-visible,
+input.search-bar:focus,
+input.search-bar:focus-visible,
+input[type="search"]:focus,
+input[type="search"]:focus-visible,
+input[aria-label*="search" i]:focus,
+input[aria-label*="search" i]:focus-visible,
+input[aria-label*="rechercher" i]:focus,
+input[aria-label*="rechercher" i]:focus-visible,
+input[placeholder*="search" i]:focus,
+input[placeholder*="search" i]:focus-visible,
+input[placeholder*="rechercher" i]:focus,
+input[placeholder*="rechercher" i]:focus-visible {
+  background-color: var(--search-bar-bg);
+  border-color: var(--search-bar-focus);
+  box-shadow: 0 0 0 3px var(--search-bar-focus-soft), var(--search-bar-shadow);
+  outline: none;
+}
+
+.search-bar input:focus,
+.search-bar input:focus-visible {
+  box-shadow: none;
+}
+
+/* Utility-resistant accessibility overrides for existing search inputs and pop-up panels.
+   These keep the drop-in styles visible when component-level Tailwind classes set their own colors. */
+.hover-card,
+.tooltip,
+[role="tooltip"],
+[data-hover-card],
+[data-radix-popper-content-wrapper] .hover-card {
+  background-color: var(--hover-card-bg) !important;
+  border-color: var(--hover-card-border) !important;
+  color: var(--hover-card-text) !important;
+  font-size: var(--hover-card-font-size) !important;
+}
+
+.hover-card :where(p, span, li, small, strong),
+.tooltip :where(p, span, li, small, strong),
+[role="tooltip"] :where(p, span, li, small, strong),
+[data-hover-card] :where(p, span, li, small, strong) {
+  color: inherit !important;
+}
+
+.search-bar,
+input.search-bar,
+input[type="search"],
+input[aria-label*="search" i],
+input[aria-label*="rechercher" i],
+input[placeholder*="search" i],
+input[placeholder*="rechercher" i] {
+  background-color: var(--search-bar-bg) !important;
+  border-color: var(--search-bar-border) !important;
+  border-radius: var(--search-bar-radius) !important;
+  box-shadow: var(--search-bar-shadow) !important;
+  color: var(--search-bar-text) !important;
+  font-size: var(--search-bar-font-size) !important;
+}
+
+.search-bar:hover,
+input.search-bar:hover,
+input[type="search"]:hover,
+input[aria-label*="search" i]:hover,
+input[aria-label*="rechercher" i]:hover,
+input[placeholder*="search" i]:hover,
+input[placeholder*="rechercher" i]:hover {
+  background-color: var(--search-bar-bg-hover) !important;
+  border-color: var(--search-bar-border-hover) !important;
+}
+
+.search-bar:focus-within,
+input.search-bar:focus,
+input.search-bar:focus-visible,
+input[type="search"]:focus,
+input[type="search"]:focus-visible,
+input[aria-label*="search" i]:focus,
+input[aria-label*="search" i]:focus-visible,
+input[aria-label*="rechercher" i]:focus,
+input[aria-label*="rechercher" i]:focus-visible,
+input[placeholder*="search" i]:focus,
+input[placeholder*="search" i]:focus-visible,
+input[placeholder*="rechercher" i]:focus,
+input[placeholder*="rechercher" i]:focus-visible {
+  background-color: var(--search-bar-bg) !important;
+  border-color: var(--search-bar-focus) !important;
+  box-shadow: 0 0 0 3px var(--search-bar-focus-soft), var(--search-bar-shadow) !important;
+  outline: none !important;
+}
+
+.search-bar input::placeholder,
+input.search-bar::placeholder,
+input[type="search"]::placeholder,
+input[aria-label*="search" i]::placeholder,
+input[aria-label*="rechercher" i]::placeholder,
+input[placeholder*="search" i]::placeholder,
+input[placeholder*="rechercher" i]::placeholder {
+  color: var(--search-bar-placeholder) !important;
+  opacity: 1 !important;
 }

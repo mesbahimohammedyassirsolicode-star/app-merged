@@ -141,16 +141,16 @@ function seanceStableKey(s: AnySeance, idx: number): number | string {
 // ── Color palette for modules ─────────────────────────────────────────────────
 
 const MODULE_COLORS = [
-  'border-l-4 border-l-indigo-400 bg-indigo-50',
-  'border-l-4 border-l-emerald-400 bg-emerald-50',
-  'border-l-4 border-l-amber-400 bg-amber-50',
-  'border-l-4 border-l-rose-400 bg-rose-50',
-  'border-l-4 border-l-violet-400 bg-violet-50',
-  'border-l-4 border-l-cyan-400 bg-cyan-50',
-  'border-l-4 border-l-orange-400 bg-orange-50',
-  'border-l-4 border-l-teal-400 bg-teal-50',
-  'border-l-4 border-l-pink-400 bg-pink-50',
-  'border-l-4 border-l-lime-400 bg-lime-50',
+  'border-l-4 border-l-blue-500 bg-blue-500/10 text-blue-200',
+  'border-l-4 border-l-emerald-500 bg-emerald-500/10 text-emerald-200',
+  'border-l-4 border-l-amber-500 bg-amber-500/10 text-amber-200',
+  'border-l-4 border-l-rose-500 bg-rose-500/10 text-rose-200',
+  'border-l-4 border-l-violet-500 bg-violet-500/10 text-violet-200',
+  'border-l-4 border-l-cyan-500 bg-cyan-500/10 text-cyan-200',
+  'border-l-4 border-l-orange-500 bg-orange-500/10 text-orange-200',
+  'border-l-4 border-l-teal-500 bg-teal-500/10 text-teal-200',
+  'border-l-4 border-l-pink-500 bg-pink-500/10 text-pink-200',
+  'border-l-4 border-l-lime-500 bg-lime-500/10 text-lime-200',
 ];
 
 function getModuleColor(code: string | undefined | null): string {
@@ -163,9 +163,9 @@ function getModuleColor(code: string | undefined | null): string {
 // ── Status badge ──────────────────────────────────────────────────────────────
 
 const STATUS_STYLES: Record<string, string> = {
-  planifie: 'bg-blue-100 text-blue-700 border-blue-200',
-  realise: 'bg-green-100 text-green-700 border-green-200',
-  annule: 'bg-red-100 text-red-500 border-red-200 line-through opacity-70',
+  planifie: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  realise: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  annule: 'bg-rose-500/10 text-rose-400 border-rose-500/20 line-through opacity-70',
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -179,7 +179,7 @@ const StatusBadge = memo(function StatusBadge({ status }: { status: string }) {
   return (
     <span
       className={`inline-block rounded border px-1.5 py-0.5 text-[10px] font-semibold ${
-        STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600 border-gray-200'
+        STATUS_STYLES[status] ?? 'bg-theme-surface text-theme-text-secondary border-theme-border'
       }`}
     >
       {STATUS_LABELS[status] ?? status}
@@ -217,7 +217,7 @@ const SeanceCard = memo(function SeanceCard({
 
   return (
     <div
-      className={`group relative rounded-xl border border-slate-200 shadow-sm transition-shadow hover:shadow-md ${
+      className={`group relative rounded-xl border border-theme-border shadow-sm transition-shadow hover:shadow-md ${
         seanceStatusValue(s) === 'annule' ? 'opacity-60' : ''
       } ${compact ? 'p-2 text-xs' : 'p-3 text-sm'} ${colorClass}`}
     >
@@ -226,15 +226,15 @@ const SeanceCard = memo(function SeanceCard({
         <div className="absolute right-1.5 top-1.5 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
           <button
             onClick={() => onEdit(s as TimetableSeance)}
-            className="rounded bg-white p-1 shadow hover:bg-slate-100"
+            className="rounded bg-theme-surface p-1 shadow hover:bg-theme-surface"
             title="Modifier"
           >
-            <Pencil className="h-3 w-3 text-slate-600" />
+            <Pencil className="h-3 w-3 text-theme-text-secondary" />
           </button>
           <button
             onClick={() => onDelete((s as TimetableSeance).id)}
             disabled={isDeletingThis}
-            className="rounded bg-white p-1 shadow hover:bg-red-50"
+            className="rounded bg-theme-surface p-1 shadow hover:bg-red-500/20"
             title="Supprimer"
           >
             {isDeletingThis ? (
@@ -247,19 +247,19 @@ const SeanceCard = memo(function SeanceCard({
       )}
 
       {/* Module label */}
-      <p className={`font-semibold text-slate-900 leading-tight ${compact ? 'truncate' : ''}`}>
+      <p className={`font-semibold text-white leading-tight ${compact ? 'truncate' : ''}`}>
         {seanceName(s)}
       </p>
 
       {/* Module code badge */}
       {(moduleCode ?? (s as TimetableDataSeance).module?.code) && (
-        <p className="mt-0.5 text-[10px] font-mono text-slate-400">
+        <p className="mt-0.5 text-[10px] font-mono text-theme-text-secondary">
           {moduleCode ?? (s as TimetableDataSeance).module?.code}
         </p>
       )}
 
       {/* Time */}
-      <p className="mt-0.5 flex items-center gap-1 text-slate-500">
+      <p className="mt-0.5 flex items-center gap-1 text-theme-text-secondary">
         <Clock className="h-3 w-3 shrink-0" />
         {String('start_time' in s ? s.start_time : '').slice(0, 5)} –{' '}
         {String('end_time' in s ? s.end_time : '').slice(0, 5)}
@@ -268,18 +268,18 @@ const SeanceCard = memo(function SeanceCard({
       {!compact && (
         <>
           {groupLabel(s) && (
-            <p className="mt-0.5 flex items-center gap-1 text-slate-500">
+            <p className="mt-0.5 flex items-center gap-1 text-theme-text-secondary">
               <Users className="h-3 w-3 shrink-0" />
               {groupLabel(s)}
             </p>
           )}
           {teacherName(s) && (
-            <p className="mt-0.5 truncate text-slate-500" title={teacherName(s)}>
+            <p className="mt-0.5 truncate text-theme-text-secondary" title={teacherName(s)}>
               {teacherName(s)}
             </p>
           )}
           {roomLabel(s) && (
-            <p className="mt-0.5 flex items-center gap-1 font-medium text-indigo-600">
+            <p className="mt-0.5 flex items-center gap-1 font-medium text-indigo-400">
               <MapPin className="h-3 w-3 shrink-0" />
               {roomLabel(s)}
             </p>
@@ -287,11 +287,11 @@ const SeanceCard = memo(function SeanceCard({
           <div className="mt-1 flex flex-wrap items-center gap-1.5">
             <StatusBadge status={seanceStatusValue(s)} />
             {seanceTypeValue(s) === 'distance' ? (
-              <span className="flex items-center gap-0.5 rounded border border-purple-200 bg-purple-50 px-1.5 py-0.5 text-[10px] font-semibold text-purple-600">
+              <span className="flex items-center gap-0.5 rounded border border-purple-500/20 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-purple-400">
                 <Wifi className="h-2.5 w-2.5" /> Distance
               </span>
             ) : (
-              <span className="flex items-center gap-0.5 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] text-slate-500">
+              <span className="flex items-center gap-0.5 rounded border border-theme-border bg-theme-surface px-1.5 py-0.5 text-[10px] text-theme-text-secondary">
                 <WifiOff className="h-2.5 w-2.5" /> Présentiel
               </span>
             )}
@@ -313,24 +313,29 @@ interface FiliereSelectorProps {
 // Performance: React.memo prevents re-render on every parent state change
 const FiliereSelector = memo(function FiliereSelector({ filieres, value, onChange }: FiliereSelectorProps) {
   return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="app-control h-9 min-w-[220px]"
-    >
-      <option value="">— Sélectionner une filière —</option>
-      {filieres.map((f) => (
-        <option key={f.code} value={f.code}>
-          {f.code} — {f.label}
-        </option>
-      ))}
-    </select>
+    <div className="flex items-center gap-3 rounded-xl border border-theme-border bg-theme-surface px-4 py-2 shadow-sm">
+      <Users className="h-4 w-4 text-theme-text-secondary" />
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full border-none bg-transparent px-0 py-0 text-sm font-medium text-theme-text-primary focus:ring-0"
+      >
+        <option value="" className="bg-theme-surface text-theme-text-primary">— Sélectionner une filière —</option>
+        {filieres.map((f) => (
+          <option key={f.code} value={f.code} className="bg-theme-surface text-theme-text-primary">
+            {f.code} — {f.label}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 });
 
 // ── Main Component ────────────────────────────────────────────────────────────
 
 type ViewMode = 'calendar' | 'list';
+
+import PageHeader from '../components/layout/PageHeader';
 
 export default function TimetablePage() {
   const { user } = useAuth();
@@ -498,30 +503,29 @@ export default function TimetablePage() {
 
   return (
     <div className="space-y-6">
-      {/* ── Header ── */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Emploi du temps</h1>
-          <p className="mt-0.5 text-sm text-slate-500">Planning hebdomadaire des séances</p>
-        </div>
-        {canEdit && (
-          <Button onClick={handleAdd} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Ajouter une séance
-          </Button>
-        )}
-      </div>
+      <PageHeader 
+        title="Emploi du temps"
+        subtitle="Planning hebdomadaire des séances"
+        actions={
+          canEdit && (
+            <Button onClick={handleAdd} className="gap-2">
+              <Plus className="h-4 w-4" />
+              Ajouter une séance
+            </Button>
+          )
+        }
+      />
 
       {/* ── Toolbar ── */}
       <div className="flex flex-wrap items-center gap-3">
         {/* View toggle */}
-        <div className="flex rounded-xl border border-slate-200 bg-white p-0.5 shadow-sm">
+        <div className="flex rounded-xl border border-theme-border bg-theme-surface p-0.5 shadow-sm">
           <button
             onClick={() => setViewMode('calendar')}
-            className={`app-control-ghost flex items-center gap-1.5 px-3 py-1.5 font-medium ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               viewMode === 'calendar'
-                ? 'bg-primary-600 text-white shadow'
-                : ''
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
+                : 'text-theme-text-secondary hover:bg-theme-hover-card-bg hover:text-theme-hover-card-fg'
             }`}
           >
             <Calendar className="h-4 w-4" />
@@ -529,10 +533,10 @@ export default function TimetablePage() {
           </button>
           <button
             onClick={() => setViewMode('list')}
-            className={`app-control-ghost flex items-center gap-1.5 px-3 py-1.5 font-medium ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               viewMode === 'list'
-                ? 'bg-primary-600 text-white shadow'
-                : ''
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
+                : 'text-theme-text-secondary hover:bg-theme-hover-card-bg hover:text-theme-hover-card-fg'
             }`}
           >
             <List className="h-4 w-4" />
@@ -541,27 +545,27 @@ export default function TimetablePage() {
         </div>
 
         {/* Week navigation */}
-        <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5 shadow-sm">
+        <div className="flex items-center gap-2 rounded-xl border border-theme-border bg-theme-surface px-3 py-1.5 shadow-sm">
           <button
             onClick={() => setWeekStart((w) => addDays(w, -7))}
-            className="app-control-ghost p-0.5"
+            className="p-1 text-theme-text-secondary hover:bg-theme-hover-card-bg hover:text-theme-hover-card-fg transition-colors"
             title="Semaine précédente"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
-          <span className="min-w-[180px] text-center text-sm font-medium text-slate-700">
+          <span className="min-w-[180px] text-center text-sm font-semibold text-theme-text-secondary">
             {weekDates[0]} → {weekDates[5]}
           </span>
           <button
             onClick={() => setWeekStart((w) => addDays(w, 7))}
-            className="app-control-ghost p-0.5"
+            className="p-1 text-theme-text-secondary hover:bg-theme-hover-card-bg hover:text-theme-hover-card-fg transition-colors"
             title="Semaine suivante"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
           <button
             onClick={() => setWeekStart(getMondayISO())}
-            className="ml-1 rounded-lg border border-slate-200 px-2 py-0.5 text-xs text-slate-500 transition-colors duration-200 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300"
+            className="ml-1 rounded-lg border border-theme-border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-theme-text-secondary transition-all hover:bg-theme-hover-card-bg hover:text-theme-hover-card-fg"
           >
             Aujourd'hui
           </button>
@@ -571,7 +575,7 @@ export default function TimetablePage() {
         {!isStudent && !isFormateur && (
           <div className="flex items-center gap-2">
             {filieresLoading ? (
-              <div className="flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-400 shadow-sm">
+              <div className="flex h-9 items-center gap-2 rounded-lg border border-theme-border bg-theme-surface px-3 text-sm text-theme-text-secondary shadow-sm">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Chargement...
               </div>
@@ -588,20 +592,20 @@ export default function TimetablePage() {
 
       {/* ── Filière info banner ── */}
       {!isStudent && filiereCode && jsonTimetable?.filiere_label && (
-        <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3">
+        <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-indigo-500/20 bg-indigo-500/10 px-4 py-3">
           <BookOpen className="h-5 w-5 shrink-0 text-indigo-500" />
           <div className="min-w-0 flex-1">
-            <p className="font-semibold text-indigo-800">
+            <p className="font-semibold text-indigo-300">
               {jsonTimetable.filiere_label}
             </p>
-            <p className="text-sm text-indigo-600">
+            <p className="text-sm text-indigo-400">
               {jsonTimetable.group_label && <span className="mr-3">{jsonTimetable.group_label}</span>}
               {jsonTimetable.academic_year && <span className="mr-3">A.S. {jsonTimetable.academic_year}</span>}
               {jsonTimetable.session && <span>Session {jsonTimetable.session}</span>}
             </p>
           </div>
           {jsonTimetable.modules.length > 0 && (
-            <div className="text-sm text-indigo-600">
+            <div className="text-sm text-indigo-400">
               <span className="font-medium">{jsonTimetable.modules.length}</span> modules
             </div>
           )}
@@ -613,8 +617,8 @@ export default function TimetablePage() {
         /* Prompt to select a filière */
         <Card className="p-16 text-center">
           <BookOpen className="mx-auto mb-4 h-14 w-14 text-indigo-200" />
-          <p className="text-lg font-semibold text-slate-700">Sélectionnez une filière</p>
-          <p className="mt-1 text-sm text-slate-400">
+          <p className="text-lg font-semibold text-white">Sélectionnez une filière</p>
+          <p className="mt-1 text-sm text-theme-text-secondary">
             Choisissez une filière dans le menu ci-dessus pour afficher son emploi du temps.
           </p>
           {filieres.length > 0 && (
@@ -623,7 +627,7 @@ export default function TimetablePage() {
                 <button
                   key={f.code}
                   onClick={() => setFiliereCode(f.code)}
-                  className="rounded-full border border-indigo-200 bg-white px-4 py-1.5 text-sm font-medium text-indigo-700 shadow-sm transition hover:bg-indigo-50"
+                  className="rounded-full border border-indigo-500/20 bg-indigo-500/10 px-4 py-1.5 text-sm font-medium text-indigo-400 shadow-sm transition hover:bg-indigo-500/20"
                 >
                   {f.code}
                 </button>
@@ -636,16 +640,16 @@ export default function TimetablePage() {
           <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
         </div>
       ) : isError ? (
-        <Card className="border-rose-200 bg-rose-50 p-12 text-center">
-          <p className="font-medium text-rose-700">Erreur de chargement de l'emploi du temps.</p>
-          <p className="mt-1 text-sm text-rose-600">Vérifiez votre connexion ou réessayez plus tard.</p>
+        <Card className="border-rose-500/20 bg-rose-500/10 p-12 text-center">
+          <p className="font-medium text-rose-400">Erreur de chargement de l'emploi du temps.</p>
+          <p className="mt-1 text-sm text-rose-400">Vérifiez votre connexion ou réessayez plus tard.</p>
         </Card>
       ) : isEmpty ? (
         <Card className="p-16 text-center">
-          <Calendar className="mx-auto mb-4 h-12 w-12 text-slate-300" />
-          <p className="text-slate-500">Aucune séance pour cette semaine.</p>
+          <Calendar className="mx-auto mb-4 h-12 w-12 text-theme-text-secondary" />
+          <p className="text-theme-text-secondary">Aucune séance pour cette semaine.</p>
           {isStudent && (
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-theme-text-secondary">
               Assurez-vous d'être inscrit dans un groupe lié à votre filière.
             </p>
           )}
@@ -658,24 +662,24 @@ export default function TimetablePage() {
         </Card>
       ) : viewMode === 'calendar' ? (
         // ── Calendar Grid ──────────────────────────────────────────────────
-        <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-x-auto rounded-2xl border border-theme-border bg-theme-surface/50 backdrop-blur-md shadow-sm">
           <table className="w-full border-collapse text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50">
-                <th className="w-16 border-r border-slate-200 p-3 text-left text-xs font-medium uppercase tracking-wide text-slate-400">
+              <tr className="border-b border-theme-border bg-theme-surface">
+                <th className="w-16 border-r border-theme-border p-3 text-left text-xs font-medium uppercase tracking-wide text-theme-text-secondary">
                   Heure
                 </th>
                 {weekDates.map((date, i) => (
                   <th
                     key={date}
-                    className={`border-l border-slate-200 p-3 text-left ${date === todayISO ? 'bg-blue-50' : ''}`}
+                    className={`border-l border-theme-border p-3 text-left ${date === todayISO ? 'bg-blue-500/10' : ''}`}
                   >
-                    <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                    <div className="text-xs font-medium uppercase tracking-wide text-theme-text-secondary">
                       {DAYS[i]}
                     </div>
                     <div
                       className={`mt-0.5 text-lg font-bold ${
-                        date === todayISO ? 'text-blue-600' : 'text-slate-800'
+                        date === todayISO ? 'text-blue-400' : 'text-theme-text-primary'
                       }`}
                     >
                       {date.slice(8, 10)}
@@ -686,8 +690,8 @@ export default function TimetablePage() {
             </thead>
             <tbody>
               {displayedHours.map((hour) => (
-                <tr key={hour} className="border-b border-slate-100 last:border-b-0">
-                  <td className="border-r border-slate-200 p-2 text-right text-xs text-slate-400">{hour}:00</td>
+                <tr key={hour} className="border-b border-theme-border last:border-b-0">
+                  <td className="border-r border-theme-border p-2 text-right text-xs text-theme-text-secondary">{hour}:00</td>
                   {weekDates.map((date) => {
                     const rows = (byDate[date] ?? []).filter(
                       (row: AnySeance) => seanceStartHour(row) === hour
@@ -695,7 +699,7 @@ export default function TimetablePage() {
                     return (
                       <td
                         key={date}
-                        className="group/cell min-w-[150px] cursor-pointer border-l border-slate-200 p-1 align-top hover:bg-blue-50/30"
+                        className="group/cell min-w-[150px] cursor-pointer border-l border-theme-border p-1 align-top hover:bg-blue-500/10"
                         onClick={() => canEdit && rows.length === 0 && handleAddFromCell(date)}
                         title={
                           canEdit && rows.length === 0
@@ -717,7 +721,7 @@ export default function TimetablePage() {
                             />
                           ))}
                           {canEdit && rows.length === 0 && (
-                            <div className="hidden rounded border-2 border-dashed border-blue-200 px-2 py-1 text-center text-xs text-blue-300 group-hover/cell:block">
+                            <div className="hidden rounded border-2 border-dashed border-blue-500/20 px-2 py-1 text-center text-xs text-blue-400 group-hover/cell:block">
                               + Ajouter
                             </div>
                           )}
@@ -731,20 +735,20 @@ export default function TimetablePage() {
           </table>
         </div>
       ) : isStudent ? (
-        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="app-table-container shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
+            <table className="app-table">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
-                  <th className="px-4 py-3 font-semibold text-slate-700 whitespace-nowrap">Jour</th>
-                  <th className="px-4 py-3 font-semibold text-slate-700 whitespace-nowrap">Date</th>
-                  <th className="px-4 py-3 font-semibold text-slate-700 whitespace-nowrap">Début</th>
-                  <th className="px-4 py-3 font-semibold text-slate-700 whitespace-nowrap">Fin</th>
-                  <th className="px-4 py-3 font-semibold text-slate-700 min-w-[140px]">Module</th>
-                  <th className="px-4 py-3 font-semibold text-slate-700 min-w-[120px]">Formateur</th>
+                <tr className="border-b border-theme-border bg-theme-surface">
+                  <th className="px-4 py-3 font-semibold text-theme-text-secondary whitespace-nowrap">Jour</th>
+                  <th className="px-4 py-3 font-semibold text-theme-text-secondary whitespace-nowrap">Date</th>
+                  <th className="px-4 py-3 font-semibold text-theme-text-secondary whitespace-nowrap">Début</th>
+                  <th className="px-4 py-3 font-semibold text-theme-text-secondary whitespace-nowrap">Fin</th>
+                  <th className="px-4 py-3 font-semibold text-theme-text-secondary min-w-[140px]">Module</th>
+                  <th className="px-4 py-3 font-semibold text-theme-text-secondary min-w-[120px]">Formateur</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-theme-border">
                 {seances.map((s: AnySeance, idx: number) => {
                   const ts = s as TimetableSeance;
                   let jour =
@@ -760,15 +764,15 @@ export default function TimetablePage() {
                   const start = String('start_time' in s ? s.start_time : '').slice(0, 5);
                   const end = String('end_time' in s ? s.end_time : '').slice(0, 5);
                   return (
-                    <tr key={seanceStableKey(s, idx)} className="hover:bg-slate-50/80">
-                      <td className="px-4 py-3 text-slate-800 whitespace-nowrap">{jour}</td>
-                      <td className="px-4 py-3 text-slate-600 font-mono text-xs whitespace-nowrap">
+                    <tr key={seanceStableKey(s, idx)} className="hover:bg-theme-surface">
+                      <td className="px-4 py-3 text-theme-text-primary whitespace-nowrap">{jour}</td>
+                      <td className="px-4 py-3 text-theme-text-secondary font-mono text-xs whitespace-nowrap">
                         {ts.date}
                       </td>
-                      <td className="px-4 py-3 text-slate-700 whitespace-nowrap">{start}</td>
-                      <td className="px-4 py-3 text-slate-700 whitespace-nowrap">{end}</td>
-                      <td className="px-4 py-3 font-medium text-slate-900">{seanceName(s)}</td>
-                      <td className="px-4 py-3 text-slate-600">{teacherName(s) ?? '—'}</td>
+                      <td className="px-4 py-3 text-theme-text-secondary whitespace-nowrap">{start}</td>
+                      <td className="px-4 py-3 text-theme-text-secondary whitespace-nowrap">{end}</td>
+                      <td className="px-4 py-3 font-medium text-theme-text-primary">{seanceName(s)}</td>
+                      <td className="px-4 py-3 text-theme-text-secondary">{teacherName(s) ?? '—'}</td>
                     </tr>
                   );
                 })}
@@ -787,18 +791,18 @@ export default function TimetablePage() {
                 <div className="mb-2 flex items-center gap-3">
                   <h2
                     className={`text-base font-bold ${
-                      date === todayISO ? 'text-blue-600' : 'text-slate-800'
+                      date === todayISO ? 'text-blue-400' : 'text-theme-text-primary'
                     }`}
                   >
                     {DAYS[di]} {date}
                     {date === todayISO && (
-                      <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-600">
+                      <span className="ml-2 rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-400">
                         Aujourd'hui
                       </span>
                     )}
                   </h2>
-                  <div className="h-px flex-1 bg-slate-200" />
-                  <span className="text-xs text-slate-400">{daySeances.length} séance(s)</span>
+                  <div className="h-px flex-1 bg-theme-surface" />
+                  <span className="text-xs text-theme-text-secondary">{daySeances.length} séance(s)</span>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {daySeances.map((s: AnySeance, idx: number) => (

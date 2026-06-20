@@ -22,8 +22,8 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
-      <div className="rounded-xl border border-gray-200 bg-white p-5 space-y-4">
+      <h1 className="text-2xl font-bold text-theme-text-primary">Edit Profile</h1>
+      <div className="rounded-xl border border-theme-border glass-panel p-5 space-y-4">
         <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
         <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" type="email" />
         <Input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="New password" type="password" />

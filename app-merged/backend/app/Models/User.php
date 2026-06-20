@@ -80,6 +80,41 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'role_user')->withTimestamps();
     }
 
+    public function canonicalRole(): string
+    {
+        $role = strtolower(trim((string) ($this->role ?? '')));
+
+        return match ($role) {
+            'teacher' => 'formateur',
+            'student' => 'stagiaire',
+            default => $role,
+        };
+    }
+
+    public function hasAnyRole(string ...$roles): bool
+    {
+        $canonical = $this->canonicalRole();
+
+        foreach ($roles as $role) {
+            $candidate = strtolower(trim($role));
+            if ($candidate === '') {
+                continue;
+            }
+
+            $candidate = match ($candidate) {
+                'teacher' => 'formateur',
+                'student' => 'stagiaire',
+                default => $candidate,
+            };
+
+            if ($candidate === $canonical) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function hasRole(string $slug): bool
     {
         return $this->roles()->where('slug', $slug)->exists();
@@ -95,7 +130,7 @@ class User extends Authenticatable
      */
     public function effectivePermissionSlugs(): Collection
     {
-        $role = strtolower(trim((string) ($this->role ?? '')));
+        $role = $this->canonicalRole();
         $aliases = (array) config('rbac.role_slug_aliases', []);
         $lookupRoles = array_values(array_unique(array_filter([$role, $aliases[$role] ?? null])));
 

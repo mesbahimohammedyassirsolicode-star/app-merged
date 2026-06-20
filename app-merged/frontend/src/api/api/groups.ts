@@ -55,7 +55,7 @@ export const groupsApi = {
     return normalizeGroupsList(res);
   },
   get: (id: number) => api.get<ApiResponse<Groupe>>(`/groups/${id}`).then(unwrapData),
-  create: (body: { filiere_id: number; annee_scolaire_id: number; label: string; year_level: number; capacity?: number }) =>
+  create: (body: { niveau_id: number; annee_scolaire_id: number; label: string; year_level: number; capacity?: number }) =>
     api.post<ApiResponse<Groupe>>('/groups', body).then(unwrapData),
   update: (id: number, body: Partial<Groupe>) =>
     api.put<ApiResponse<Groupe>>(`/groups/${id}`, body).then(unwrapData),

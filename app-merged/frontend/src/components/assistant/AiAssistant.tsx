@@ -1,9 +1,27 @@
-import { useMemo, useRef, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { BarChart, Bar, CartesianGrid, LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { Download, Loader2, Mic, MicOff, Sparkles } from 'lucide-react';
-import { aiAssistantApi, type AiAssistantResponse } from '../../api/api/aiAssistant';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { useMemo, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Scatter,
+  ScatterChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import { BrainCircuit, Database, Download, Loader2, MessageSquareText, ShieldCheck, Sparkles } from 'lucide-react';
+import {
+  aiAssistantApi,
+  type AiAssistantResponse,
+  type AiChartPayload,
+  type AnalyticsCatalogResponse,
+  type StructuredAnalyticsQueryResponse,
+} from '../../api/api/aiAssistant';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { getApiErrorMessage } from '../../lib/api-error';
 
 type ChatItem = {
@@ -13,40 +31,27 @@ type ChatItem = {
   error?: string;
 };
 
-type SpeechRecognitionResultEvent = Event & {
-  results: SpeechRecognitionResultList;
-};
-
-type SpeechRecognitionErrorEvent = Event & {
-  error: string;
-};
-
-type SpeechRecognitionInstance = {
-  lang: string;
-  interimResults: boolean;
-  maxAlternatives: number;
-  start: () => void;
-  stop: () => void;
-  onresult: ((event: SpeechRecognitionResultEvent) => void) | null;
-  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
-  onend: (() => void) | null;
-};
-
-type SpeechRecognitionCtor = new () => SpeechRecognitionInstance;
-
 const SUGGESTED_QUERIES = [
-  'Show me students at risk this month',
-  'Average performance this month',
-  'Top students in my scope',
-  'Attendance report last 6 months',
-  'Grades by module',
+  'Show students at risk in my scope this month',
+  'Compare attendance with last month',
+  'Which modules have the lowest grades?',
+  'Show top students in my groups',
+  'Explain the attendance trend this year',
 ];
+
+function normalizeInsightText(insight: AiAssistantResponse['insights'][number]): string {
+  return typeof insight === 'string' ? insight : `${insight.title}: ${insight.detail}`;
+}
+
+function normalizeRecommendationText(recommendation: AiAssistantResponse['recommendations'][number]): string {
+  return typeof recommendation === 'string' ? recommendation : recommendation.label;
+}
 
 function DataTable({ data }: { data: unknown }) {
   if (!Array.isArray(data) || data.length === 0 || typeof data[0] !== 'object' || data[0] === null) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-500">
-        Structured table unavailable for this result.
+      <div className="rounded-2xl border border-theme-border bg-theme-surface p-4 text-sm text-theme-text-secondary">
+        No drilldown table is available for this result yet.
       </div>
     );
   }
@@ -55,20 +60,24 @@ function DataTable({ data }: { data: unknown }) {
   const columns = Object.keys(rows[0]).slice(0, 6);
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200">
-      <table className="min-w-full text-left text-xs">
-        <thead className="bg-slate-50 text-slate-600">
+    <div className="overflow-x-auto rounded-2xl border border-theme-border">
+      <table className="min-w-full text-left text-sm">
+        <thead className="bg-theme-surface text-theme-text-secondary">
           <tr>
-            {columns.map((col) => (
-              <th key={col} className="px-3 py-2 font-semibold">{col}</th>
+            {columns.map((column) => (
+              <th key={column} className="px-4 py-3 font-semibold">
+                {column.replaceAll('_', ' ')}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {rows.slice(0, 10).map((row, idx) => (
-            <tr key={idx} className="border-t border-slate-200">
-              {columns.map((col) => (
-                <td key={col} className="px-3 py-2 text-slate-700">{String(row[col] ?? '-')}</td>
+          {rows.slice(0, 12).map((row, index) => (
+            <tr key={index} className="border-t border-theme-border">
+              {columns.map((column) => (
+                <td key={column} className="px-4 py-3 text-theme-text-primary">
+                  {String(row[column] ?? '-')}
+                </td>
               ))}
             </tr>
           ))}
@@ -78,83 +87,179 @@ function DataTable({ data }: { data: unknown }) {
   );
 }
 
-function DataChart({ response }: { response: AiAssistantResponse }) {
-  if (!response.chart || response.chart.labels.length === 0 || response.chart.data.length === 0) {
+function AnalyticsChart({ chart }: { chart?: AiChartPayload }) {
+  if (!chart || chart.labels.length === 0 || chart.data.length === 0) {
     return null;
   }
 
-  const chartData = response.chart.labels.map((label, index) => ({
+  const chartData = chart.labels.map((label, index) => ({
     label,
-    value: Number(response.chart?.data[index] ?? 0),
+    value: Number(chart.data[index] ?? 0),
+    x: index + 1,
   }));
 
-  if (response.chart.type === 'line') {
+  if (chart.type === 'line') {
     return (
-      <div className="h-60">
+      <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-            <XAxis dataKey="label" tick={{ fill: '#64748b', fontSize: 12 }} />
-            <YAxis tick={{ fill: '#64748b', fontSize: 12 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--theme-border))" />
+            <XAxis dataKey="label" tick={{ fill: 'rgb(var(--theme-text-secondary))', fontSize: 12 }} />
+            <YAxis tick={{ fill: 'rgb(var(--theme-text-secondary))', fontSize: 12 }} />
             <Tooltip />
-            <Line type="monotone" dataKey="value" stroke="#0ea5e9" strokeWidth={2} />
+            <Line type="monotone" dataKey="value" stroke="#0f766e" strokeWidth={3} dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>
     );
   }
 
-  if (response.chart.type === 'pie') {
+  if (chart.type === 'scatter') {
     return (
-      <div className="h-60">
+      <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Tooltip />
-            <Pie data={chartData} dataKey="value" nameKey="label" cx="50%" cy="50%" outerRadius={90}>
-              {chartData.map((entry, index) => (
-                <Cell key={`${entry.label}-${index}`} fill={['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#ef4444'][index % 5]} />
-              ))}
-            </Pie>
-          </PieChart>
+          <ScatterChart>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--theme-border))" />
+            <XAxis type="number" dataKey="x" name="index" tick={{ fill: 'rgb(var(--theme-text-secondary))', fontSize: 12 }} />
+            <YAxis type="number" dataKey="value" name="value" tick={{ fill: 'rgb(var(--theme-text-secondary))', fontSize: 12 }} />
+            <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+            <Scatter data={chartData} fill="#0f766e" />
+          </ScatterChart>
         </ResponsiveContainer>
       </div>
     );
   }
 
   return (
-    <div className="h-60">
+    <div className="h-72">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData.slice(0, 12)}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis dataKey="label" tick={{ fill: '#64748b', fontSize: 12 }} />
-          <YAxis tick={{ fill: '#64748b', fontSize: 12 }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--theme-border))" />
+          <XAxis dataKey="label" tick={{ fill: 'rgb(var(--theme-text-secondary))', fontSize: 12 }} />
+          <YAxis tick={{ fill: 'rgb(var(--theme-text-secondary))', fontSize: 12 }} />
           <Tooltip />
-          <Bar dataKey="value" fill="#4f46e5" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="value" fill="#0f766e" radius={[8, 8, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
   );
 }
 
+function CatalogPanel({
+  catalog,
+  structuredResult,
+  metric,
+  dimension,
+  onMetricChange,
+  onDimensionChange,
+  onRunStructuredQuery,
+  isRunning,
+}: {
+  catalog?: AnalyticsCatalogResponse;
+  structuredResult?: StructuredAnalyticsQueryResponse;
+  metric: string;
+  dimension: string;
+  onMetricChange: (value: string) => void;
+  onDimensionChange: (value: string) => void;
+  onRunStructuredQuery: () => void;
+  isRunning: boolean;
+}) {
+  const selectedMetric = metric && catalog ? catalog.metrics[metric] : undefined;
+  const dimensionOptions = selectedMetric?.supported_dimensions ?? Object.keys(catalog?.dimensions ?? {});
+
+  return (
+    <Card className="border-theme-border glass-panel/90">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Database className="h-5 w-5 text-teal-700" />
+          Analytics Builder
+        </CardTitle>
+        <CardDescription>Run secure metric queries without leaving role-scoped boundaries.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <label className="text-xs font-semibold uppercase tracking-wide text-theme-text-secondary">Metric</label>
+          <select
+            value={metric}
+            onChange={(e) => onMetricChange(e.target.value)}
+            className="w-full rounded-xl border border-theme-border glass-panel px-3 py-2 text-sm text-theme-text-primary"
+          >
+            {Object.entries(catalog?.metrics ?? {}).map(([key, value]) => (
+              <option key={key} value={key}>
+                {value.label}
+              </option>
+            ))}
+          </select>
+          {selectedMetric ? <p className="text-xs text-theme-text-secondary">{selectedMetric.description}</p> : null}
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs font-semibold uppercase tracking-wide text-theme-text-secondary">Dimension</label>
+          <select
+            value={dimension}
+            onChange={(e) => onDimensionChange(e.target.value)}
+            className="w-full rounded-xl border border-theme-border glass-panel px-3 py-2 text-sm text-theme-text-primary"
+          >
+            {dimensionOptions.map((key) => (
+              <option key={key} value={key}>
+                {catalog?.dimensions[key]?.label ?? key}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button
+          type="button"
+          onClick={onRunStructuredQuery}
+          disabled={isRunning || !metric || !dimension}
+          className="w-full rounded-xl bg-theme-hover-card-bg px-4 py-2 text-sm font-semibold text-theme-hover-card-fg disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isRunning ? 'Running query...' : 'Run structured query'}
+        </button>
+
+        {structuredResult ? (
+          <div className="space-y-3 rounded-2xl border border-theme-border bg-theme-surface p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-theme-text-secondary">
+              Latest builder result
+            </p>
+            <AnalyticsChart chart={structuredResult.chart} />
+          </div>
+        ) : null}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function AiAssistant() {
   const [query, setQuery] = useState('');
+  const [conversationId, setConversationId] = useState<string | undefined>();
   const [history, setHistory] = useState<ChatItem[]>([]);
-  const [isListening, setIsListening] = useState(false);
-  const [voiceError, setVoiceError] = useState<string | null>(null);
-  const debounceRef = useRef<number | null>(null);
-  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  const [metric, setMetric] = useState('attendance_rate');
+  const [dimension, setDimension] = useState('month');
+  const [structuredResult, setStructuredResult] = useState<StructuredAnalyticsQueryResponse | undefined>();
+
+  const catalogQuery = useQuery({
+    queryKey: ['analytics-catalog'],
+    queryFn: () => aiAssistantApi.catalog(),
+  });
 
   const askMutation = useMutation({
-    mutationFn: (q: string) => aiAssistantApi.ask(q),
-    onSuccess: (response, submittedQuery) => {
-      setHistory((prev) => [...prev, { id: crypto.randomUUID(), query: submittedQuery, response }]);
+    mutationFn: (payload: { q: string; conversationId?: string }) => aiAssistantApi.ask(payload.q, payload.conversationId),
+    onSuccess: (response, payload) => {
+      setConversationId(response.conversation_id ?? payload.conversationId);
+      setHistory((prev) => [...prev, { id: crypto.randomUUID(), query: payload.q, response }]);
     },
-    onError: (error, submittedQuery) => {
+    onError: (error, payload) => {
       setHistory((prev) => [
         ...prev,
-        { id: crypto.randomUUID(), query: submittedQuery, error: getApiErrorMessage(error, 'Unable to fetch analytics insight.') },
+        { id: crypto.randomUUID(), query: payload.q, error: getApiErrorMessage(error, 'Unable to generate analytics response.') },
       ]);
     },
+  });
+
+  const structuredQueryMutation = useMutation({
+    mutationFn: () => aiAssistantApi.structuredQuery({ metric, dimension }),
+    onSuccess: (response) => setStructuredResult(response),
   });
 
   const exportMutation = useMutation({
@@ -163,209 +268,251 @@ export default function AiAssistant() {
         format,
         data: response.data,
         summary: response.summary,
-        insights: response.insights,
+        insights: response.insights.map(normalizeInsightText),
       }),
   });
 
   const canSend = useMemo(() => query.trim().length >= 3 && !askMutation.isPending, [query, askMutation.isPending]);
-  const supportsVoice = useMemo(() => {
-    const scopedWindow = window as Window & {
-      SpeechRecognition?: SpeechRecognitionCtor;
-      webkitSpeechRecognition?: SpeechRecognitionCtor;
-    };
 
-    return Boolean(scopedWindow.SpeechRecognition || scopedWindow.webkitSpeechRecognition);
-  }, []);
-
-  const debouncedAsk = (value: string) => {
-    if (debounceRef.current) {
-      window.clearTimeout(debounceRef.current);
-    }
-    debounceRef.current = window.setTimeout(() => {
-      askMutation.mutate(value);
-    }, 300);
-  };
-
-  const onSend = () => {
-    const normalized = query.trim();
+  const handleSend = (nextQuery?: string) => {
+    const normalized = (nextQuery ?? query).trim();
     if (normalized.length < 3 || askMutation.isPending) {
       return;
     }
     setQuery('');
-    debouncedAsk(normalized);
+    askMutation.mutate({ q: normalized, conversationId });
   };
 
-  const toggleVoiceInput = () => {
-    if (!supportsVoice) {
-      setVoiceError('Voice input is not supported on this browser.');
-      return;
-    }
-
-    if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
-      return;
-    }
-
-    const scopedWindow = window as Window & {
-      SpeechRecognition?: SpeechRecognitionCtor;
-      webkitSpeechRecognition?: SpeechRecognitionCtor;
-    };
-    const SpeechRecognitionImpl = scopedWindow.SpeechRecognition ?? scopedWindow.webkitSpeechRecognition;
-    if (!SpeechRecognitionImpl) {
-      setVoiceError('Voice input is not supported on this browser.');
-      return;
-    }
-
-    const recognition = new SpeechRecognitionImpl();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.onresult = (event) => {
-      const transcript = event.results?.[0]?.[0]?.transcript?.trim() ?? '';
-      if (transcript.length > 0) {
-        setQuery(transcript);
-      }
-      setVoiceError(null);
-    };
-    recognition.onerror = (event) => {
-      setVoiceError(`Voice input error: ${event.error}`);
-      setIsListening(false);
-    };
-    recognition.onend = () => {
-      setIsListening(false);
-    };
-
-    recognitionRef.current = recognition;
-    setVoiceError(null);
-    setIsListening(true);
-    recognition.start();
-  };
+  const latestResponse = history.length > 0 ? history[history.length - 1].response : undefined;
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-indigo-600" />
-            Analytics Copilot
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-slate-600">Ask analytics questions in natural language. Responses are structured and role-scoped.</p>
-          <div className="flex flex-wrap gap-2">
-            {SUGGESTED_QUERIES.map((s) => (
-              <button
-                key={s}
-                type="button"
-                className="rounded-full border border-slate-300 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                onClick={() => setQuery(s)}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="e.g. Show me students at risk this month"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-indigo-500 focus:ring-2"
-            />
-            <button
-              type="button"
-              onClick={toggleVoiceInput}
-              disabled={!supportsVoice}
-              className="rounded-lg border border-slate-300 px-3 py-2 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
-              title={supportsVoice ? 'Voice input' : 'Voice input not supported'}
-            >
-              {isListening ? <MicOff className="h-4 w-4 text-rose-600" /> : <Mic className="h-4 w-4" />}
-            </button>
-            <button
-              type="button"
-              onClick={onSend}
-              disabled={!canSend}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              Send
-            </button>
-          </div>
-          {askMutation.isPending ? (
-            <div className="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Copilot is analyzing your data...
-            </div>
-          ) : null}
-          {voiceError ? (
-            <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
-              {voiceError}
-            </div>
-          ) : null}
-        </CardContent>
-      </Card>
+    <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)_320px]">
+      <CatalogPanel
+        catalog={catalogQuery.data}
+        structuredResult={structuredResult}
+        metric={metric}
+        dimension={dimension}
+        onMetricChange={(value) => {
+          setMetric(value);
+          const supported = catalogQuery.data?.metrics[value]?.supported_dimensions ?? [];
+          if (supported.length > 0 && !supported.includes(dimension)) {
+            setDimension(supported[0]);
+          }
+        }}
+        onDimensionChange={setDimension}
+        onRunStructuredQuery={() => structuredQueryMutation.mutate()}
+        isRunning={structuredQueryMutation.isPending}
+      />
 
-      <div className="space-y-4">
-        {history.slice().reverse().map((item) => (
-          <Card key={item.id}>
-            <CardHeader>
-              <CardTitle className="text-base">Query: {item.query}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {item.error ? (
-                <div className="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">{item.error}</div>
-              ) : null}
-              {item.response ? (
-                <>
-                  <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-indigo-800">Summary</p>
-                    <p className="mt-1 text-sm font-medium text-indigo-900">{item.response.summary}</p>
-                    <p className="mt-1 text-[11px] uppercase tracking-wide text-indigo-700">
-                      Intent source: {item.response.meta?.intent_source ?? 'rule'}
-                    </p>
+      <div className="space-y-6">
+        <Card className="overflow-hidden border-theme-border bg-theme-card">
+          <CardHeader className="pb-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="rounded-2xl bg-teal-100 p-3 text-teal-800">
+                <BrainCircuit className="h-6 w-6" />
+              </div>
+              <div>
+                <CardTitle>Analytics Copilot Workspace</CardTitle>
+                <CardDescription>
+                  Conversational, secure, role-scoped analytics for grades, attendance, trends, and student risk.
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-wrap gap-2">
+              {SUGGESTED_QUERIES.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => setQuery(item)}
+                  className="rounded-full border border-teal-200 glass-panel/80 px-3 py-1.5 text-xs font-semibold text-teal-800"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+            <div className="rounded-3xl border border-theme-border glass-panel/90 p-3 shadow-sm">
+              <textarea
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Ask a question like: Which students in my groups are likely to fail this month, and why?"
+                rows={4}
+                className="w-full resize-none border-0 bg-transparent text-sm text-theme-text-primary outline-none"
+              />
+              <div className="mt-3 flex items-center justify-between gap-3 border-t border-theme-border pt-3">
+                <div className="flex items-center gap-2 text-xs text-theme-text-secondary">
+                  <ShieldCheck className="h-4 w-4 text-teal-700" />
+                  Results stay role scoped and query-safe
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleSend()}
+                  disabled={!canSend}
+                  className="rounded-xl bg-teal-700 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {askMutation.isPending ? 'Analyzing...' : 'Ask Copilot'}
+                </button>
+              </div>
+            </div>
+
+            {askMutation.isPending ? (
+              <div className="flex items-center gap-2 rounded-2xl border border-theme-border glass-panel px-4 py-3 text-sm text-theme-text-secondary">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Building analytics plan, applying secure scope, and generating insights...
+              </div>
+            ) : null}
+          </CardContent>
+        </Card>
+
+        <div className="space-y-4">
+          {history.slice().reverse().map((item) => (
+            <Card key={item.id}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <MessageSquareText className="h-4 w-4 text-teal-700" />
+                  {item.query}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {item.error ? (
+                  <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-400">
+                    {item.error}
                   </div>
-                  <DataChart response={item.response} />
-                  <DataTable data={item.response.data} />
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={() => exportMutation.mutate({ format: 'pdf', response: item.response! })}
-                      className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                      Export PDF
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => exportMutation.mutate({ format: 'csv', response: item.response! })}
-                      className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                      Export CSV
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                    <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-700">Insights</p>
-                      <ul className="mt-2 space-y-1 text-xs text-slate-700">
-                        {item.response.insights.map((insight) => (
-                          <li key={insight}>- {insight}</li>
-                        ))}
-                      </ul>
+                ) : null}
+
+                {item.response ? (
+                  <>
+                    <div className="grid gap-4 md:grid-cols-[1.4fr_1fr]">
+                      <div className="rounded-2xl bg-theme-hover-card-bg p-5 text-theme-hover-card-fg">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-200">Executive summary</p>
+                        <p className="mt-2 text-base font-medium leading-7">{item.response.summary}</p>
+                        <div className="mt-4 flex flex-wrap gap-2 text-xs text-theme-text-primary">
+                          <span className="rounded-full glass-panel/10 px-3 py-1">
+                            Intent: {item.response.intent.replaceAll('_', ' ')}
+                          </span>
+                          {item.response.scope?.type ? (
+                            <span className="rounded-full glass-panel/10 px-3 py-1">
+                              Scope: {item.response.scope.type.replaceAll('_', ' ')}
+                            </span>
+                          ) : null}
+                          {item.response.meta?.cache_hit ? (
+                            <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-emerald-100">
+                              cache hit
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="rounded-2xl border border-theme-border bg-theme-surface p-5">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-theme-text-secondary">AI trace</p>
+                        <div className="mt-3 space-y-2 text-sm text-theme-text-primary">
+                          <p>Source: {item.response.meta?.intent_source ?? 'rule'}</p>
+                          <p>Trace: {item.response.meta?.trace_id ?? 'n/a'}</p>
+                          <p>Generated: {item.response.meta?.generated_at ?? 'n/a'}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Recommendations</p>
-                      <ul className="mt-2 space-y-1 text-xs text-emerald-800">
-                        {item.response.recommendations.map((recommendation) => (
-                          <li key={recommendation}>- {recommendation}</li>
-                        ))}
-                      </ul>
+
+                    <AnalyticsChart chart={item.response.chart ?? item.response.charts?.[0]} />
+                    <DataTable data={item.response.data} />
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="rounded-2xl border border-theme-border bg-theme-surface p-4">
+                        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-theme-text-secondary">
+                          <Sparkles className="h-4 w-4 text-teal-700" />
+                          Insights
+                        </p>
+                        <ul className="mt-3 space-y-2 text-sm text-theme-text-primary">
+                          {item.response.insights.map((insight) => (
+                            <li key={normalizeInsightText(insight)}>{normalizeInsightText(insight)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="rounded-2xl border border-emerald-200 bg-emerald-500/10 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400">Recommendations</p>
+                        <ul className="mt-3 space-y-2 text-sm text-emerald-900">
+                          {item.response.recommendations.map((recommendation) => (
+                            <li key={normalizeRecommendationText(recommendation)}>
+                              {normalizeRecommendationText(recommendation)}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                  </div>
-                </>
-              ) : null}
-            </CardContent>
-          </Card>
-        ))}
+
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => exportMutation.mutate({ format: 'pdf', response: item.response! })}
+                        className="inline-flex items-center gap-2 rounded-xl border border-theme-border px-3 py-2 text-sm font-semibold text-theme-text-primary"
+                      >
+                        <Download className="h-4 w-4" />
+                        Export PDF
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => exportMutation.mutate({ format: 'csv', response: item.response! })}
+                        className="inline-flex items-center gap-2 rounded-xl border border-theme-border px-3 py-2 text-sm font-semibold text-theme-text-primary"
+                      >
+                        <Download className="h-4 w-4" />
+                        Export CSV
+                      </button>
+                      {item.response.follow_up_suggestions?.map((suggestion) => (
+                        <button
+                          key={suggestion}
+                          type="button"
+                          onClick={() => handleSend(suggestion)}
+                          className="rounded-full border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-800"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                ) : null}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Session Context</CardTitle>
+            <CardDescription>Follow-up prompts reuse secure conversational context.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-theme-text-secondary">
+            <div className="rounded-2xl bg-theme-surface p-4">
+              <p className="font-semibold text-theme-text-primary">Conversation</p>
+              <p className="mt-1 break-all">{conversationId ?? 'A conversation id will appear after the first answer.'}</p>
+            </div>
+            <div className="rounded-2xl bg-theme-surface p-4">
+              <p className="font-semibold text-theme-text-primary">Active scope</p>
+              <p className="mt-1">{latestResponse?.scope?.type?.replaceAll('_', ' ') ?? 'Waiting for first response'}</p>
+            </div>
+            <div className="rounded-2xl bg-theme-surface p-4">
+              <p className="font-semibold text-theme-text-primary">Plan snapshot</p>
+              <p className="mt-1">
+                Metrics: {latestResponse?.meta?.plan?.metrics?.join(', ') ?? 'n/a'}
+              </p>
+              <p className="mt-1">
+                Dimensions: {latestResponse?.meta?.plan?.dimensions?.join(', ') ?? 'n/a'}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Production Notes</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-theme-text-secondary">
+            <p>The copilot uses a role-aware execution plan rather than direct LLM-to-SQL generation.</p>
+            <p>Structured queries and conversational answers share the same secure analytics scope model.</p>
+            <p>Use the builder on the left for deterministic metric exploration and the chat for guided insight generation.</p>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

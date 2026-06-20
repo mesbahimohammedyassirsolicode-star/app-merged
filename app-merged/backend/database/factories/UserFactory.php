@@ -29,8 +29,7 @@ class UserFactory extends Factory
         $prenom = self::$prenoms[array_rand(self::$prenoms)];
         $nom = self::$noms[array_rand(self::$noms)];
 
-        // [MERGED] Using V1's names but supporting both roles.
-        $role = array_rand(array_flip(['student', 'stagiaire']));
+        $role = 'stagiaire';
 
         return [
             'name' => "{$prenom} {$nom}",

@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import type { User, LoginCredentials } from '../types/auth';
 import { authService } from '../api/authService';
-import { setAccessToken } from '../lib/axios';
+import { setAccessToken, registerUnauthorizedHandler } from '../lib/axios';
 import { AuthContext } from './auth-context';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -14,7 +14,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [permissions, setPermissions] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
+    const handleUnauthorizedRef = useRef(() => {});
+
     useEffect(() => {
+        handleUnauthorizedRef.current = () => {
+            setAccessToken(null);
+            queryClient.cancelQueries();
+            queryClient.clear();
+            setUser(null);
+            setPermissions([]);
+            navigate('/login', { replace: true });
+        };
+    }, [navigate, queryClient]);
+
+    useEffect(() => {
+        registerUnauthorizedHandler(() => {
+            handleUnauthorizedRef.current();
+        });
+
         const checkAuth = async () => {
             try {
                 const { user: userData, permissions: perm } = await authService.getMe();
@@ -30,17 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         checkAuth();
     }, []);
 
-    useEffect(() => {
-        const handleUnauthorized = async () => {
-            setAccessToken(null);
-            queryClient.clear();
-            setUser(null);
-            setPermissions([]);
-            navigate('/login', { replace: true });
-        };
-        window.addEventListener('auth:unauthorized', handleUnauthorized);
-        return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
-    }, [navigate, queryClient]);
+
 
     const login = async (credentials: LoginCredentials) => {
         const response = await authService.login(credentials);

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { academicStructureApi, type Filiere } from '../../api/api/academicStructure';
+import { academicStructureApi, type Filiere, type FiliereStandardizationResult } from '../../api/api/academicStructure';
 import { groupsApi } from '../../api/api/groups';
 import { modulesApi } from '../../api/api/modules';
 import { Card } from '../../components/ui/card';
@@ -15,6 +15,7 @@ import {
   Loader2,
   Pencil,
   Plus,
+  RefreshCcw,
   Search,
   Sparkles,
   Trash2,
@@ -28,6 +29,7 @@ type ModalState =
   | { type: 'create-group'; filiere: Filiere }
   | { type: 'create-module'; filiere: Filiere }
   | { type: 'edit-filiere'; filiere: Filiere }
+  | { type: 'standardize-filiere'; filiere: Filiere }
   | { type: 'delete-filiere'; filiere: Filiere }
   | null;
 
@@ -71,16 +73,16 @@ function StatPill({
       ? 'rounded-2xl border border-primary-600 bg-primary/20 px-4 py-3'
       : 'rounded-2xl border border-primary-100 bg-primary-50/80 px-4 py-3'
     : onDark
-    ? 'rounded-2xl border border-white/10 bg-white/5 px-4 py-3'
-    : 'rounded-2xl border border-slate-200 bg-white/80 px-4 py-3';
+    ? 'rounded-2xl border border-theme-border glass-panel/5 px-4 py-3'
+    : 'rounded-2xl border border-theme-border glass-panel/80 px-4 py-3';
 
   const labelClass = onDark
-    ? 'flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-200'
-    : 'flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500';
+    ? 'flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-theme-text-primary'
+    : 'flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-theme-text-secondary';
 
-  const iconClass = tone === 'accent' ? (onDark ? 'h-4 w-4 text-primary-200' : 'h-4 w-4 text-primary-600') : (onDark ? 'h-4 w-4 text-slate-200' : 'h-4 w-4 text-slate-400');
+  const iconClass = tone === 'accent' ? (onDark ? 'h-4 w-4 text-primary-200' : 'h-4 w-4 text-primary-600') : (onDark ? 'h-4 w-4 text-theme-text-primary' : 'h-4 w-4 text-theme-text-secondary');
 
-  const valueClass = onDark ? 'mt-2 text-xl font-bold text-white' : 'mt-2 text-xl font-bold text-slate-900';
+  const valueClass = onDark ? 'mt-2 text-xl font-bold text-white' : 'mt-2 text-xl font-bold text-theme-text-primary';
 
   return (
     <div className={containerClass}>
@@ -95,27 +97,27 @@ function StatPill({
 
 function FiliereCardSkeleton() {
   return (
-    <div className="animate-pulse rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="animate-pulse rounded-[28px] border border-theme-border glass-panel p-6 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-3">
-          <div className="h-4 w-20 rounded-full bg-slate-100" />
+          <div className="h-4 w-20 rounded-full bg-slate-700/30" />
           <div className="h-7 w-56 rounded-full bg-slate-200" />
-          <div className="h-4 w-40 rounded-full bg-slate-100" />
+          <div className="h-4 w-40 rounded-full bg-slate-700/30" />
         </div>
-        <div className="h-12 w-12 rounded-2xl bg-slate-100" />
+        <div className="h-12 w-12 rounded-2xl bg-slate-700/30" />
       </div>
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <div className="h-20 rounded-2xl bg-slate-100" />
-        <div className="h-20 rounded-2xl bg-slate-100" />
+        <div className="h-20 rounded-2xl bg-slate-700/30" />
+        <div className="h-20 rounded-2xl bg-slate-700/30" />
       </div>
       <div className="mt-6 space-y-3">
-        <div className="h-4 w-24 rounded-full bg-slate-100" />
-        <div className="h-16 rounded-2xl bg-slate-100" />
-        <div className="h-16 rounded-2xl bg-slate-100" />
+        <div className="h-4 w-24 rounded-full bg-slate-700/30" />
+        <div className="h-16 rounded-2xl bg-slate-700/30" />
+        <div className="h-16 rounded-2xl bg-slate-700/30" />
       </div>
       <div className="mt-6 flex gap-3">
-        <div className="h-10 flex-1 rounded-xl bg-slate-100" />
-        <div className="h-10 flex-1 rounded-xl bg-slate-100" />
+        <div className="h-10 flex-1 rounded-xl bg-slate-700/30" />
+        <div className="h-10 flex-1 rounded-xl bg-slate-700/30" />
       </div>
     </div>
   );
@@ -123,14 +125,14 @@ function FiliereCardSkeleton() {
 
 function EmptyState({ hasSearch, onClear }: { hasSearch: boolean; onClear: () => void }) {
   return (
-    <div className="rounded-[32px] border border-dashed border-slate-300 bg-white px-6 py-16 text-center shadow-sm">
-      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[24px] bg-slate-100 text-slate-500">
+    <div className="rounded-[32px] border border-dashed border-theme-border glass-panel px-6 py-16 text-center shadow-sm">
+      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[24px] bg-slate-700/30 text-theme-text-secondary">
         <Search className="h-9 w-9" />
       </div>
-      <h3 className="mt-6 text-2xl font-bold text-slate-900">
+      <h3 className="mt-6 text-2xl font-bold text-theme-text-primary">
         {hasSearch ? 'Aucune filière trouvée' : 'Aucune filière disponible'}
       </h3>
-      <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-500">
+      <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-theme-text-secondary">
         {hasSearch
           ? 'Aucun résultat ne correspond à votre recherche. Essayez un autre mot-clé ou réinitialisez le filtre.'
           : 'Les filières apparaîtront ici sous forme de cartes dès qu’elles seront disponibles.'}
@@ -155,9 +157,9 @@ function FieldShell({
 }) {
   return (
     <label className="block space-y-2">
-      <span className="text-sm font-semibold text-slate-700">{label}</span>
+      <span className="text-sm font-semibold text-theme-text-primary">{label}</span>
       {children}
-      {hint ? <p className="text-xs text-slate-500">{hint}</p> : null}
+      {hint ? <p className="text-xs text-theme-text-secondary">{hint}</p> : null}
     </label>
   );
 }
@@ -210,6 +212,7 @@ export default function FilieresPage() {
     description: '',
     niveau_id: '',
   });
+  const [lastStandardization, setLastStandardization] = useState<FiliereStandardizationResult | null>(null);
 
   const filieresQuery = useQuery({
     queryKey: ['academic', 'filieres', user?.id, user?.role],
@@ -278,7 +281,7 @@ export default function FilieresPage() {
   const createGroupMutation = useMutation({
     mutationFn: () =>
       groupsApi.create({
-        filiere_id: activeModal?.type === 'create-group' ? activeModal.filiere.id : 0,
+        niveau_id: activeModal?.type === 'create-group' ? activeModal.filiere.niveau_id : 0,
         annee_scolaire_id: Number(groupForm.annee_scolaire_id),
         label: groupForm.label.trim(),
         year_level: Number(groupForm.year_level),
@@ -295,7 +298,7 @@ export default function FilieresPage() {
   const createModuleMutation = useMutation({
     mutationFn: () =>
       modulesApi.create({
-        filiere_id: activeModal?.type === 'create-module' ? activeModal.filiere.id : 0,
+        niveau_id: activeModal?.type === 'create-module' ? activeModal.filiere.niveau_id : 0,
         code: moduleForm.code.trim(),
         label: moduleForm.label.trim(),
         masse_horaire: Number(moduleForm.masse_horaire),
@@ -340,8 +343,38 @@ export default function FilieresPage() {
     onError: (err: unknown) => toast.error(getApiErrorMessage(err, "Impossible de supprimer la filiere.")),
   });
 
+  const standardizeFiliereMutation = useMutation({
+    mutationFn: () =>
+      academicStructureApi.standardizeFiliereGroups(
+        activeModal?.type === 'standardize-filiere' ? activeModal.filiere.id : 0,
+      ),
+    onSuccess: async (result) => {
+      setLastStandardization(result);
+      toast.success('La structure des groupes a été reconstruite.');
+
+      const ambiguousModules = result.manual_review.ambiguous_modules;
+      if (ambiguousModules.length > 0) {
+        const sample = ambiguousModules
+          .slice(0, 3)
+          .map((module) => module.code || module.label)
+          .join(', ');
+
+        toast.warning(
+          ambiguousModules.length > 3
+            ? `${ambiguousModules.length} modules restent à vérifier, dont ${sample}.`
+            : `${ambiguousModules.length} modules restent à vérifier : ${sample}.`,
+        );
+      }
+
+      setActiveModal(null);
+      await refreshAcademicViews();
+    },
+    onError: (err: unknown) => toast.error(getApiErrorMessage(err, 'Impossible de reconstruire les groupes de cette filiere.')),
+  });
+
   const openModal = (state: ModalState) => {
     setActiveModal(state);
+    setLastStandardization(null);
 
     if (state?.type === 'create-group') {
       setGroupForm(toGroupForm(state.filiere, years[0]?.id));
@@ -395,10 +428,10 @@ export default function FilieresPage() {
 
   return (
     <div className="space-y-8 pb-12">
-      <section className="overflow-hidden rounded-[32px] border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-primary/90 text-white shadow-[0_24px_80px_-32px_rgba(15,23,42,0.65)]">
+      <section className="overflow-hidden rounded-[32px] border border-theme-border bg-gradient-to-br from-slate-950 via-slate-900 to-primary/90 text-white shadow-[0_24px_80px_-32px_rgba(15,23,42,0.65)]">
         <div className="grid gap-8 px-6 py-8 sm:px-8 lg:grid-cols-[1.25fr_0.9fr] lg:px-10">
           <div className="space-y-5">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
+            <div className="inline-flex items-center gap-2 rounded-full border border-theme-border glass-panel/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
               <Sparkles className="h-3.5 w-3.5" />
               Academic dashboard
             </div>
@@ -406,7 +439,7 @@ export default function FilieresPage() {
               <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
                 {t('nav.filieres', 'Gestion des Filières')}
               </h1>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-200 sm:text-base">
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-theme-text-primary sm:text-base">
                 Parcourez vos filières sous forme de cartes, consultez rapidement les groupes et modules associés,
                 puis gérez les actions clés sans quitter la page.
               </p>
@@ -421,22 +454,22 @@ export default function FilieresPage() {
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+      <section className="rounded-[28px] border border-theme-border glass-panel p-4 shadow-sm sm:p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-900">Vue cartes</h2>
-            <p className="mt-1 text-sm text-slate-500">
+            <h2 className="text-lg font-bold text-theme-text-primary">Vue cartes</h2>
+            <p className="mt-1 text-sm text-theme-text-secondary">
               Recherchez par filière, code, groupe, module ou niveau.
             </p>
           </div>
 
           <div className="relative w-full lg:max-w-md">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-theme-text-secondary" />
             <Input
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Rechercher une filière, un groupe ou un module..."
-              className="h-12 rounded-2xl border-slate-200 bg-slate-50 pl-11 pr-4 shadow-none transition focus-visible:border-primary/50 focus-visible:bg-white"
+              className="h-12 rounded-2xl border-theme-border bg-theme-surface pl-10 pr-4 shadow-none transition focus-visible:border-primary/50 focus-visible:glass-panel"
             />
           </div>
         </div>
@@ -461,17 +494,17 @@ export default function FilieresPage() {
             return (
               <Card
                 key={filiere.id}
-                className="group rounded-[30px] border border-slate-200 bg-white p-6 shadow-[0_16px_50px_-28px_rgba(15,23,42,0.2)] transition duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-[0_22px_60px_-28px_rgba(14,116,144,0.28)]"
+                className="group rounded-[30px] border border-theme-border glass-panel p-6 shadow-[0_16px_50px_-28px_rgba(15,23,42,0.2)] transition duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-[0_22px_60px_-28px_rgba(14,116,144,0.28)]"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                    <div className="inline-flex items-center rounded-full border border-theme-border bg-theme-surface px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-theme-text-secondary">
                       {filiere.code}
                     </div>
-                    <h3 className="mt-4 text-xl font-bold leading-tight text-slate-900">
+                    <h3 className="mt-4 text-xl font-bold leading-tight text-theme-text-primary">
                       {filiere.label}
                     </h3>
-                    <p className="mt-2 text-sm text-slate-500">
+                    <p className="mt-2 text-sm text-theme-text-secondary">
                       {filiere.niveau?.label ? `Niveau ${filiere.niveau.label}` : 'Niveau non renseigné'}
                     </p>
                   </div>
@@ -482,12 +515,12 @@ export default function FilieresPage() {
                 </div>
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-4">
-                    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                      <Users className="h-4 w-4 text-slate-400" />
+                  <div className="rounded-2xl border border-theme-border bg-theme-surface/80 px-4 py-4">
+                    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-theme-text-secondary">
+                      <Users className="h-4 w-4 text-theme-text-secondary" />
                       Groupes
                     </div>
-                    <p className="mt-2 text-2xl font-bold text-slate-900">{groups.length}</p>
+                    <p className="mt-2 text-2xl font-bold text-theme-text-primary">{groups.length}</p>
                   </div>
 
                   <div className="rounded-2xl border border-primary/10 bg-primary/5 px-4 py-4">
@@ -495,14 +528,14 @@ export default function FilieresPage() {
                       <BookOpen className="h-4 w-4" />
                       Modules
                     </div>
-                    <p className="mt-2 text-2xl font-bold text-slate-900">{modules.length}</p>
+                    <p className="mt-2 text-2xl font-bold text-theme-text-primary">{modules.length}</p>
                   </div>
                 </div>
 
-                <div className="mt-6 rounded-[24px] border border-slate-200 bg-slate-50/70 p-4">
+                <div className="mt-6 rounded-[24px] border border-theme-border bg-theme-surface/70 p-4">
                   <div className="flex items-center justify-between gap-3">
-                    <h4 className="text-sm font-bold text-slate-900">Aperçu des groupes</h4>
-                    <span className="text-xs font-medium text-slate-500">
+                    <h4 className="text-sm font-bold text-theme-text-primary">Aperçu des groupes</h4>
+                    <span className="text-xs font-medium text-theme-text-secondary">
                       {groups.length > 0 ? `${groups.length} au total` : 'Aucun groupe'}
                     </span>
                   </div>
@@ -513,27 +546,27 @@ export default function FilieresPage() {
                         {groupPreview.map((group) => (
                           <div
                             key={group.id}
-                            className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-white px-4 py-3 shadow-sm"
+                            className="flex items-center justify-between gap-3 rounded-2xl border border-theme-border glass-panel px-4 py-3 shadow-sm"
                           >
                             <div className="min-w-0">
-                              <p className="truncate text-sm font-semibold text-slate-900">{group.label}</p>
-                              <p className="mt-1 text-xs text-slate-500">
+                              <p className="truncate text-sm font-semibold text-theme-text-primary">{group.label}</p>
+                              <p className="mt-1 text-xs text-theme-text-secondary">
                                 {group.year_level ? `Année ${group.year_level}` : 'Niveau non défini'}
                               </p>
                             </div>
-                            <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                            <div className="rounded-full bg-slate-700/30 px-3 py-1 text-xs font-semibold text-theme-text-secondary">
                               {group.capacity ?? 0} pl.
                             </div>
                           </div>
                         ))}
                         {hiddenGroups > 0 && (
-                          <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-3 text-sm font-medium text-slate-500">
+                          <div className="rounded-2xl border border-dashed border-theme-border px-4 py-3 text-sm font-medium text-theme-text-secondary">
                             + {hiddenGroups} autre{hiddenGroups > 1 ? 's' : ''} groupe{hiddenGroups > 1 ? 's' : ''}
                           </div>
                         )}
                       </>
                     ) : (
-                      <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-6 text-center text-sm text-slate-500">
+                      <div className="rounded-2xl border border-dashed border-theme-border glass-panel px-4 py-6 text-center text-sm text-theme-text-secondary">
                         Aucun groupe associé pour le moment.
                       </div>
                     )}
@@ -550,7 +583,7 @@ export default function FilieresPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-11 flex-1 rounded-2xl border-slate-200"
+                    className="h-11 flex-1 rounded-2xl border-theme-border"
                     onClick={() => openModal({ type: 'create-module', filiere })}
                   >
                     <Plus className="mr-2 h-4 w-4" />
@@ -560,8 +593,19 @@ export default function FilieresPage() {
 
                 <div className="mt-3 flex flex-wrap gap-3">
                   <Button
+                    variant="outline"
+                    className="h-11 w-full rounded-2xl border-amber-300 bg-amber-500/10 text-amber-700 hover:bg-amber-100 hover:text-amber-800"
+                    onClick={() => openModal({ type: 'standardize-filiere', filiere })}
+                  >
+                    <RefreshCcw className="mr-2 h-4 w-4" />
+                    Refaire les groupes 1ère / 2ème année
+                  </Button>
+                </div>
+
+                <div className="mt-3 flex flex-wrap gap-3">
+                  <Button
                     variant="ghost"
-                    className="h-11 flex-1 rounded-2xl bg-slate-50 text-slate-700 hover:bg-slate-100"
+                    className="h-11 flex-1 rounded-2xl bg-theme-surface text-theme-text-primary hover:bg-theme-hover-card-bg"
                     onClick={() => openModal({ type: 'edit-filiere', filiere })}
                   >
                     <Pencil className="mr-2 h-4 w-4" />
@@ -569,7 +613,7 @@ export default function FilieresPage() {
                   </Button>
                   <Button
                     variant="ghost"
-                    className="h-11 flex-1 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"
+                    className="h-11 flex-1 rounded-2xl bg-red-500/10 text-red-600 hover:bg-red-100 hover:text-red-400"
                     onClick={() => openModal({ type: 'delete-filiere', filiere })}
                   >
                     <Trash2 className="mr-2 h-4 w-4" />
@@ -599,7 +643,7 @@ export default function FilieresPage() {
                 <select
                   value={groupForm.annee_scolaire_id}
                   onChange={(event) => setGroupForm((prev) => ({ ...prev, annee_scolaire_id: event.target.value }))}
-                  className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="h-10 w-full rounded-xl border border-theme-border glass-panel px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                 >
                   <option value="">Sélectionner une année</option>
                   {years.map((year) => (
@@ -733,7 +777,7 @@ export default function FilieresPage() {
                 <select
                   value={filiereForm.niveau_id}
                   onChange={(event) => setFiliereForm((prev) => ({ ...prev, niveau_id: event.target.value }))}
-                  className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="h-10 w-full rounded-xl border border-theme-border glass-panel px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                 >
                   <option value="">Conserver le niveau actuel</option>
                   {levels.map((level) => (
@@ -749,7 +793,7 @@ export default function FilieresPage() {
                   rows={4}
                   value={filiereForm.description}
                   onChange={(event) => setFiliereForm((prev) => ({ ...prev, description: event.target.value }))}
-                  className="min-h-[104px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="min-h-[104px] w-full rounded-xl border border-theme-border glass-panel px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                   placeholder="Brève description de la filière"
                 />
               </FieldShell>
@@ -767,10 +811,53 @@ export default function FilieresPage() {
         </Modal>
       ) : null}
 
+      {activeModal?.type === 'standardize-filiere' ? (
+        <Modal isOpen onClose={closeModal} title={`Reconstruire les groupes de ${activeModal.filiere.label}`}>
+          <div className="space-y-5">
+            <div className="rounded-2xl border border-amber-200 bg-amber-500/10 p-4 text-sm text-amber-800">
+              Cette action remplace les groupes actifs de la filière par exactement deux groupes :
+              <span className="font-semibold"> 1ère année </span>
+              et
+              <span className="font-semibold"> 2ème année</span>.
+            </div>
+
+            <div className="rounded-2xl border border-theme-border bg-theme-surface p-4 text-sm text-theme-text-secondary">
+              Les liens modules, stagiaires et formateurs seront déplacés vers les nouveaux groupes.
+              Les modules ambigus seront signalés pour vérification manuelle après l'opération.
+            </div>
+
+            {lastStandardization ? (
+              <div className="rounded-2xl border border-theme-border glass-panel p-4 text-sm text-theme-text-primary">
+                Dernier résultat :
+                <div className="mt-2 text-theme-text-secondary">
+                  {lastStandardization.created_groups.length} groupes créés,
+                  {' '}{lastStandardization.student_assignments.primary_group_updates} stagiaires déplacés,
+                  {' '}{lastStandardization.manual_review.ambiguous_modules.length} modules à revoir.
+                </div>
+              </div>
+            ) : null}
+
+            <div className="flex justify-end gap-3">
+              <Button type="button" variant="outline" className="rounded-xl" onClick={closeModal}>
+                Annuler
+              </Button>
+              <Button
+                type="button"
+                className="rounded-xl"
+                isLoading={standardizeFiliereMutation.isPending}
+                onClick={() => standardizeFiliereMutation.mutate()}
+              >
+                Lancer la reconstruction
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      ) : null}
+
       {activeModal?.type === 'delete-filiere' ? (
         <Modal isOpen onClose={closeModal} title="Supprimer la filière">
           <div className="space-y-5">
-            <div className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-700">
+            <div className="rounded-2xl border border-red-100 bg-red-500/10 p-4 text-sm text-red-400">
               Vous êtes sur le point de supprimer <span className="font-semibold">{activeModal.filiere.label}</span>.
               Cette action est définitive.
             </div>
@@ -796,8 +883,9 @@ export default function FilieresPage() {
       {(createGroupMutation.isPending ||
         createModuleMutation.isPending ||
         updateFiliereMutation.isPending ||
-        deleteFiliereMutation.isPending) && (
-        <div className="fixed bottom-5 right-5 flex items-center gap-3 rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-lg">
+        deleteFiliereMutation.isPending ||
+        standardizeFiliereMutation.isPending) && (
+        <div className="fixed bottom-5 right-5 flex items-center gap-3 rounded-full border border-theme-border glass-panel px-4 py-3 text-sm font-medium text-theme-text-primary shadow-lg">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           Mise à jour en cours...
         </div>

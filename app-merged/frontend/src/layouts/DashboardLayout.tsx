@@ -1,8 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../hooks/useAuth';
-import { Button } from '../components/ui/button';
 import {
   Home,
   Users,
@@ -23,8 +21,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import Sidebar from '../components/layout/Sidebar';
 import Topbar from '../components/layout/Topbar';
-import { notificationsApi } from '../api/api/notifications';
 import { hasAnyPermission, PERMISSIONS, type PermissionSlug } from '../lib/rbac';
+import { cn } from '../lib/utils';
+import { motion } from 'framer-motion';
 
 const navItems: {
   label: string;
@@ -159,12 +158,7 @@ export default function DashboardLayout() {
   const location = useLocation();
   const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { data: notificationData } = useQuery({
-    queryKey: ['notifications', 'unread', user?.id],
-    queryFn: () => notificationsApi.list({ page: 1, per_page: 1 }),
-    enabled: !!user,
-    refetchInterval: 30000,
-  });
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Performance: useCallback for stable references passed to memoized Sidebar
   const handleLogout = useCallback(async () => {
@@ -184,14 +178,14 @@ export default function DashboardLayout() {
     return true;
   };
 
-  const resolvedAttendanceHref =
+  const resolvedAttendanceHref = useMemo(() => 
     user?.role === 'admin' || user?.role === 'directeur' || user?.role === 'secretariat'
       ? '/attendance/seances'
-      : '/attendance';
+      : '/attendance',
+    [user?.role]
+  );
 
   // Performance: memoize array derivations to prevent new references on every render.
-  // Without this, the memoized Sidebar would re-render every time because it receives
-  // a new sidebarItems array reference.
   const visibleNav = useMemo(() =>
     navItems
       .filter((item) => canSee(item.roles, item.anyPermission))
@@ -223,7 +217,7 @@ export default function DashboardLayout() {
   }, [navigate]);
 
   return (
-    <div className="flex h-screen bg-slate-100/70">
+    <div className="flex h-screen bg-theme-background dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-blue-950 text-theme-text-primary dark:text-white transition-colors duration-300">
       <Sidebar
         items={sidebarItems}
         activePath={location.pathname}
@@ -232,41 +226,59 @@ export default function DashboardLayout() {
         userName={user?.name}
         userRole={user?.role}
         logoutLabel={t('auth.logout')}
+        isCollapsed={isCollapsed}
+        onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
         onNavigate={handleNavigate}
         onLogout={handleLogout}
       />
 
       {mobileOpen ? (
-        <div className="fixed inset-0 z-30 bg-slate-900/30 backdrop-blur-[1px] md:hidden" onClick={() => setMobileOpen(false)}>
-          <aside className="h-full w-72 border-r border-slate-200 bg-white p-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <div className="mb-3 flex items-center justify-between px-1">
-              <h2 className="text-sm font-semibold text-slate-700">{t('app.title')}</h2>
-              <Button variant="secondary" size="icon" onClick={() => setMobileOpen(false)} aria-label="Close navigation">
+        <div 
+          className="fixed inset-0 z-[100] bg-slate-950/40 backdrop-blur-md md:hidden" 
+          onClick={() => setMobileOpen(false)}
+        >
+          <aside 
+            className="h-full w-72 border-r border-theme-border dark:border-theme-border bg-theme-surface dark:bg-gradient-to-b dark:from-slate-900/80 dark:to-slate-950/40 backdrop-blur-xl p-4 shadow-2xl relative z-50 text-theme-text-primary dark:text-white" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-6 flex items-center justify-between px-2">
+              <h2 className="text-sm font-bold text-theme-text-primary dark:text-white">{t('app.title')}</h2>
+              <button 
+                onClick={() => setMobileOpen(false)} 
+                className="flex items-center justify-center w-8 h-8 rounded-lg bg-theme-surface dark:bg-theme-surface border border-theme-border dark:border-theme-border text-theme-text-secondary hover:bg-theme-hover-card-bg hover:text-theme-hover-card-fg transition-colors"
+                aria-label="Close navigation"
+              >
                 <X className="h-4 w-4" />
-              </Button>
+              </button>
             </div>
             <div className="space-y-1">
-              {sidebarItems.map((item) => (
-                <button
-                  key={item.href}
-                  type="button"
-                  onClick={() => handleNavigate(item.href)}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors ${
-                    location.pathname === item.href || location.pathname.startsWith(`${item.href}/`)
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  <item.icon className="h-[18px] w-[18px] shrink-0" />
-                  <span className="truncate">{item.label}</span>
-                </button>
-              ))}
+              {sidebarItems.map((item) => {
+                const isActive = location.pathname === item.href || location.pathname.startsWith(`${item.href}/`);
+                return (
+                  <button
+                    key={item.href}
+                    type="button"
+                    onClick={() => handleNavigate(item.href)}
+                    className={`flex w-full items-center gap-3 rounded-[12px] px-3 py-2.5 text-left text-sm font-medium transition-all ${
+                      isActive
+                        ? 'text-blue-600 dark:text-white bg-blue-500/10 dark:bg-gradient-to-r dark:from-blue-500/20 dark:to-blue-600/10 border border-blue-500/30'
+                        : 'text-theme-text-secondary hover:bg-theme-hover-card-bg hover:text-theme-hover-card-fg'
+                    }`}
+                  >
+                    <item.icon className="h-[18px] w-[18px] shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </aside>
         </div>
       ) : null}
 
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className={cn(
+        "flex flex-1 flex-col overflow-hidden transition-all duration-300 ease-in-out",
+        isCollapsed ? "md:ml-20" : "md:ml-72"
+      )}>
         <Topbar
           title={activeItem?.label ?? t('app.title')}
           subtitle={t('app.subtitle')}
@@ -275,11 +287,16 @@ export default function DashboardLayout() {
           logoutLabel={t('auth.logout')}
           onLogout={handleLogout}
           onOpenMobileNav={() => setMobileOpen(true)}
-          unreadNotifications={notificationData?.meta?.unread_count ?? 0}
-          onOpenNotifications={() => navigate('/notifications')}
         />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-          <Outlet />
+        <main className="flex-1 overflow-y-auto scroll-smooth custom-scrollbar">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="p-4 sm:p-6 lg:p-8 pb-20"
+          >
+            <Outlet />
+          </motion.div>
         </main>
       </div>
     </div>

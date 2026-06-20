@@ -55,14 +55,14 @@ export default function AttendancePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">{t('nav.attendance')}</h1>
+      <h1 className="text-2xl font-bold text-theme-text-primary">{t('nav.attendance')}</h1>
       {isLoading ? (
         <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary-600" /></div>
       ) : isAccessDenied ? (
         // FIXED: Show meaningful message instead of blank screen on 403
-        <div className="rounded-lg border border-amber-200 bg-amber-50 px-6 py-10 text-center">
-          <p className="text-amber-800 font-semibold">Accès restreint</p>
-          <p className="text-sm text-amber-700 mt-1">
+        <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-6 py-10 text-center">
+          <p className="text-amber-400 font-semibold">Accès restreint</p>
+          <p className="text-sm text-amber-400 mt-1">
             Vous n’avez pas accès à cette liste de séances. Les formateurs enregistrent les présences depuis{' '}
             <span className="font-medium">Présences</span> dans le menu (module, groupe et date).
           </p>
@@ -76,7 +76,7 @@ export default function AttendancePage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg">{s.module?.label ?? s.affectation?.module?.label ?? 'Séance'}</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-gray-600 space-y-2">
+                <CardContent className="text-sm text-theme-text-secondary space-y-2">
                   <p>{s.date} {s.start_time} — {s.end_time}</p>
                   <p>Groupe : {s.groupe?.label ?? s.affectation?.groupe?.label}</p>
                   <p className="capitalize">{s.status}</p>
@@ -89,7 +89,7 @@ export default function AttendancePage() {
           ) : (
             // FIXED: clear empty-state instead of blank screen
             !error && (
-              <p className="text-gray-500 col-span-full text-center py-12">
+              <p className="text-theme-text-secondary col-span-full text-center py-12">
                 Aucune séance trouvée pour cette période.
               </p>
             )

@@ -9,8 +9,8 @@ return [
     | Optional: map legacy/alternate role column values to canonical config keys.
     */
     'role_slug_aliases' => [
-        'stagiaire' => 'student',
-        'formateur' => 'teacher',
+        'student' => 'stagiaire',
+        'teacher' => 'formateur',
     ],
 
     'role_permissions' => [
@@ -36,14 +36,14 @@ return [
             'evaluations.read', 'evaluations.write', 'exports.run', 'analytics.read', 'ai.use',
             'messages.use', 'notifications.read', 'course_files.read', 'progress.read', 'dashboard.read',
         ],
-        'teacher' => [
+        'formateur' => [
             'attendance.write', 'attendance.read', 'grades.write', 'grades.read', 'groups.read', 'modules.manage',
             'affectations.manage', 'stages.manage', 'timetable.read', 'timetable.manage',
             'modules.read_catalog', 'evaluations.read', 'evaluations.write', 'exports.run',
             'analytics.read', 'ai.use', 'messages.use', 'notifications.read', 'course_files.read',
             'progress.read', 'dashboard.read',
         ],
-        'student' => [
+        'stagiaire' => [
             'grades.read', 'groups.read', 'timetable.read', 'modules.read_catalog', 'evaluations.read',
             'attendance.read', 'course_files.read', 'progress.read', 'messages.use',
             'notifications.read', 'dashboard.read', 'feedback.submit',

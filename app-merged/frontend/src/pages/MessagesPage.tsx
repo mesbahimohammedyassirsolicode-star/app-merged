@@ -37,19 +37,19 @@ export default function MessagesPage() {
 
   return (
     <div className="grid h-[70vh] grid-cols-1 gap-4 md:grid-cols-[280px_1fr]">
-      <aside className="rounded-xl border border-gray-200 bg-white p-2">
+      <aside className="rounded-xl border border-theme-border glass-panel p-2">
         {conversations.map((c) => (
-          <button key={c.peer.id} className="w-full rounded-lg p-3 text-left hover:bg-gray-50" onClick={() => setSelectedPeer(c.peer.id)}>
+          <button key={c.peer.id} className="w-full rounded-lg p-3 text-left hover:bg-theme-surface" onClick={() => setSelectedPeer(c.peer.id)}>
             <p className="font-medium">{c.peer.name}</p>
-            <p className="truncate text-xs text-gray-500">{c.last_message.content}</p>
+            <p className="truncate text-xs text-theme-text-secondary">{c.last_message.content}</p>
           </button>
         ))}
       </aside>
 
-      <section className="flex flex-col rounded-xl border border-gray-200 bg-white">
+      <section className="flex flex-col rounded-xl border border-theme-border glass-panel">
         <div className="flex-1 space-y-2 overflow-y-auto p-4">
           {messages.map((m) => (
-            <div key={m.id} className={`max-w-[70%] rounded-lg px-3 py-2 text-sm ${m.sender_id === selectedPeer ? 'bg-gray-100' : 'ml-auto bg-blue-600 text-white'}`}>
+            <div key={m.id} className={`max-w-[70%] rounded-lg px-3 py-2 text-sm ${m.sender_id === selectedPeer ? 'bg-theme-surface' : 'ml-auto bg-blue-600 text-white'}`}>
               <p>{m.content}</p>
               <p className="mt-1 text-[10px] opacity-70">{new Date(m.created_at).toLocaleString()}</p>
             </div>

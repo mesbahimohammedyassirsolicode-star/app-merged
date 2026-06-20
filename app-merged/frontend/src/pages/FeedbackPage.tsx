@@ -35,17 +35,17 @@ export default function FeedbackPage() {
 
   return (
     <div className="space-y-6 max-w-xl">
-      <h1 className="text-2xl font-bold text-gray-900">{t('nav.feedback')}</h1>
+      <h1 className="text-2xl font-bold text-theme-text-primary">{t('nav.feedback')}</h1>
       <Card>
         <CardHeader>
           <CardTitle>Formulaire anonyme</CardTitle>
-          <p className="text-sm text-gray-500">Aucune donnée personnelle n’est enregistrée.</p>
+          <p className="text-sm text-theme-text-secondary">Aucune donnée personnelle n’est enregistrée.</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit((d) => submit.mutate(d))} className="space-y-4">
             <div>
               <Label>Catégorie</Label>
-              <select {...register('category')} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2">
+              <select {...register('category')} className="mt-1 block w-full rounded-md border border-theme-border px-3 py-2">
                 <option value="pedagogie">Pédagogie</option>
                 <option value="infrastructure">Infrastructure</option>
                 <option value="administration">Administration</option>
@@ -54,7 +54,7 @@ export default function FeedbackPage() {
             </div>
             <div>
               <Label>Message</Label>
-              <textarea {...register('content')} rows={4} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2" />
+              <textarea {...register('content')} rows={4} className="mt-1 block w-full rounded-md border border-theme-border px-3 py-2" />
               {errors.content && <p className="text-sm text-red-500">{errors.content.message}</p>}
             </div>
             <Button type="submit" disabled={submit.isPending}>Envoyer</Button>

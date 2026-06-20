@@ -22,11 +22,11 @@ export default function EvaluationsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">{t('nav.evaluations')}</h1>
+      <h1 className="text-2xl font-bold text-theme-text-primary">{t('nav.evaluations')}</h1>
       {isLoading ? (
         <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary-600" /></div>
       ) : !data?.items?.length ? (
-        <div className="rounded-xl border border-dashed border-gray-200 bg-white py-12 text-center text-sm text-gray-500">
+        <div className="rounded-xl border border-dashed border-theme-border glass-panel py-12 text-center text-sm text-theme-text-secondary">
           Aucune evaluation disponible.
         </div>
       ) : (
@@ -36,7 +36,7 @@ export default function EvaluationsPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg">{e.item_label}</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-gray-600">
+              <CardContent className="text-sm text-theme-text-secondary">
                 <p>Type : {e.type} • Barème : {e.max_points}</p>
                 <p>Date : {e.date}</p>
                 <p>Module : {e.affectation?.module?.label}</p>

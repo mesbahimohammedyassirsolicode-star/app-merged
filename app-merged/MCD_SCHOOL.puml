@@ -1,0 +1,445 @@
+@startuml MCD_GIMS
+
+title MCD — Modèle Conceptuel de Données\nSystème de Gestion Scolaire (GIMS)
+
+skinparam {
+    BackgroundColor white
+    RoundCorner 10
+    ArrowColor #2C3E50
+    EntityBackgroundColor #FEF9E7
+    EntityBorderColor #F39C12
+    EntityFontColor #2C3E50
+    NoteBackgroundColor #E8F8F5
+    NoteBorderColor #1ABC9C
+}
+
+' =====================================================
+' CORE - UTILISATEURS & PROFILS
+' =====================================================
+
+entity "Utilisateur" as User {
+    * **id** : BIGINT
+    --
+    nom : VARCHAR(255)
+    email : VARCHAR(255)
+    mot_de_passe : VARCHAR(255)
+    rôle : ENUM(admin, formateur, stagiaire, parent)
+    est_actif : BOOLEAN
+}
+
+entity "Administrateur" as Admin {
+    * **id** : BIGINT
+    --
+    poste : VARCHAR(100)
+    téléphone : VARCHAR(20)
+}
+
+entity "Formateur" as Formateur {
+    * **id** : BIGINT
+    --
+    matricule : VARCHAR(50)
+    spécialité : VARCHAR(100)
+    type : ENUM(permanent, vacataire)
+    taux_horaire : DECIMAL
+}
+
+entity "Stagiaire" as Stagiaire {
+    * **id** : BIGINT
+    --
+    CEF : VARCHAR(50)
+    CIN : VARCHAR(20)
+    date_naissance : DATE
+    niveau_scolaire : VARCHAR(20)
+    niveau_formation : VARCHAR(20)
+    statut : ENUM(actif, abandon, exclu, diplômé)
+}
+
+entity "Parent" as Parent {
+    * **id** : BIGINT
+    --
+    CIN : VARCHAR(20)
+    téléphone : VARCHAR(20)
+    adresse : TEXT
+}
+
+' =====================================================
+' STRUCTURE PÉDAGOGIQUE
+' =====================================================
+
+entity "AnnéeScolaire" as AnneeScolaire {
+    * **id** : BIGINT
+    --
+    année_début : YEAR
+    année_fin : YEAR
+    libellé : VARCHAR(20)
+    est_courante : BOOLEAN
+}
+
+entity "Filière" as Filiere {
+    * **id** : BIGINT
+    --
+    code : VARCHAR(255)
+    nom : VARCHAR(255)
+    type : VARCHAR(255)
+    durée_ans : INT
+    niveau_requis : VARCHAR(255)
+}
+
+entity "Niveau" as Niveau {
+    * **id** : BIGINT
+    --
+    code : VARCHAR(255)
+    nom : VARCHAR(255)
+}
+
+entity "Groupe" as Groupe {
+    * **id** : BIGINT
+    --
+    nom : VARCHAR(255)
+    année_niveau : INT
+    capacité : INT
+}
+
+entity "Module" as Module {
+    * **id** : BIGINT
+    --
+    code : VARCHAR(255)
+    nom : VARCHAR(255)
+    coefficient : INT
+    masse_horaire : INT
+    semestre : ENUM(S1, S2, S3, S4)
+}
+
+entity "SyllabusItem" as SyllabusItem {
+    * **id** : BIGINT
+    --
+    intitulé : VARCHAR(255)
+    heures_estimées : INT
+    ordre : INT
+}
+
+' =====================================================
+' PLANIFICATION & PRÉSENCE
+' =====================================================
+
+entity "Affectation" as Affectation {
+    * **id** : BIGINT
+    --
+    date_début : DATE
+    date_fin : DATE
+}
+
+entity "Séance" as Seance {
+    * **id** : BIGINT
+    --
+    date : DATE
+    heure_début : TIME
+    heure_fin : TIME
+    salle : VARCHAR(20)
+    statut : ENUM(planifié, réalisé, annulé)
+    type : ENUM(présentiel, distance)
+}
+
+entity "Absence" as Absence {
+    * **id** : BIGINT
+    --
+    justifiée : BOOLEAN
+    minutes_retard : INT
+    motif : VARCHAR(255)
+    justificatif : VARCHAR(255)
+}
+
+entity "Assiduité" as Attendance {
+    * **id** : BIGINT
+    --
+    date : DATE
+    statut : ENUM(présent, absent, retard)
+    minutes_retard : INT
+    justifiée : BOOLEAN
+    motif : VARCHAR(255)
+}
+
+' =====================================================
+' ÉVALUATION & NOTES
+' =====================================================
+
+entity "Évaluation" as Evaluation {
+    * **id** : BIGINT
+    --
+    intitulé : VARCHAR(100)
+    type : ENUM(CC, EFM, projet, stage)
+    note_max : DECIMAL
+    coefficient : DECIMAL
+    date : DATE
+}
+
+entity "Note" as Note {
+    * **id** : BIGINT
+    --
+    valeur : DECIMAL
+    observation : TEXT
+}
+
+' =====================================================
+' PROGRESSION & RESSOURCES
+' =====================================================
+
+entity "Progression" as Progression {
+    * **id** : BIGINT
+    --
+    statut : ENUM(à_venir, en_cours, terminé)
+    terminé_le : DATETIME
+}
+
+entity "ProgressionModule" as ModuleProgress {
+    * **id** : BIGINT
+    --
+    progression : TINYINT(0-100)
+    dernière_séance : DATETIME
+}
+
+entity "FichierCours" as CourseFile {
+    * **id** : BIGINT
+    --
+    titre : VARCHAR(255)
+    description : TEXT
+    fichier : VARCHAR(255)
+    type_mime : VARCHAR(191)
+    taille : BIGINT
+}
+
+' =====================================================
+' COMMUNICATION
+' =====================================================
+
+entity "Notification" as Notification {
+    * **id** : BIGINT
+    --
+    titre : VARCHAR(255)
+    message : TEXT
+    type : VARCHAR(255)
+    données : JSON
+    lu_le : TIMESTAMP
+}
+
+entity "Message" as Message {
+    * **id** : BIGINT
+    --
+    contenu : TEXT
+    lu_le : TIMESTAMP
+}
+
+entity "Feedback" as Feedback {
+    * **id** : BIGINT
+    --
+    jeton : VARCHAR(64)
+    catégorie : ENUM(pédagogie, infrastructure, administration)
+    contenu : TEXT
+    score_sentiment : INT
+    est_lu : BOOLEAN
+}
+
+' =====================================================
+' STAGE
+' =====================================================
+
+entity "Stage" as Stage {
+    * **id** : BIGINT
+    --
+    organisation : VARCHAR(255)
+    poste : VARCHAR(150)
+    date_début : DATE
+    date_fin : DATE
+    statut : ENUM(en_cours, validé, non_validé)
+    rapport : TEXT
+    note : DECIMAL
+    observation : TEXT
+}
+
+' =====================================================
+' COMMERCE
+' =====================================================
+
+entity "Produit" as Product {
+    * **id** : BIGINT
+    --
+    nom : VARCHAR(255)
+    description : TEXT
+    prix : DECIMAL
+    stock : INT
+}
+
+entity "Panier" as Cart {
+    * **id** : BIGINT
+    --
+    statut : VARCHAR(30)
+    total : DECIMAL
+}
+
+entity "Commande" as Order {
+    * **id** : BIGINT
+    --
+    numéro : VARCHAR(255)
+    statut : VARCHAR(30)
+    total : DECIMAL
+    adresse_livraison : TEXT
+    mode_paiement : VARCHAR(50)
+    notes : TEXT
+}
+
+' =====================================================
+' SÉCURITÉ
+' =====================================================
+
+entity "Rôle" as Role {
+    * **id** : BIGINT
+    --
+    nom : VARCHAR(50)
+    slug : VARCHAR(50)
+    description : TEXT
+}
+
+entity "Permission" as Permission {
+    * **id** : BIGINT
+    --
+    nom : VARCHAR(100)
+    slug : VARCHAR(100)
+    groupe : VARCHAR(50)
+}
+
+entity "JournalAudit" as AuditLog {
+    * **id** : BIGINT
+    --
+    action : VARCHAR(50)
+    anciennes_valeurs : JSON
+    nouvelles_valeurs : JSON
+    adresse_IP : VARCHAR(45)
+}
+
+' =====================================================
+' ASSOCIATIONS - UTILISATEURS & PROFILS
+' =====================================================
+
+User ||--o| Admin : "est"
+User ||--o| Formateur : "est"
+User ||--o| Stagiaire : "est"
+User ||--o| Parent : "est"
+
+' =====================================================
+' ASSOCIATIONS - STRUCTURE PÉDAGOGIQUE
+' =====================================================
+
+Filiere ||--o{ Niveau : "contient"
+Niveau ||--o{ Groupe : "regroupe"
+Filiere ||--o{ Groupe : "classe"
+Filiere ||--o{ Module : "propose"
+Niveau ||--o{ Module : "inclut"
+AnneeScolaire ||--o{ Groupe : "concerne"
+Module ||--o{ SyllabusItem : "composé de"
+Groupe }o--o{ Module : "étudié dans"
+Groupe }o--o{ Stagiaire : "inscrit"
+
+' =====================================================
+' ASSOCIATIONS - PLANIFICATION
+' =====================================================
+
+Formateur ||--o{ Affectation : "charge de"
+Groupe ||--o{ Affectation : "ciblé par"
+Module ||--o{ Affectation : "enseigné dans"
+AnneeScolaire ||--o{ Affectation : "cadre"
+Affectation ||--o{ Seance : "planifiée dans"
+Seance ||--o{ Absence : "enregistre"
+Stagiaire ||--o{ Absence : "concerné par"
+Seance |o--o{ Attendance : "traçabilité"
+Stagiaire |o--o{ Attendance : "traçabilité"
+
+' =====================================================
+' ASSOCIATIONS - ÉVALUATION
+' =====================================================
+
+Formateur ||--o{ Evaluation : "crée"
+Module ||--o{ Evaluation : "évalue"
+Groupe ||--o{ Evaluation : "concerne"
+Evaluation ||--o{ Note : "attribue"
+Stagiaire ||--o{ Note : "reçoit"
+
+' =====================================================
+' ASSOCIATIONS - PROGRESSION & RESSOURCES
+' =====================================================
+
+Formateur ||--o{ ModuleProgress : "suit"
+Module ||--o{ ModuleProgress : "mesuré"
+Module ||--o{ CourseFile : "contient"
+User ||--o{ CourseFile : "dépose"
+Groupe ||--o{ CourseFile : "partagé avec"
+SyllabusItem ||--o{ Progression : "avancement"
+Formateur ||--o{ Progression : "renseigne"
+Module ||--o{ Progression : "concerne"
+Groupe ||--o{ Progression : "ciblé"
+
+' =====================================================
+' ASSOCIATIONS - COMMUNICATION
+' =====================================================
+
+User ||--o{ Notification : "reçoit"
+User ||--o{ Message : "envoie"
+User ||--o{ Message : "reçoit"
+
+' =====================================================
+' ASSOCIATIONS - STAGE
+' =====================================================
+
+Stagiaire ||--o{ Stage : "effectue"
+Formateur |o--o{ Stage : "encadre"
+Groupe |o--o{ Stage : "concerne"
+
+' =====================================================
+' ASSOCIATIONS - PARENT
+' =====================================================
+
+Parent }o--o{ Stagiaire : "est parent de"
+
+' =====================================================
+' ASSOCIATIONS - COMMERCE
+' =====================================================
+
+User ||--o{ Cart : "possède"
+Cart ||--o{ Order : "convertie en"
+Product }o--o{ Cart : "contient"
+
+' =====================================================
+' ASSOCIATIONS - SÉCURITÉ
+' =====================================================
+
+User }o--o{ Role : "a pour"
+Role }o--o{ Permission : "possède"
+User ||--o{ AuditLog : "génère"
+
+' =====================================================
+' NOTES
+' =====================================================
+
+note right of User
+  **Authentification**
+  - Sanctum tokens API
+  - SoftDeletes
+  - Rôles : admin, formateur,
+    stagiaire, parent
+end note
+
+note right of Attendance
+  **Système dual**
+  - Mode V1 : student_id + module_id
+    + group_id + date
+  - Mode V2 : seance_id + stagiaire_id
+  Consolidé dans `attendances`
+end note
+
+note right of Evaluation
+  **Barème OFPPT**
+  - CC (contrôle continu) : 40%
+  - EFM (examen fin module) : 40%
+  - Projet / Stage : 20%
+end note
+
+@enduml

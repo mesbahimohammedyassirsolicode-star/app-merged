@@ -17,3 +17,5 @@ require __DIR__.'/api/stages.php';
 require __DIR__.'/api/timetable.php';
 require __DIR__.'/api/files.php';
 require __DIR__.'/api/core.php';
+require __DIR__.'/api/analytics.php';
+require __DIR__.'/api/copilot.php';

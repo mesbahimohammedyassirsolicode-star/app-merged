@@ -22,13 +22,13 @@ export default function AcademicYearsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">{t('nav.years')}</h1>
+      <h1 className="text-2xl font-bold text-theme-text-primary">{t('nav.years')}</h1>
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
         </div>
       ) : !data?.length ? (
-        <div className="rounded-xl border border-dashed border-gray-200 bg-white py-12 text-center text-sm text-gray-500">
+        <div className="rounded-xl border border-dashed border-theme-border glass-panel py-12 text-center text-sm text-theme-text-secondary">
           Aucune annee scolaire disponible.
         </div>
       ) : (
@@ -38,7 +38,7 @@ export default function AcademicYearsPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg">{y.label}</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-gray-600">
+              <CardContent className="text-sm text-theme-text-secondary">
                 <p>{y.start_date} — {y.end_date}</p>
                 {y.is_current && (
                   <span className="inline-block mt-2 px-2 py-0.5 bg-primary-100 text-primary-700 rounded text-xs">

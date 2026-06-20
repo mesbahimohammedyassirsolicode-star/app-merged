@@ -121,46 +121,90 @@ class AttendanceService
 
         $filiereId = $this->resolveFiliereIdForModuleGroup($moduleId, $groupId);
         $formateurRecordId = $actor->formateur?->id;
+        $teacherId = $this->resolveTeacherId($actor, $payload);
+        $studentIds = [];
+        $rowsToPersist = [];
 
-        DB::transaction(function () use ($actor, $payload, $groupId, $moduleId, $filiereId, $formateurRecordId, &$created, &$updated): void {
-            foreach ($payload['attendances'] as $row) {
+        foreach ($payload['attendances'] as $row) {
+            $studentId = (int) $row['student_id'];
+            $this->assertStudentInGroup($studentId, $groupId);
+            $this->assertLateMinutesConsistency($row);
+
+            $studentIds[] = $studentId;
+            $rowsToPersist[] = [
+                'student_id' => $studentId,
+                'status' => $row['status'],
+                'minutes_late' => $row['minutes_late'] ?? null,
+                'note' => $row['note'] ?? null,
+            ];
+        }
+
+        DB::transaction(function () use (
+            $actor,
+            $payload,
+            $moduleId,
+            $groupId,
+            $teacherId,
+            $filiereId,
+            $formateurRecordId,
+            $studentIds,
+            $rowsToPersist,
+            &$created,
+            &$updated
+        ): void {
+            $stagiairesByUserId = Stagiaire::query()
+                ->whereIn('user_id', $studentIds)
+                ->get(['id', 'user_id'])
+                ->keyBy('user_id');
+
+            $existingStudentIds = Attendance::query()
+                ->whereIn('student_id', $studentIds)
+                ->where('module_id', $moduleId)
+                ->where('group_id', $groupId)
+                ->whereDate('date', $payload['date'])
+                ->where('academic_year', $payload['academic_year'])
+                ->pluck('student_id')
+                ->map(fn ($studentId) => (int) $studentId)
+                ->all();
+
+            $existingLookup = array_fill_keys($existingStudentIds, true);
+            $timestamp = now();
+            $upserts = [];
+
+            foreach ($rowsToPersist as $row) {
                 $studentId = (int) $row['student_id'];
-                $this->assertStudentInGroup($studentId, $groupId);
-                $this->assertLateMinutesConsistency($row);
 
-                $stagiaire = Stagiaire::query()->where('user_id', $studentId)->first();
-
-                // Match existing rows by calendar date — firstOrNew() missed rows when DB date casting differed from the payload string.
-                $attendance = Attendance::query()
-                    ->where('student_id', $studentId)
-                    ->where('module_id', $moduleId)
-                    ->where('group_id', $groupId)
-                    ->whereDate('date', $payload['date'])
-                    ->where('academic_year', $payload['academic_year'])
-                    ->first();
-
-                if ($attendance) {
+                if (isset($existingLookup[$studentId])) {
                     $updated++;
                 } else {
                     $created++;
-                    $attendance = new Attendance([
-                        'student_id' => $studentId,
-                        'module_id' => $moduleId,
-                        'group_id' => $groupId,
-                        'date' => $payload['date'],
-                        'academic_year' => $payload['academic_year'],
-                        'created_by' => $actor->id,
-                    ]);
                 }
 
-                $attendance->teacher_id = $this->resolveTeacherId($actor, $payload);
-                $attendance->stagiaire_id = $stagiaire?->id;
-                $attendance->filiere_id = $filiereId;
-                $attendance->formateur_id = $formateurRecordId;
-                $attendance->status = $row['status'];
-                $attendance->minutes_late = $row['minutes_late'] ?? null;
-                $attendance->note = $row['note'] ?? null;
-                $attendance->save();
+                $upserts[] = [
+                    'student_id' => $studentId,
+                    'module_id' => $moduleId,
+                    'group_id' => $groupId,
+                    'date' => $payload['date'],
+                    'academic_year' => $payload['academic_year'],
+                    'teacher_id' => $teacherId,
+                    'stagiaire_id' => $stagiairesByUserId->get($studentId)?->id,
+                    'filiere_id' => $filiereId,
+                    'formateur_id' => $formateurRecordId,
+                    'created_by' => $actor->id,
+                    'status' => $row['status'],
+                    'minutes_late' => $row['minutes_late'],
+                    'note' => $row['note'],
+                    'updated_at' => $timestamp,
+                    'created_at' => $timestamp,
+                ];
+            }
+
+            foreach (array_chunk($upserts, 500) as $chunk) {
+                Attendance::query()->upsert(
+                    $chunk,
+                    ['student_id', 'module_id', 'group_id', 'date', 'academic_year'],
+                    ['teacher_id', 'stagiaire_id', 'filiere_id', 'formateur_id', 'created_by', 'status', 'minutes_late', 'note', 'updated_at']
+                );
             }
         });
 

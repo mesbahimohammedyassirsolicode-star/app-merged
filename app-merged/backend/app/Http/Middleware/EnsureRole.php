@@ -44,11 +44,16 @@ class EnsureRole
             }
         }
 
-        if (! in_array((string) $user->role, self::ALLOWED_ROLES, true)) {
+        if (! method_exists($user, 'canonicalRole') || ! method_exists($user, 'hasAnyRole')) {
             return response()->json(['message' => 'Role utilisateur invalide.'], 403);
         }
 
-        if (in_array((string) $user->role, $allowed, true)) {
+        $userRole = $user->canonicalRole();
+        if (! in_array($userRole, self::ALLOWED_ROLES, true)) {
+            return response()->json(['message' => 'Role utilisateur invalide.'], 403);
+        }
+
+        if ($user->hasAnyRole(...$allowed)) {
             return $next($request);
         }
 

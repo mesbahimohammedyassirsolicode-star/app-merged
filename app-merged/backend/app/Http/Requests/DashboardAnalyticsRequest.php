@@ -12,6 +12,7 @@ class DashboardAnalyticsRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
+            'filiere_id' => ['nullable', 'integer', 'exists:filieres,id'],
             'module_id' => ['nullable', 'integer', 'exists:modules,id'],
             'group_id' => ['nullable', 'integer', 'exists:groupes,id'],
             'date_from' => ['nullable', 'date'],

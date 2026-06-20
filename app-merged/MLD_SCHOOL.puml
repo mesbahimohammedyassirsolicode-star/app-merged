@@ -1,0 +1,768 @@
+@startuml MLD_GIMS
+
+title MLD — Modèle Logique de Données\nSystème de Gestion Scolaire (GIMS)
+
+skinparam {
+    BackgroundColor white
+    RoundCorner 10
+    ArrowColor #2C3E50
+    TableBackgroundColor #EBF5FB
+    TableBorderColor #2980B9
+    TableFontColor #2C3E50
+}
+
+' =====================================================
+' UTILISATEURS & PROFILS
+' =====================================================
+
+table "users" as users {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    name : VARCHAR(255) <<NOT NULL>>
+    email : VARCHAR(255) <<UNIQUE, NOT NULL>>
+    password : VARCHAR(255) <<NOT NULL>>
+    role : VARCHAR(32) <<DEFAULT 'stagiaire', INDEX>>
+    avatar_url : VARCHAR(255) <<NULL>>
+    is_active : TINYINT(1) <<DEFAULT 1>>
+    remember_token : VARCHAR(100) <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL, SoftDeletes>>
+}
+
+table "administrators" as administrators {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    poste : VARCHAR(100) <<NOT NULL>>
+    phone : VARCHAR(20) <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "formateurs" as formateurs {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    matricule : VARCHAR(50) <<UNIQUE>>
+    specialty : VARCHAR(100) <<NOT NULL>>
+    type : ENUM('permanent','vacataire') <<NOT NULL>>
+    hourly_rate : DECIMAL(8,2) <<NULL>>
+    filiere_id : BIGINT UNSIGNED <<FK, NULL>>
+    niveau : VARCHAR(10) <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "stagiaires" as stagiaires {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    filiere_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    groupe_id : BIGINT UNSIGNED <<FK, NULL>>
+    parent_id : BIGINT UNSIGNED <<FK, NULL, legacy>>
+    cef_number : VARCHAR(50) <<UNIQUE>>
+    cin : VARCHAR(20) <<UNIQUE, NOT NULL>>
+    date_naissance : DATE <<NOT NULL>>
+    niveau_scolaire : VARCHAR(20) <<DEFAULT 'BAC'>>
+    niveau_formation : VARCHAR(20) <<DEFAULT 'TS'>>
+    status : ENUM('actif','abandon','exclu','diplome') <<DEFAULT 'actif'>>
+    photo_url : VARCHAR(255) <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "parents" as parents {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    cin : VARCHAR(20) <<UNIQUE>>
+    phone : VARCHAR(20) <<NOT NULL>>
+    address : TEXT <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+' =====================================================
+' STRUCTURE PÉDAGOGIQUE
+' =====================================================
+
+table "annees_scolaires" as annees_scolaires {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    year_start : YEAR <<NOT NULL>>
+    year_end : YEAR <<NOT NULL>>
+    label : VARCHAR(20) <<NOT NULL>>
+    is_current : TINYINT(1) <<DEFAULT 0>>
+    start_date : DATE <<NOT NULL>>
+    end_date : DATE <<NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "filieres" as filieres {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    niveau_id : BIGINT UNSIGNED <<FK, NULL>>
+    code : VARCHAR(255) <<UNIQUE>>
+    name : VARCHAR(255) <<NOT NULL>>
+    label : VARCHAR(255) <<NULL>>
+    type : VARCHAR(255) <<NULL>>
+    required_level : VARCHAR(255) <<NULL>>
+    duration_years : INT <<DEFAULT 2>>
+    description : VARCHAR(255) <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "niveaux" as niveaux {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    filiere_id : BIGINT UNSIGNED <<FK, NULL>>
+    code : VARCHAR(255) <<NULL>>
+    name : VARCHAR(255) <<NOT NULL>>
+    label : VARCHAR(255) <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "groupes" as groupes {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    niveau_id : BIGINT UNSIGNED <<FK, NULL>>
+    filiere_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    annee_scolaire_id : BIGINT UNSIGNED <<FK, NULL>>
+    name : VARCHAR(255) <<NOT NULL>>
+    label : VARCHAR(255) <<NULL>>
+    year_level : INT <<DEFAULT 1>>
+    capacity : INT <<DEFAULT 30>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "modules" as modules {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    niveau_id : BIGINT UNSIGNED <<FK, NULL>>
+    filiere_id : BIGINT UNSIGNED <<FK, NULL>>
+    code : VARCHAR(255) <<UNIQUE>>
+    name : VARCHAR(255) <<NOT NULL>>
+    label : VARCHAR(255) <<NULL>>
+    coefficient : INT <<DEFAULT 1>>
+    masse_horaire : INT <<DEFAULT 0>>
+    semester : ENUM('S1','S2','S3','S4') <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "syllabus_items" as syllabus_items {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    module_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    label : VARCHAR(255) <<NOT NULL>>
+    estimated_hours : INT <<DEFAULT 1>>
+    order : INT <<DEFAULT 1>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+' =====================================================
+' PIVOTS - STRUCTURE PÉDAGOGIQUE
+' =====================================================
+
+table "module_groupe" as module_groupe {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    module_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    groupe_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    academic_year : BIGINT UNSIGNED <<FK>>
+    semester : ENUM('S1','S2','S3','S4') <<NULL>>
+    planned_hours : INT UNSIGNED <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (module_id, groupe_id, academic_year, semester)
+}
+
+table "groupe_stagiaire" as groupe_stagiaire {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    groupe_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    stagiaire_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+}
+
+table "parent_stagiaire" as parent_stagiaire {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    parent_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    stagiaire_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (parent_id, stagiaire_id)
+}
+
+' =====================================================
+' AFFECTATIONS & SÉANCES
+' =====================================================
+
+table "affectations" as affectations {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    formateur_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    groupe_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    module_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    annee_scolaire_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    start_date : DATE <<NULL>>
+    end_date : DATE <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "seances" as seances {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    affectation_id : BIGINT UNSIGNED <<FK, NULL>>
+    filiere_id : BIGINT UNSIGNED <<FK, NULL>>
+    groupe_id : BIGINT UNSIGNED <<FK, NULL>>
+    user_id : BIGINT UNSIGNED <<FK, NULL>>
+    module_id : BIGINT UNSIGNED <<FK, NULL>>
+    date : DATE <<NOT NULL, INDEX>>
+    start_time : TIME <<NOT NULL>>
+    end_time : TIME <<NOT NULL>>
+    salle : VARCHAR(20) <<NULL>>
+    status : ENUM('planifie','realise','annule') <<DEFAULT 'planifie'>>
+    type : ENUM('presentiel','distance') <<DEFAULT 'presentiel'>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+    --
+    INDEX seances_date_start_idx (date, start_time)
+    INDEX seances_group_date_start_idx (groupe_id, date, start_time)
+}
+
+' =====================================================
+' ABSENCES & ASSIDUITÉ
+' =====================================================
+
+table "absences" as absences {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    stagiaire_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    seance_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    justifie : TINYINT(1) <<DEFAULT 0>>
+    retard_minutes : INT <<DEFAULT 0>>
+    motif : VARCHAR(255) <<NULL>>
+    justification_doc : VARCHAR(255) <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "attendances" as attendances {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    seance_id : BIGINT UNSIGNED <<FK, NULL>>
+    stagiaire_id : BIGINT UNSIGNED <<FK, NULL>>
+    student_id : BIGINT UNSIGNED <<FK, NULL>>
+    module_id : BIGINT UNSIGNED <<FK, NULL>>
+    group_id : BIGINT UNSIGNED <<FK, NULL>>
+    filiere_id : BIGINT UNSIGNED <<FK, NULL>>
+    teacher_id : BIGINT UNSIGNED <<FK, NULL>>
+    formateur_id : BIGINT UNSIGNED <<FK, NULL>>
+    date : DATE <<NULL>>
+    academic_year : VARCHAR(9) <<NULL>>
+    created_by : BIGINT UNSIGNED <<FK, NULL>>
+    status : VARCHAR(255) <<DEFAULT 'present'>>
+    minutes_late : SMALLINT UNSIGNED <<NULL>>
+    retard_minutes : SMALLINT UNSIGNED <<DEFAULT 0>>
+    note : TEXT <<NULL>>
+    justifie : TINYINT(1) <<DEFAULT 0>>
+    motif : VARCHAR(255) <<NULL>>
+    justification_doc : VARCHAR(255) <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (seance_id, stagiaire_id)
+    UNIQUE (student_id, module_id, group_id, date, academic_year)
+}
+
+' =====================================================
+' ÉVALUATIONS & NOTES
+' =====================================================
+
+table "evaluations" as evaluations {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    affectation_id : BIGINT UNSIGNED <<FK, NULL>>
+    user_id : BIGINT UNSIGNED <<FK, NULL>>
+    module_id : BIGINT UNSIGNED <<FK, NULL>>
+    groupe_id : BIGINT UNSIGNED <<FK, NULL>>
+    item_label : VARCHAR(100) <<NOT NULL>>
+    type : ENUM('cc','efm','projet','stage') <<NOT NULL>>
+    max_points : DECIMAL(5,2) <<DEFAULT 20.00>>
+    coefficient : DECIMAL(3,2) <<DEFAULT 1.00>>
+    date : DATE <<NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "notes" as notes {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    evaluation_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    stagiaire_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    valeur : DECIMAL(5,2) <<NOT NULL>>
+    observation : TEXT <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+' =====================================================
+' PROGRESSION
+' =====================================================
+
+table "progressions" as progressions {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    affectation_id : BIGINT UNSIGNED <<FK, NULL>>
+    syllabus_item_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    user_id : BIGINT UNSIGNED <<FK, NULL>>
+    module_id : BIGINT UNSIGNED <<FK, NULL>>
+    groupe_id : BIGINT UNSIGNED <<FK, NULL>>
+    status : ENUM('not_started','in_progress','completed') <<DEFAULT 'not_started'>>
+    completed_at : DATETIME <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+table "module_progress" as module_progress {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    formateur_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    module_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    progression : TINYINT UNSIGNED <<DEFAULT 0>>
+    last_session : DATETIME <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (formateur_id, module_id)
+}
+
+' =====================================================
+' RESSOURCES PÉDAGOGIQUES
+' =====================================================
+
+table "course_files" as course_files {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    uploaded_by_user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    groupe_id : BIGINT UNSIGNED <<FK, NULL>>
+    module_id : BIGINT UNSIGNED <<FK, NULL>>
+    title : VARCHAR(255) <<NULL>>
+    description : TEXT <<NULL>>
+    original_name : VARCHAR(255) <<NOT NULL>>
+    disk : VARCHAR(255) <<DEFAULT 'course_files'>>
+    path : VARCHAR(255) <<NOT NULL>>
+    mime_type : VARCHAR(191) <<NOT NULL>>
+    size_bytes : BIGINT UNSIGNED <<NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+' =====================================================
+' COMMUNICATION
+' =====================================================
+
+table "notifications" as notifications {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    title : VARCHAR(255) <<NOT NULL>>
+    message : TEXT <<NOT NULL>>
+    type : VARCHAR(255) <<NULL>>
+    data : JSON <<NULL>>
+    read_at : TIMESTAMP <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+    --
+    INDEX notifications_user_read (user_id, read_at)
+}
+
+table "messages" as messages {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    sender_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    receiver_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    content : TEXT <<NOT NULL>>
+    read_at : TIMESTAMP <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+}
+
+table "feedbacks" as feedbacks {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    submission_token : VARCHAR(64) <<UNIQUE, NULL>>
+    category : ENUM('pedagogie','infrastructure','administration','autre') <<INDEX>>
+    content : TEXT <<NOT NULL>>
+    sentiment_score : INT <<NULL>>
+    is_read : TINYINT(1) <<DEFAULT 0>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+' =====================================================
+' STAGES
+' =====================================================
+
+table "stages" as stages {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    stagiaire_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    groupe_id : BIGINT UNSIGNED <<FK, NULL>>
+    formateur_id : BIGINT UNSIGNED <<FK, NULL>>
+    organisation : VARCHAR(255) <<NOT NULL>>
+    poste : VARCHAR(150) <<NULL>>
+    date_debut : DATE <<NOT NULL>>
+    date_fin : DATE <<NOT NULL>>
+    status : ENUM('en_cours','valide','non_valide') <<DEFAULT 'en_cours'>>
+    rapport_path : TEXT <<NULL>>
+    note : DECIMAL(5,2) <<NULL>>
+    observation : TEXT <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    deleted_at : TIMESTAMP <<NULL>>
+}
+
+' =====================================================
+' COMMERCE
+' =====================================================
+
+table "products" as products {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    name : VARCHAR(255) <<NOT NULL>>
+    description : TEXT <<NULL>>
+    price : DECIMAL(10,2) <<NOT NULL>>
+    stock : INT UNSIGNED <<DEFAULT 0>>
+    is_active : TINYINT(1) <<DEFAULT 1>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+}
+
+table "carts" as carts {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    status : VARCHAR(30) <<DEFAULT 'active'>>
+    total : DECIMAL(12,2) <<DEFAULT 0>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+}
+
+table "cart_items" as cart_items {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    cart_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    product_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    quantity : INT UNSIGNED <<DEFAULT 1>>
+    unit_price : DECIMAL(10,2) <<NOT NULL>>
+    subtotal : DECIMAL(12,2) <<NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (cart_id, product_id)
+}
+
+table "orders" as orders {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    order_number : VARCHAR(255) <<UNIQUE>>
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    cart_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    status : VARCHAR(30) <<DEFAULT 'pending'>>
+    total : DECIMAL(12,2) <<DEFAULT 0>>
+    shipping_address : TEXT <<NOT NULL>>
+    payment_method : VARCHAR(50) <<NOT NULL>>
+    notes : TEXT <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+}
+
+' =====================================================
+' SÉCURITÉ & AUDIT
+' =====================================================
+
+table "roles" as roles {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    name : VARCHAR(50) <<UNIQUE>>
+    slug : VARCHAR(50) <<UNIQUE, INDEX>>
+    description : TEXT <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+}
+
+table "permissions" as permissions {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    name : VARCHAR(100) <<UNIQUE>>
+    slug : VARCHAR(100) <<UNIQUE, INDEX>>
+    group : VARCHAR(50) <<NULL, INDEX>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+}
+
+table "role_user" as role_user {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    role_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (role_id, user_id)
+}
+
+table "permission_role" as permission_role {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    permission_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    role_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (permission_id, role_id)
+}
+
+table "audit_logs" as audit_logs {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    user_id : BIGINT UNSIGNED <<FK, NULL>>
+    action : VARCHAR(50) <<NOT NULL>>
+    model_type : VARCHAR(100) <<NULL>>
+    model_id : BIGINT UNSIGNED <<NULL>>
+    old_values : JSON <<NULL>>
+    new_values : JSON <<NULL>>
+    ip_address : VARCHAR(45) <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    INDEX (user_id, created_at)
+}
+
+' =====================================================
+' PIVOTS - AFFECTATIONS FORMATEUR
+' =====================================================
+
+table "teacher_module" as teacher_module {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    teacher_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    module_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    academic_year : BIGINT UNSIGNED <<FK>>
+    semester : ENUM('S1','S2','S3','S4') <<NULL>>
+    weekly_hours : INT UNSIGNED <<NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (teacher_id, module_id, academic_year, semester)
+}
+
+table "module_trainer" as module_trainer {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    module_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (user_id, module_id)
+}
+
+table "formateur_group" as formateur_group {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    groupe_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (user_id, groupe_id)
+}
+
+table "formateur_module_group" as formateur_module_group {
+    **id** : BIGINT UNSIGNED <<PK, AUTO_INCREMENT>>
+    --
+    user_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    module_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    groupe_id : BIGINT UNSIGNED <<FK, NOT NULL>>
+    created_at : TIMESTAMP <<NULL>>
+    updated_at : TIMESTAMP <<NULL>>
+    --
+    UNIQUE (user_id, module_id, groupe_id)
+}
+
+' =====================================================
+' CLES ETRANGERES
+' =====================================================
+
+' --- Profils ---
+users ||--|| administrators : "user_id"
+users ||--|| formateurs : "user_id"
+users ||--|| stagiaires : "user_id"
+users ||--|| parents : "user_id"
+
+' --- Structure pédagogique ---
+filieres ||--o{ niveaux : "filiere_id"
+niveaux ||--o{ groupes : "niveau_id"
+filieres ||--o{ groupes : "filiere_id"
+annees_scolaires ||--o{ groupes : "annee_scolaire_id"
+niveaux ||--o{ modules : "niveau_id"
+filieres ||--o{ modules : "filiere_id"
+modules ||--o{ syllabus_items : "module_id"
+modules ||--o{ module_groupe : "module_id"
+groupes ||--o{ module_groupe : "groupe_id"
+groupes ||--o{ groupe_stagiaire : "groupe_id"
+stagiaires ||--o{ groupe_stagiaire : "stagiaire_id"
+parents ||--o{ parent_stagiaire : "parent_id"
+stagiaires ||--o{ parent_stagiaire : "stagiaire_id"
+stagiaires ||--o{ stagiaires : "parent_id (legacy)"
+
+' --- Affectations ---
+formateurs ||--o{ affectations : "formateur_id"
+groupes ||--o{ affectations : "groupe_id"
+modules ||--o{ affectations : "module_id"
+annees_scolaires ||--o{ affectations : "annee_scolaire_id"
+
+' --- Séances ---
+affectations ||--o{ seances : "affectation_id"
+filieres ||--o{ seances : "filiere_id"
+groupes ||--o{ seances : "groupe_id"
+users ||--o{ seances : "user_id"
+modules ||--o{ seances : "module_id"
+
+' --- Absences ---
+stagiaires ||--o{ absences : "stagiaire_id"
+seances ||--o{ absences : "seance_id"
+
+' --- Assiduité ---
+seances ||--o{ attendances : "seance_id"
+stagiaires ||--o{ attendances : "stagiaire_id"
+users ||--o{ attendances : "student_id"
+modules ||--o{ attendances : "module_id"
+groupes ||--o{ attendances : "group_id"
+filieres ||--o{ attendances : "filiere_id"
+formateurs ||--o{ attendances : "formateur_id"
+
+' --- Évaluations ---
+users ||--o{ evaluations : "user_id"
+modules ||--o{ evaluations : "module_id"
+groupes ||--o{ evaluations : "groupe_id"
+affectations ||--o{ evaluations : "affectation_id"
+evaluations ||--o{ notes : "evaluation_id"
+stagiaires ||--o{ notes : "stagiaire_id"
+
+' --- Progression ---
+syllabus_items ||--o{ progressions : "syllabus_item_id"
+users ||--o{ progressions : "user_id"
+modules ||--o{ progressions : "module_id"
+groupes ||--o{ progressions : "groupe_id"
+affectations ||--o{ progressions : "affectation_id"
+formateurs ||--o{ module_progress : "formateur_id"
+modules ||--o{ module_progress : "module_id"
+
+' --- Fichiers ---
+users ||--o{ course_files : "uploaded_by_user_id"
+modules ||--o{ course_files : "module_id"
+groupes ||--o{ course_files : "groupe_id"
+
+' --- Communication ---
+users ||--o{ notifications : "user_id"
+users ||--o{ messages : "sender_id"
+users ||--o{ messages : "receiver_id"
+
+' --- Stages ---
+stagiaires ||--o{ stages : "stagiaire_id"
+groupes ||--o{ stages : "groupe_id"
+formateurs ||--o{ stages : "formateur_id"
+
+' --- Commerce ---
+users ||--o{ carts : "user_id"
+carts ||--o{ cart_items : "cart_id"
+products ||--o{ cart_items : "product_id"
+users ||--o{ orders : "user_id"
+carts ||--o{ orders : "cart_id"
+
+' --- RBAC ---
+roles ||--o{ role_user : "role_id"
+users ||--o{ role_user : "user_id"
+permissions ||--o{ permission_role : "permission_id"
+roles ||--o{ permission_role : "role_id"
+
+' --- Audit ---
+users ||--o{ audit_logs : "user_id"
+
+' --- Pivots Formateur ---
+formateurs ||--o{ teacher_module : "teacher_id"
+modules ||--o{ teacher_module : "module_id"
+users ||--o{ module_trainer : "user_id"
+modules ||--o{ module_trainer : "module_id"
+users ||--o{ formateur_group : "user_id"
+groupes ||--o{ formateur_group : "groupe_id"
+users ||--o{ formateur_module_group : "user_id"
+modules ||--o{ formateur_module_group : "module_id"
+groupes ||--o{ formateur_module_group : "groupe_id"
+
+' =====================================================
+' NOTES
+' =====================================================
+
+note right of users
+  **Authentification**
+  - Sanctum tokens
+  - SoftDeletes
+  - Rôles legacy : admin,
+    teacher, student, parent,
+    directeur, secretariat,
+    formateur, stagiaire
+end note
+
+note right of attendances
+  **Système dual V1/V2**
+  - V1: student_id + module_id
+    + group_id + date + teacher_id
+  - V2: seance_id + stagiaire_id
+  Les deux coexistents avec
+  contraintes d'unicité séparées
+end note
+
+note right of evaluations
+  **Barème OFPPT**
+  - CC: 40%
+  - EFM: 40%
+  - Projet/Stage: 20%
+  Note sur 20 par défaut
+end note
+
+@enduml

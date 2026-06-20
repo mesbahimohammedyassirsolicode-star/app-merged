@@ -53,7 +53,7 @@ function ParentStagiaireManager({ parentId }: { parentId: number }) {
   const currentSelectedIds = selectedIds ?? [];
 
   return (
-    <Card className="border-slate-200 shadow-sm">
+    <Card className="border-theme-border shadow-sm">
       <CardHeader>
         <CardTitle>Stagiaires</CardTitle>
         <CardDescription>La sauvegarde remplace la liste actuelle de ce parent.</CardDescription>
@@ -61,10 +61,10 @@ function ParentStagiaireManager({ parentId }: { parentId: number }) {
       <CardContent>
         {loadingStagiaires ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-10 w-10 animate-spin text-indigo-600" />
+            <Loader2 className="h-10 w-10 animate-spin text-indigo-400" />
           </div>
         ) : !rows?.length ? (
-          <p className="py-8 text-center text-sm text-slate-500">Aucun stagiaire disponible.</p>
+          <p className="py-8 text-center text-sm text-theme-text-secondary">Aucun stagiaire disponible.</p>
         ) : (
           <StagiaireSelector rows={rows} selectedIds={currentSelectedIds} onToggle={toggle} disabled={busy} />
         )}
@@ -113,13 +113,13 @@ export default function AdminParentStagiaireLinkPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Affecter des stagiaires à un parent</h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <h1 className="text-2xl font-bold text-theme-text-primary">Affecter des stagiaires à un parent</h1>
+        <p className="mt-1 text-sm text-theme-text-secondary">
           Sélectionnez un compte parent, puis cochez les stagiaires à rattacher à ce parent.
         </p>
       </div>
 
-      <Card className="border-slate-200 shadow-sm">
+      <Card className="border-theme-border shadow-sm">
         <CardHeader>
           <CardTitle>Parent cible</CardTitle>
           <CardDescription>Seuls les administrateurs peuvent modifier ces affectations.</CardDescription>
@@ -127,10 +127,10 @@ export default function AdminParentStagiaireLinkPage() {
         <CardContent>
           {loadingParents ? (
             <div className="flex justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-indigo-400" />
             </div>
           ) : !parentAccounts?.length ? (
-            <p className="text-sm text-slate-500">Aucun compte parent trouvé.</p>
+            <p className="text-sm text-theme-text-secondary">Aucun compte parent trouvé.</p>
           ) : (
             <div className="space-y-2">
               <select
@@ -146,7 +146,7 @@ export default function AdminParentStagiaireLinkPage() {
                 ))}
               </select>
               {activeParent ? (
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-theme-text-secondary">
                   Parent sélectionné: {activeParent.name ?? `#${activeParent.id}`}
                 </p>
               ) : null}

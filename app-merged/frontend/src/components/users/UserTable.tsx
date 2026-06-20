@@ -14,8 +14,8 @@ interface UserTableProps {
 export default function UserTable({ usersData, isUsersLoading, onEdit, onDelete }: UserTableProps) {
     if (isUsersLoading) {
         return (
-            <div className="rounded-2xl border border-slate-200 bg-white p-10 shadow-sm">
-                <div className="flex items-center justify-center gap-2 text-slate-500">
+            <div className="rounded-2xl border border-theme-border glass-panel p-10 shadow-sm">
+                <div className="flex items-center justify-center gap-2 text-theme-text-secondary">
                     <Loader2 className="h-5 w-5 animate-spin" />
                     <span className="text-sm font-medium">Chargement des utilisateurs...</span>
                 </div>
@@ -33,9 +33,9 @@ export default function UserTable({ usersData, isUsersLoading, onEdit, onDelete 
     }
 
     return (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-theme-border bg-theme-surface/50 backdrop-blur-md shadow-sm">
             <table className="w-full text-left text-sm">
-                <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
+                <thead className="border-b border-theme-border bg-theme-surface text-theme-text-secondary">
                     <tr>
                         <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide">Nom</th>
                         <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide">Email</th>
@@ -44,48 +44,51 @@ export default function UserTable({ usersData, isUsersLoading, onEdit, onDelete 
                         <th className="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wide">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-theme-border">
                     {usersData?.data?.map((user: User) => (
-                        <tr key={user.id} className="border-b border-slate-100 transition-colors hover:bg-slate-50/70">
-                            <td className="px-5 py-4 font-semibold text-slate-900">{user.name}</td>
-                            <td className="px-5 py-4 text-slate-600">{user.email}</td>
+                        <tr key={user.id} className="transition-colors hover:bg-theme-surface">
+                            <td className="px-5 py-4 font-semibold text-theme-text-primary">{user.name}</td>
+                            <td className="px-5 py-4 text-theme-text-secondary">{user.email}</td>
                             <td className="px-5 py-4 capitalize">
-                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' :
-                                    user.role === 'teacher' ? 'bg-blue-100 text-blue-800' :
-                                        user.role === 'student' ? 'bg-green-100 text-green-800' :
-                                            'bg-gray-100 text-gray-800'
-                                    }`}>
+                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                    user.role === 'admin' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' :
+                                    user.role === 'teacher' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
+                                    user.role === 'student' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                                    'bg-theme-text-secondary/10 text-theme-text-secondary border border-theme-border/20'
+                                }`}>
                                     {user.role}
                                 </span>
                             </td>
-                            <td className="px-5 py-4 text-xs text-slate-500">
+                            <td className="px-5 py-4 text-xs text-theme-text-secondary">
                                 {user.role === 'teacher' && user.formateur && (
-                                    <>
-                                        <div className="font-semibold">{user.formateur.specialty}</div>
-                                        <div>{user.formateur.matricule}</div>
-                                    </>
+                                    <div className="space-y-1">
+                                        <div className="font-semibold text-theme-text-secondary">{user.formateur.specialty}</div>
+                                        <div className="text-theme-text-secondary">{user.formateur.matricule}</div>
+                                    </div>
                                 )}
                                 {user.role === 'student' && user.stagiaire && (
-                                    <>
-                                        <div>CEF: {user.stagiaire.cef_number}</div>
-                                        <div>Filière: {user.stagiaire.filiere?.label ?? user.stagiaire.filiere_id ?? '-'}</div>
-                                        <div>Groupe: {user.stagiaire.groupe?.label ?? user.stagiaire.groupe_id ?? '-'}</div>
-                                        <div>Né(e): {user.stagiaire.date_naissance}</div>
-                                    </>
+                                    <div className="space-y-0.5">
+                                        <div className="text-theme-text-secondary">CEF: <span className="text-theme-text-secondary">{user.stagiaire.cef_number}</span></div>
+                                        <div className="text-theme-text-secondary">Filière: <span className="text-theme-text-secondary">{user.stagiaire.filiere?.label ?? user.stagiaire.filiere_id ?? '-'}</span></div>
+                                        <div className="text-theme-text-secondary">Groupe: <span className="text-theme-text-secondary">{user.stagiaire.groupe?.label ?? user.stagiaire.groupe_id ?? '-'}</span></div>
+                                    </div>
                                 )}
                             </td>
-                            <td className="space-x-2 px-5 py-4 text-right">
-                                <Button variant="ghost" size="icon" onClick={() => onEdit(user)} title="Modifier">
-                                    <Pencil className="h-4 w-4 text-slate-600" />
-                                </Button>
-                                <Button variant="ghost" size="icon" onClick={() => onDelete(user.id)} title="Supprimer">
-                                    <Trash2 className="h-4 w-4 text-rose-500" />
-                                </Button>
+                            <td className="px-5 py-4 text-right">
+                                <div className="flex items-center justify-end gap-1">
+                                    <Button variant="ghost" size="icon" onClick={() => onEdit(user)} className="h-8 w-8 text-theme-text-secondary hover:text-blue-400 hover:bg-blue-400/10">
+                                        <Pencil className="h-4 w-4" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" onClick={() => onDelete(user.id)} className="h-8 w-8 text-theme-text-secondary hover:text-rose-400 hover:bg-rose-400/10">
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </div>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+
         </div>
     );
 }

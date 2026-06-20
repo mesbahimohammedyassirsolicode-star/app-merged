@@ -5,6 +5,8 @@ import DashboardLayout from './layouts/DashboardLayout';
 import { Loader2 } from 'lucide-react';
 import type { User } from './types/auth';
 import { hasAnyPermission, resolveDashboardPath, type PermissionSlug } from './lib/rbac';
+import { ErrorBoundary } from './components/ui/error-boundary';
+import { RealtimeProvider } from './features/realtime/websocket/RealtimeProvider';
 
 // ── Performance: Code-split all pages via React.lazy ──────────────────────────
 // Each page becomes a separate chunk loaded on-demand, reducing initial bundle
@@ -50,7 +52,7 @@ function PageFallback() {
 
 /** Redirect to /login if not authenticated; shows spinner while auth is resolving. */
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) {
     return (
@@ -60,11 +62,15 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>;
+  return (
+    <RealtimeProvider userId={user.id.toString()} enabled={true}>
+      {children}
+    </RealtimeProvider>
+  );
 }
 
 /**
@@ -148,182 +154,184 @@ function AttendanceEntryRoute() {
 
 export default function App() {
   return (
-    // Performance: Suspense boundary for lazy-loaded page chunks
-    <Suspense fallback={<PageFallback />}>
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
+    <ErrorBoundary variant="app">
+      {/* Performance: Suspense boundary for lazy-loaded page chunks */}
+      <Suspense fallback={<PageFallback />}>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
 
-      {/* All routes below require authentication */}
-      <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-        <Route path="/dashboard" element={<DashboardHomeRoute />} />
-        <Route path="/dashboard/admin" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat']}>
-            <DashboardPage />
-          </RoleRoute>
-        } />
-        <Route path="/dashboard/formateur" element={
-          <RoleRoute roles={['teacher', 'formateur']}>
-            <DashboardPage />
-          </RoleRoute>
-        } />
-        <Route path="/dashboard/stagiaire" element={
-          <RoleRoute roles={['student', 'stagiaire']}>
-            <DashboardPage />
-          </RoleRoute>
-        } />
-        <Route path="/dashboard/parent" element={
-          <RoleRoute roles={['parent']}>
-            <DashboardPage />
-          </RoleRoute>
-        } />
-        <Route path="/" element={<DashboardHomeRoute />} />
-
-        {/* FIXED: Admin-only routes now wrapped in RoleRoute to enforce frontend access control */}
-        <Route path="/users" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat']}>
-            <UsersPage />
-          </RoleRoute>
-        } />
-        <Route path="/admin/parent-links" element={
-          <RoleRoute roles={['admin']}>
-            <AdminParentStagiaireLinkPage />
-          </RoleRoute>
-        } />
-        <Route path="/academic/years" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat']}>
-            <AcademicYearsPage />
-          </RoleRoute>
-        } />
-        <Route path="/academic/filieres" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat']}>
-            <FilieresPage />
-          </RoleRoute>
-        } />
-
-        {/* General — accessible to all authenticated roles */}
-        <Route
-          path="/group"
-          element={
-            <RoleRoute roles={['student', 'stagiaire']}>
-              <GroupPage />
+        {/* All routes below require authentication */}
+        <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+          <Route path="/dashboard" element={<DashboardHomeRoute />} />
+          <Route path="/dashboard/admin" element={
+            <RoleRoute roles={['admin', 'directeur', 'secretariat']}>
+              <DashboardPage />
             </RoleRoute>
-          }
-        />
-        <Route
-          path="/groups"
-          element={
+          } />
+          <Route path="/dashboard/formateur" element={
+            <RoleRoute roles={['teacher', 'formateur']}>
+              <DashboardPage />
+            </RoleRoute>
+          } />
+          <Route path="/dashboard/stagiaire" element={
+            <RoleRoute roles={['student', 'stagiaire']}>
+              <DashboardPage />
+            </RoleRoute>
+          } />
+          <Route path="/dashboard/parent" element={
+            <RoleRoute roles={['parent']}>
+              <DashboardPage />
+            </RoleRoute>
+          } />
+          <Route path="/" element={<DashboardHomeRoute />} />
+
+          {/* FIXED: Admin-only routes now wrapped in RoleRoute to enforce frontend access control */}
+          <Route path="/users" element={
+            <RoleRoute roles={['admin', 'directeur', 'secretariat']}>
+              <UsersPage />
+            </RoleRoute>
+          } />
+          <Route path="/admin/parent-links" element={
+            <RoleRoute roles={['admin']}>
+              <AdminParentStagiaireLinkPage />
+            </RoleRoute>
+          } />
+          <Route path="/academic/years" element={
+            <RoleRoute roles={['admin', 'directeur', 'secretariat']}>
+              <AcademicYearsPage />
+            </RoleRoute>
+          } />
+          <Route path="/academic/filieres" element={
+            <RoleRoute roles={['admin', 'directeur', 'secretariat']}>
+              <FilieresPage />
+            </RoleRoute>
+          } />
+
+          {/* General — accessible to all authenticated roles */}
+          <Route
+            path="/group"
+            element={
+              <RoleRoute roles={['student', 'stagiaire']}>
+                <GroupPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/groups"
+            element={
+              <RoleRoute
+                roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'parent']}
+                anyPermission={['groups.read', 'groups.manage', 'parent.portal']}
+              >
+                <GroupsPage />
+              </RoleRoute>
+            }
+          />
+          <Route path="/groups/:id" element={
             <RoleRoute
-              roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'parent']}
+              roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent']}
               anyPermission={['groups.read', 'groups.manage', 'parent.portal']}
             >
-              <GroupsPage />
+              <GroupDetailPage />
             </RoleRoute>
-          }
-        />
-        <Route path="/groups/:id" element={
-          <RoleRoute
-            roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent']}
-            anyPermission={['groups.read', 'groups.manage', 'parent.portal']}
-          >
-            <GroupDetailPage />
-          </RoleRoute>
-        } />
-        <Route path="/groups/:id/attendance-summary" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
-            <GroupAttendanceRiskPage />
-          </RoleRoute>
-        } />
-        <Route path="/timetable" element={
-          <RoleRoute
-            roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire']}
-            anyPermission={['timetable.read']}
-          >
-            <TimetablePage />
-          </RoleRoute>
-        } />
-        <Route path="/progress" element={
-          <RoleRoute roles={['student', 'stagiaire']}>
-            <ProgressPage />
-          </RoleRoute>
-        } />
-        <Route path="/modules" element={
-          <RoleRoute
-            roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent']}
-            anyPermission={['modules.manage', 'modules.read_catalog']}
-          >
-            <ModulesPage />
-          </RoleRoute>
-        } />
-        <Route
-          path="/course-files"
-          element={
+          } />
+          <Route path="/groups/:id/attendance-summary" element={
+            <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
+              <GroupAttendanceRiskPage />
+            </RoleRoute>
+          } />
+          <Route path="/timetable" element={
+            <RoleRoute
+              roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire']}
+              anyPermission={['timetable.read']}
+            >
+              <TimetablePage />
+            </RoleRoute>
+          } />
+          <Route path="/progress" element={
+            <RoleRoute roles={['student', 'stagiaire']}>
+              <ProgressPage />
+            </RoleRoute>
+          } />
+          <Route path="/modules" element={
+            <RoleRoute
+              roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent']}
+              anyPermission={['modules.manage', 'modules.read_catalog']}
+            >
+              <ModulesPage />
+            </RoleRoute>
+          } />
+          <Route
+            path="/course-files"
+            element={
+              <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent']}>
+                <CourseFilesPage />
+              </RoleRoute>
+            }
+          />
+          <Route path="/attendance" element={<AttendanceEntryRoute />} />
+          <Route path="/attendance/seances" element={
+            <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
+              <AttendancePage />
+            </RoleRoute>
+          } />
+          <Route path="/attendance/seances/:id" element={
+            <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
+              <SeanceRollCallPage />
+            </RoleRoute>
+          } />
+          <Route path="/evaluations" element={
             <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent']}>
-              <CourseFilesPage />
+              <EvaluationsPage />
             </RoleRoute>
-          }
-        />
-        <Route path="/attendance" element={<AttendanceEntryRoute />} />
-        <Route path="/attendance/seances" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
-            <AttendancePage />
-          </RoleRoute>
-        } />
-        <Route path="/attendance/seances/:id" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
-            <SeanceRollCallPage />
-          </RoleRoute>
-        } />
-        <Route path="/evaluations" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'student', 'stagiaire', 'parent']}>
-            <EvaluationsPage />
-          </RoleRoute>
-        } />
-        <Route path="/stages" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
-            <StagesPage />
-          </RoleRoute>
-        } />
-        <Route path="/feedback" element={<FeedbackPage />} />
-        <Route path="/notifications" element={<NotificationsPage />} />
-        <Route path="/ai-assistant" element={
-          <RoleRoute
-            roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'parent']}
-            anyPermission={['ai.use']}
-          >
-            <AiAssistantPage />
-          </RoleRoute>
-        } />
-        <Route path="/grades-entry" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
-            <GradeEntryPage />
-          </RoleRoute>
-        } />
-        <Route path="/messages" element={<MessagesPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/exports" element={
-          <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
-            <DataExportsPage />
-          </RoleRoute>
-        } />
+          } />
+          <Route path="/stages" element={
+            <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
+              <StagesPage />
+            </RoleRoute>
+          } />
+          <Route path="/feedback" element={<FeedbackPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/ai-assistant" element={
+            <RoleRoute
+              roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur', 'parent']}
+              anyPermission={['ai.use']}
+            >
+              <AiAssistantPage />
+            </RoleRoute>
+          } />
+          <Route path="/grades-entry" element={
+            <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
+              <GradeEntryPage />
+            </RoleRoute>
+          } />
+          <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/exports" element={
+            <RoleRoute roles={['admin', 'directeur', 'secretariat', 'teacher', 'formateur']}>
+              <DataExportsPage />
+            </RoleRoute>
+          } />
 
-        {/* FIXED: Parent-only routes wrapped in RoleRoute */}
-        <Route path="/parent/children" element={
-          <RoleRoute roles={['parent']}>
-            <ParentChildrenPage />
-          </RoleRoute>
-        } />
-        <Route path="/parent/children/:id" element={
-          <RoleRoute roles={['parent']}>
-            <ParentChildDetailPage />
-          </RoleRoute>
-        } />
+          {/* FIXED: Parent-only routes wrapped in RoleRoute */}
+          <Route path="/parent/children" element={
+            <RoleRoute roles={['parent']}>
+              <ParentChildrenPage />
+            </RoleRoute>
+          } />
+          <Route path="/parent/children/:id" element={
+            <RoleRoute roles={['parent']}>
+              <ParentChildDetailPage />
+            </RoleRoute>
+          } />
 
-        <Route path="/forbidden" element={<ForbiddenPage />} />
+          <Route path="/forbidden" element={<ForbiddenPage />} />
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Route>
-    </Routes>
-    </Suspense>
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Route>
+      </Routes>
+      </Suspense>
+    </ErrorBoundary>
   );
 }

@@ -59,6 +59,7 @@ Route::prefix('v1')->group(function () use ($allRoles, $staffRoles, $adminRoles,
             Route::post('/academic-structure/filieres', [AcademicStructureController::class, 'storeFiliere']);
             Route::put('/academic-structure/filieres/{filiere}', [AcademicStructureController::class, 'updateFiliere']);
             Route::delete('/academic-structure/filieres/{filiere}', [AcademicStructureController::class, 'destroyFiliere']);
+            Route::post('/academic-structure/filieres/{filiere}/standardize-groups', [AcademicStructureController::class, 'standardizeFiliereGroups']);
 
             if (app()->environment(['local', 'testing'])) {
                 Route::post('/debug/sync-relationships', function () {

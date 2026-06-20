@@ -48,9 +48,9 @@ class DemoDataSeeder extends Seeder
             ['email' => 'idrissi@gims.ma', 'name' => 'Mme. Layla Idrissi', 'specialty' => 'Communication'],
         ];
 
-        $roleFormateur = Role::where('slug', 'teacher')->first();
+        $roleFormateur = Role::where('slug', 'formateur')->first() ?? Role::where('slug', 'teacher')->first();
         if (! $roleFormateur) {
-            echo "Role teacher not found! Run seeding first.\n";
+            echo "Role formateur not found! Run seeding first.\n";
 
             return;
         }
@@ -62,13 +62,13 @@ class DemoDataSeeder extends Seeder
                 [
                     'name' => $t['name'],
                     'password' => 'Password123',
-                    'role' => 'teacher',
+                    'role' => 'formateur',
                     'is_active' => true,
                 ]
             );
 
             // Ensure permissions/role
-            if (! $user->roles()->where('slug', 'teacher')->exists()) {
+            if (! $user->roles()->where('slug', $roleFormateur->slug)->exists()) {
                 $user->roles()->attach($roleFormateur->id);
             }
 

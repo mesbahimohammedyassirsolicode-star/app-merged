@@ -63,45 +63,49 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <Card className="w-full max-w-md">
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950">
+            <Card className="w-full max-w-md !bg-theme-surface !border-theme-border !text-theme-text-primary">
                 <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold text-center text-primary-600">GIMS Connect</CardTitle>
-                    <CardDescription className="text-center">
+                    <CardTitle className="text-2xl font-bold text-center text-blue-400">GIMS Connect</CardTitle>
+                    <CardDescription className="text-center text-theme-text-secondary">
                         Système de Gestion IKI
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
+                            <Label htmlFor="email" className="text-theme-text-secondary">Email</Label>
+                            <input
                                 id="email"
                                 type="email"
                                 placeholder="nom@exemple.com"
                                 {...register('email')}
-                                className={errors.email ? 'border-red-500' : ''}
+                                className={`flex h-10 w-full rounded-xl border bg-theme-surface px-3 py-2 text-sm text-theme-text-primary placeholder:text-theme-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:border-blue-500/50 transition-all duration-200 ${errors.email ? 'border-red-500' : 'border-theme-border hover:border-theme-border'}`}
                             />
-                            {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+                            {errors.email && <p className="text-sm text-red-400">{errors.email.message}</p>}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="password">Mot de passe</Label>
-                            <Input
+                            <Label htmlFor="password" className="text-theme-text-secondary">Mot de passe</Label>
+                            <input
                                 id="password"
                                 type="password"
                                 {...register('password')}
-                                className={errors.password ? 'border-red-500' : ''}
+                                className={`flex h-10 w-full rounded-xl border bg-theme-surface px-3 py-2 text-sm text-theme-text-primary placeholder:text-theme-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:border-blue-500/50 transition-all duration-200 ${errors.password ? 'border-red-500' : 'border-theme-border hover:border-theme-border'}`}
                             />
-                            {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
+                            {errors.password && <p className="text-sm text-red-400">{errors.password.message}</p>}
                         </div>
-                        {error && <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md">{error}</div>}
-                        <Button type="submit" className="w-full bg-primary-600 hover:bg-primary-700 text-white" disabled={isLoading}>
+                        {error && <div className="p-3 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg">{error}</div>}
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full flex items-center justify-center h-10 px-4 rounded-xl bg-blue-600 text-white text-sm font-medium shadow-lg shadow-blue-500/20 hover:bg-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
                             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Se connecter
-                        </Button>
+                        </button>
                     </form>
                 </CardContent>
-                <CardFooter className="text-center text-sm text-gray-500">
+                <CardFooter className="text-center text-sm text-theme-text-secondary justify-center">
                     Problème de connexion? Contactez l'administration.
                 </CardFooter>
             </Card>

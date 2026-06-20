@@ -1,0 +1,12 @@
+.card-bg {
+  background-color: var(--card-background);
+}
+.card-fg {
+  color: var(--card-foreground);
+}
+.hover-card-bg {
+  background-color: var(--hover-card-background);
+}
+.hover-card-fg {
+  color: var(--hover-card-foreground);
+}

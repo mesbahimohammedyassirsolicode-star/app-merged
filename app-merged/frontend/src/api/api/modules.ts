@@ -91,7 +91,7 @@ export const modulesApi = {
   get: (id: number) => api.get<ApiResponse<Module>>(`/modules/${id}`).then(unwrapData),
   getSyllabus: (id: number) =>
     api.get<ApiResponse<SyllabusItem[]>>(`/modules/${id}/syllabus`).then(unwrapData),
-  create: (body: { filiere_id: number; code: string; label: string; masse_horaire: number; coefficient: number; semester: string }) =>
+  create: (body: { niveau_id: number; code: string; label: string; masse_horaire: number; coefficient: number; semester: string }) =>
     api.post<ApiResponse<Module>>('/modules', body).then(unwrapData),
   update: (id: number, body: Partial<Module>) =>
     api.put<ApiResponse<Module>>(`/modules/${id}`, body).then(unwrapData),

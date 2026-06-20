@@ -65,14 +65,14 @@ export default function CourseFilesPage() {
 
   return (
     <div className="space-y-8 pb-10 max-w-5xl mx-auto">
-      <div className="rounded-2xl bg-white px-6 py-6 shadow-sm border border-gray-100">
-        <h1 className="text-2xl font-bold text-gray-900">Fichiers de cours</h1>
-        <p className="text-sm text-gray-500 mt-2">
+      <div className="rounded-2xl glass-panel px-6 py-6 shadow-sm border border-theme-border">
+        <h1 className="text-2xl font-bold text-theme-text-primary">Fichiers de cours</h1>
+        <p className="text-sm text-theme-text-secondary mt-2">
           Ressources liées aux groupes et aux modules. Accès contrôlé selon votre rôle et vos affectations.
         </p>
       </div>
 
-      <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
+      <div className="rounded-2xl glass-panel p-6 shadow-sm border border-theme-border">
         <div className="max-w-xs">
           <Label htmlFor="filter-filiere">Filtrer par filière</Label>
           <select

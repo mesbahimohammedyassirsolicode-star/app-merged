@@ -1,0 +1,82 @@
+@startuml MLD_Cabinet_Medical
+
+title MLD — Modèle Logique de Données\nCabinet Médical Dr. Dghar Mohamed
+
+skinparam {
+    BackgroundColor white
+    RoundCorner 10
+    ArrowColor #2C3E50
+    TableBackgroundColor #EBF5FB
+    TableBorderColor #2980B9
+    TableFontColor #2C3E50
+}
+
+' =====================================================
+' TABLES
+' =====================================================
+
+table "services" as services {
+    **id** : INT <<PK, AUTO_INCREMENT>>
+    --
+    name : VARCHAR(255) <<NOT NULL>>
+    price : DECIMAL(10,2) <<DEFAULT 0.00>>
+}
+
+table "time_slots" as time_slots {
+    **id** : INT <<PK, AUTO_INCREMENT>>
+    --
+    day_of_week : VARCHAR(20) <<NOT NULL, INDEX>>
+    start_time : TIME <<NOT NULL>>
+    end_time : TIME <<NOT NULL>>
+    max_patients : INT <<DEFAULT 1>>
+    --
+    UNIQUE (day_of_week, start_time, end_time)
+}
+
+table "schedule_exceptions" as exceptions {
+    **id** : INT <<PK, AUTO_INCREMENT>>
+    --
+    exception_date : DATE <<NOT NULL>>
+    reason : VARCHAR(255) <<NULL>>
+    time_slot_id : INT <<FK, NULL>>
+    --
+    UNIQUE (exception_date, time_slot_id)
+}
+
+table "appointments" as appointments {
+    **id** : INT <<PK, AUTO_INCREMENT>>
+    --
+    name : VARCHAR(100) <<NOT NULL>>
+    email : VARCHAR(100) <<NOT NULL>>
+    phone : VARCHAR(50) <<NOT NULL>>
+    cni : VARCHAR(20) <<NOT NULL>>
+    service_type : VARCHAR(100) <<NOT NULL>>
+    appointment_date : DATE <<NOT NULL, INDEX>>
+    message : TEXT <<NULL>>
+    medical_document : VARCHAR(255) <<NULL>>
+    reference_number : VARCHAR(50) <<UNIQUE, INDEX>>
+    public_token : VARCHAR(64) <<NULL, INDEX>>
+    status : ENUM('pending','confirmed','canceled') <<DEFAULT 'pending', INDEX>>
+    created_at : DATETIME <<DEFAULT CURRENT_TIMESTAMP>>
+    service_id : INT <<FK, NULL>>
+    time_slot_id : INT <<FK, NULL>>
+}
+
+' =====================================================
+' CLES ETRANGERES
+' =====================================================
+
+services ||--o{ appointments : "service_id"
+time_slots ||--o{ appointments : "time_slot_id"
+time_slots ||--o{ exceptions : "time_slot_id"
+
+note right of appointments
+  **Workflow de confirmation**
+  - pending → confirmed (par l'admin)
+  - pending → canceled  (par l'admin)
+  - public_token + reference_number
+    permettent le suivi public sécurisé
+    (confirmation.php / pending-confirmation.php)
+end note
+
+@enduml

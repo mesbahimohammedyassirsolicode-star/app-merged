@@ -24,11 +24,11 @@ export default function StagesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">{t('nav.stages')}</h1>
+      <h1 className="text-2xl font-bold text-theme-text-primary">{t('nav.stages')}</h1>
       {isLoading ? (
         <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary-600" /></div>
       ) : !data?.items?.length ? (
-        <div className="rounded-xl border border-dashed border-gray-200 bg-white py-12 text-center text-sm text-gray-500">
+        <div className="rounded-xl border border-dashed border-theme-border glass-panel py-12 text-center text-sm text-theme-text-secondary">
           Aucun stage disponible.
         </div>
       ) : (
@@ -38,7 +38,7 @@ export default function StagesPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg">{s.organisation}</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-gray-600">
+              <CardContent className="text-sm text-theme-text-secondary">
                 <p>Stagiaire : {s.stagiaire?.user?.name ?? 'Non renseigne'}</p>
                 <p>{s.date_debut} — {s.date_fin}</p>
                 <p className="capitalize">{s.status}</p>

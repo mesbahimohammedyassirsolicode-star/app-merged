@@ -1,0 +1,202 @@
+@startuml UseCase_GIMS
+
+left to right direction
+title Diagramme de Cas d'Utilisation — Système de Gestion Scolaire (GIMS)
+
+' === DESIGN & STYLING ===
+skinparam {
+    BackgroundColor white
+    Shadowing true
+    RoundCorner 10
+    ArrowColor #2C3E50
+    BorderColor #34495E
+    
+    ActorBackgroundColor #ECF0F1
+    ActorBorderColor #2980B9
+    ActorFontColor #2C3E50
+    
+    UseCaseBackgroundColor #D6EAF8
+    UseCaseBorderColor #2980B9
+    UseCaseFontColor #2C3E50
+    
+    PackageBackgroundColor #F8F9F9
+    PackageBorderColor #BDC3C7
+}
+
+' Acteurs
+actor "Administrateur" as Admin
+actor "Formateur" as Formateur
+actor "Stagiaire" as Stagiaire
+actor "Parent" as Parent
+actor "Système" as S
+
+' =====================================================
+' AUTHENTIFICATION & PROFIL
+' =====================================================
+package "Authentification & Profil" {
+    usecase "S'authentifier\n(login)" as UC1
+    usecase "Se déconnecter" as UC2
+    usecase "Consulter son profil" as UC3
+    usecase "Modifier son profil" as UC4
+}
+
+' =====================================================
+' ESPACE ADMINISTRATEUR
+' =====================================================
+package "Espace Administrateur" {
+    usecase "Gérer les\nutilisateurs (CRUD)" as UC10
+    usecase "Gérer les\nannées scolaires" as UC11
+    usecase "Gérer les\nfilières" as UC12
+    usecase "Gérer les\nniveaux" as UC13
+    usecase "Gérer les\ngroupes" as UC14
+    usecase "Gérer les\nmodules" as UC15
+    usecase "Gérer les\naffectations" as UC16
+    usecase "Gérer les rôles\n& permissions" as UC17
+    usecase "Consulter les\nlogs d'audit" as UC18
+    usecase "Gérer les\nproduits & commandes" as UC19
+}
+
+' =====================================================
+' ESPACE FORMATEUR
+' =====================================================
+package "Espace Formateur" {
+    usecase "Planifier une\nséance" as UC20
+    usecase "Prendre les\nprésences" as UC21
+    usecase "Saisir les notes\n(évaluations)" as UC22
+    usecase "Suivre la progression\ndu module" as UC23
+    usecase "Déposer des\nfichiers de cours" as UC24
+    usecase "Consulter son\nemploi du temps" as UC25
+    usecase "Envoyer des\nnotifications" as UC26
+    usecase "Consulter les\nstatistiques" as UC27
+    usecase "Gérer le\nsyllabus" as UC28
+    usecase "Valider un\nstage" as UC29
+}
+
+' =====================================================
+' ESPACE STAGIAIRE
+' =====================================================
+package "Espace Stagiaire" {
+    usecase "Consulter son\nemploi du temps" as UC30
+    usecase "Voir ses\nnotes" as UC31
+    usecase "Voir ses\nabsences" as UC32
+    usecase "Voir sa\nprogression" as UC33
+    usecase "Télécharger les\nfichiers de cours" as UC34
+    usecase "Soumettre un\nfeedback anonyme" as UC35
+    usecase "Suivre son\nstage" as UC36
+    usecase "Envoyer un\nmessage" as UC37
+}
+
+' =====================================================
+' ESPACE PARENT
+' =====================================================
+package "Espace Parent" {
+    usecase "Voir les notes\nde son enfant" as UC40
+    usecase "Voir les absences\nde son enfant" as UC41
+    usecase "Voir la progression\nde son enfant" as UC42
+    usecase "Voir l'emploi du temps\nde son enfant" as UC43
+}
+
+' =====================================================
+' NOTIFICATIONS SYSTÈME
+' =====================================================
+package "Notifications Système" {
+    usecase "Notifier les\nabsences" as UC50
+    usecase "Notifier les\nnouvelles notes" as UC51
+    usecase "Notifier les\nchangements de planning" as UC52
+    usecase "Notifier les\ndates de stage" as UC53
+}
+
+' =====================================================
+' ASSOCIATIONS - ACTEURS
+' =====================================================
+
+' Administrateur
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+Admin --> UC14
+Admin --> UC15
+Admin --> UC16
+Admin --> UC17
+Admin --> UC18
+Admin --> UC19
+
+' Formateur
+Formateur --> UC1
+Formateur --> UC2
+Formateur --> UC3
+Formateur --> UC4
+Formateur --> UC20
+Formateur --> UC21
+Formateur --> UC22
+Formateur --> UC23
+Formateur --> UC24
+Formateur --> UC25
+Formateur --> UC26
+Formateur --> UC27
+Formateur --> UC28
+Formateur --> UC29
+
+' Stagiaire
+Stagiaire --> UC1
+Stagiaire --> UC2
+Stagiaire --> UC3
+Stagiaire --> UC4
+Stagiaire --> UC30
+Stagiaire --> UC31
+Stagiaire --> UC32
+Stagiaire --> UC33
+Stagiaire --> UC34
+Stagiaire --> UC35
+Stagiaire --> UC36
+Stagiaire --> UC37
+
+' Parent
+Parent --> UC1
+Parent --> UC2
+Parent --> UC3
+Parent --> UC4
+Parent --> UC40
+Parent --> UC41
+Parent --> UC42
+Parent --> UC43
+
+' Système
+S --> UC50
+S --> UC51
+S --> UC52
+S --> UC53
+
+' =====================================================
+' RELATIONS includes / extends
+' =====================================================
+
+' Présences
+UC21 ..> UC27 : <<include>>
+
+' Évaluations
+UC22 ..> UC27 : <<include>>
+
+' Stages
+UC36 ..> UC29 : <<include>>
+
+' Notifications déclenchées par actions
+UC21 ..> UC50 : <<enable>>
+UC22 ..> UC51 : <<enable>>
+UC20 ..> UC52 : <<enable>>
+UC36 ..> UC53 : <<enable>>
+
+' Feedback anonyme (pas de login requis)
+UC35 ..> UC3 : <<extend>>
+
+' Parent voit via le profil stagiaire
+UC40 ..> UC41 : <<extend>>
+UC40 ..> UC42 : <<extend>>
+UC40 ..> UC43 : <<extend>>
+
+@enduml

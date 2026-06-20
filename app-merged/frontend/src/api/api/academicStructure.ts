@@ -67,6 +67,33 @@ export interface ProgramResponse {
   groups: ProgramGroup[];
 }
 
+export interface FiliereStandardizationResult {
+  backup: {
+    filiere: { id: number; code: string; label: string };
+    groups: { id: number; label: string; year_level: number | null; annee_scolaire_id: number | null; capacity: number | null }[];
+    module_group_links: { module_id: number; groupe_id: number; academic_year: number | null; semester: string | null; planned_hours: number | null }[];
+  };
+  created_groups: { id: number; label: string; year_level: number; annee_scolaire_id: number | null }[];
+  student_assignments: {
+    primary_group_updates: number;
+    pivot_links_created_or_updated: number;
+    pivot_links_removed_from_old_groups: number;
+  };
+  module_assignments: {
+    module_group_links_created_or_updated: number;
+    module_group_links_removed_from_old_groups: number;
+    trainer_module_group_links_created_or_updated: number;
+    trainer_module_group_links_removed_from_old_groups: number;
+  };
+  trainer_assignments: {
+    group_links_created_or_updated: number;
+    group_links_removed_from_old_groups: number;
+  };
+  manual_review: {
+    ambiguous_modules: { id: number; code: string; label: string; reason: string }[];
+  };
+}
+
 export const academicStructureApi = {
   getYears: () => api.get<ApiResponse<AnneeScolaire[]>>('/academic-structure/years').then(unwrapData),
   createYear: (body: Partial<AnneeScolaire>) =>
@@ -90,6 +117,8 @@ export const academicStructureApi = {
   updateFiliere: (id: number, body: Partial<Filiere>) =>
     api.put<ApiResponse<Filiere>>(`/academic-structure/filieres/${id}`, body).then(unwrapData),
   deleteFiliere: (id: number) => api.delete(`/academic-structure/filieres/${id}`),
+  standardizeFiliereGroups: (id: number, body?: { academic_year_id?: number }) =>
+    api.post<ApiResponse<FiliereStandardizationResult>>(`/academic-structure/filieres/${id}/standardize-groups`, body ?? {}).then(unwrapData),
   getProgram: (params: { filiere_id: number; niveau: string }) =>
     api.get<ApiResponse<ProgramResponse>>('/program', { params }).then(unwrapData),
 };

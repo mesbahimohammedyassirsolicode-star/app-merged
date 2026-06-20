@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class AcademicSeeder extends Seeder
 {
@@ -29,15 +30,12 @@ class AcademicSeeder extends Seeder
             return;
         }
 
-        // Clear existing data
-        DB::statement('PRAGMA foreign_keys=OFF;');
-
+        Schema::disableForeignKeyConstraints();
         DB::table('modules')->truncate();
-        DB::table('groups')->truncate();
+        DB::table('groupes')->truncate();
         DB::table('niveaux')->truncate();
         DB::table('filieres')->truncate();
-
-        DB::statement('PRAGMA foreign_keys=ON;');
+        Schema::enableForeignKeyConstraints();
 
         // Insert structured data
         foreach ($data as $filiere) {
@@ -61,8 +59,9 @@ class AcademicSeeder extends Seeder
                 ]);
 
                 foreach ($niveau['groupes_prevus'] as $group) {
-                    DB::table('groups')->insert([
+                    DB::table('groupes')->insert([
                         'niveau_id' => $n,
+                        'filiere_id' => $f,
                         'name' => $group,
                         'created_at' => now(),
                         'updated_at' => now(),

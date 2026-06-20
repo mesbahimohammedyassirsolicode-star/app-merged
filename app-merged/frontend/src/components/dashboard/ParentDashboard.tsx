@@ -3,11 +3,12 @@ import { Users, AlertTriangle, GraduationCap } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import type { ParentDashboardData } from '../../api/dashboardService';
 import { parentApi } from '../../api/api/parent';
-import { analyticsApi } from '../../api/api/analytics';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { EmptyState } from '../ui/empty-state';
-import { Loader2 } from 'lucide-react';
+import { ListSkeleton } from '../ui/loading-skeleton';
+import { StatCard } from './StatCard';
+import { useAnalyticsOverview } from '../../features/analytics/hooks/useAnalyticsOverview';
 
 interface ParentDashboardProps {
     data: ParentDashboardData;
@@ -21,51 +22,42 @@ export default function ParentDashboard({ data, userName }: ParentDashboardProps
         queryKey: ['parent', 'stagiaires', 'dashboard'],
         queryFn: parentApi.getStagiaires,
     });
-    const { data: analytics } = useQuery({
-        queryKey: ['analytics', 'parent-overview'],
-        queryFn: () => analyticsApi.overview(),
-    });
+    const { data: analytics, isLoading: isLoadingAnalytics } = useAnalyticsOverview('parent');
     const total = stagiaires?.length ?? 0;
 
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-slate-900">Espace parent</h1>
-                <p className="mt-1 text-sm text-slate-600">Bienvenue, {userName}.</p>
+                <h1 className="text-2xl font-bold text-theme-text-primary">Espace parent</h1>
+                <p className="mt-1 text-sm text-theme-text-secondary">Bienvenue, {userName}.</p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <Card className="border-slate-200 shadow-sm">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-700">Total stagiaires</CardTitle>
-                        <Users className="h-5 w-5 text-indigo-600" aria-hidden />
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-semibold tracking-tight text-slate-900">{total}</p>
-                        <p className="mt-1 text-xs text-slate-500">Comptes liés à votre profil</p>
-                    </CardContent>
-                </Card>
-                <Card className="border-slate-200 shadow-sm">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-700">Taux de présence</CardTitle>
-                        <Users className="h-5 w-5 text-emerald-600" aria-hidden />
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-semibold tracking-tight text-slate-900">{analytics?.kpis.attendance_rate ?? 0}%</p>
-                        <p className="mt-1 text-xs text-slate-500">Moyenne enfants suivis</p>
-                    </CardContent>
-                </Card>
+                <StatCard
+                    title="Total stagiaires"
+                    value={isLoadingStagiaires ? '...' : total}
+                    icon={<Users className="h-6 w-6" />}
+                    colorTheme="indigo"
+                    delay={0.1}
+                />
+                <StatCard
+                    title="Taux de presence"
+                    value={isLoadingAnalytics ? '...' : `${analytics?.kpis.attendance_rate ?? 0}%`}
+                    icon={<GraduationCap className="h-6 w-6" />}
+                    colorTheme="emerald"
+                    delay={0.2}
+                />
             </div>
 
             {alerts?.length > 0 && (
-                <div className="flex items-start rounded-2xl border border-amber-200 bg-amber-50 p-4">
+                <div className="flex items-start rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4">
                     <AlertTriangle className="mr-3 mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
                     <div>
                         <h3 className="font-medium text-amber-900">Alertes présence</h3>
-                        <p className="mt-1 text-sm text-amber-800">
+                        <p className="mt-1 text-sm text-amber-400">
                             {alerts.length} enfant(s) avec un taux de présence &lt; 80 % (à risque).
                         </p>
-                        <ul className="mt-2 space-y-1 text-sm text-amber-800">
+                        <ul className="mt-2 space-y-1 text-sm text-amber-400">
                             {alerts.map((c) => (
                                 <li key={c.id}>
                                     {c.name} — {c.attendance_percent ?? 0}%
@@ -76,51 +68,49 @@ export default function ParentDashboard({ data, userName }: ParentDashboardProps
                 </div>
             )}
 
-            <Card className="border-slate-200 shadow-sm">
+            <Card className="border-theme-border shadow-sm">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg">
-                        <GraduationCap className="h-5 w-5 text-indigo-600" aria-hidden />
+                        <GraduationCap className="h-5 w-5 text-indigo-400" aria-hidden />
                         Mes stagiaires
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     {isLoadingStagiaires ? (
-                        <div className="flex items-center justify-center py-10">
-                            <Loader2 className="h-7 w-7 animate-spin text-primary-600" />
-                        </div>
+                        <ListSkeleton rows={2} />
                     ) : total > 0 ? (
                         <div className="grid gap-4 md:grid-cols-2">
                             {stagiaires?.map((child) => (
                                 <Card
                                     key={child.id}
-                                    className="cursor-pointer border-slate-200 transition hover:border-primary-200 hover:shadow-md"
+                                    className="cursor-pointer border-theme-border transition hover:border-primary-200 hover:shadow-md"
                                     onClick={() => navigate(`/parent/children/${child.id}`)}
                                 >
                                     <CardHeader className="pb-2">
-                                        <CardTitle className="text-base font-semibold text-slate-900">{child.name ?? '—'}</CardTitle>
+                                        <CardTitle className="text-base font-semibold text-theme-text-primary">{child.name ?? '—'}</CardTitle>
                                     </CardHeader>
-                                    <CardContent className="space-y-2 text-sm text-slate-600">
+                                    <CardContent className="space-y-2 text-sm text-theme-text-secondary">
                                         <p>
-                                            <span className="font-medium text-slate-800">Filière:</span> {child.filiere ?? '—'}
+                                            <span className="font-medium text-theme-text-primary">Filière:</span> {child.filiere ?? '—'}
                                         </p>
                                         <p>
-                                            <span className="font-medium text-slate-800">Groupe:</span> {child.groupe ?? '—'}
+                                            <span className="font-medium text-theme-text-primary">Groupe:</span> {child.groupe ?? '—'}
                                         </p>
                                         <div>
-                                            <p className="font-medium text-slate-800">Modules:</p>
+                                            <p className="font-medium text-theme-text-primary">Modules:</p>
                                             {child.modules.length > 0 ? (
                                                 <ul className="mt-1 flex flex-wrap gap-2">
                                                     {child.modules.map((moduleName) => (
                                                         <li
                                                             key={`${child.id}-${moduleName}`}
-                                                            className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700"
+                                                            className="rounded-full bg-slate-700/30 px-2.5 py-0.5 text-xs font-medium text-theme-text-primary"
                                                         >
                                                             {moduleName}
                                                         </li>
                                                     ))}
                                                 </ul>
                                             ) : (
-                                                <p className="mt-1 text-xs text-slate-400">Aucun module disponible</p>
+                                                <p className="mt-1 text-xs text-theme-text-secondary">Aucun module disponible</p>
                                             )}
                                         </div>
                                     </CardContent>
@@ -136,7 +126,7 @@ export default function ParentDashboard({ data, userName }: ParentDashboardProps
                 </CardContent>
             </Card>
 
-            <Card className="border-slate-200 shadow-sm">
+            <Card className="border-theme-border shadow-sm">
                 <CardHeader>
                     <CardTitle className="text-base">Vue présence (mois en cours)</CardTitle>
                 </CardHeader>
@@ -146,21 +136,21 @@ export default function ParentDashboard({ data, userName }: ParentDashboardProps
                             {attendance.child_overview.map((row) => (
                                 <li
                                     key={row.child_id}
-                                    className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                                    className="rounded-lg border border-theme-border px-3 py-2 text-sm"
                                 >
                                     <div className="flex justify-between">
-                                        <span className="font-medium text-slate-800">{row.child_name}</span>
+                                        <span className="font-medium text-theme-text-primary">{row.child_name}</span>
                                         <span
                                             className={
                                                 row.is_risk
                                                     ? 'font-semibold text-amber-600'
-                                                    : 'font-semibold text-emerald-700'
+                                                    : 'font-semibold text-emerald-400'
                                             }
                                         >
                                             {row.monthly_summary.attendance_rate_percent}%
                                         </span>
                                     </div>
-                                    <p className="mt-1 text-slate-500">
+                                    <p className="mt-1 text-theme-text-secondary">
                                         Absents : {row.monthly_summary.absent_count} /{' '}
                                         {row.monthly_summary.total_count}
                                     </p>
@@ -176,7 +166,7 @@ export default function ParentDashboard({ data, userName }: ParentDashboardProps
                 </CardContent>
             </Card>
 
-            <Card className="border-slate-200 shadow-sm">
+            <Card className="border-theme-border shadow-sm">
                 <CardHeader>
                     <CardTitle className="text-base">Raccourcis</CardTitle>
                 </CardHeader>
@@ -185,9 +175,9 @@ export default function ParentDashboard({ data, userName }: ParentDashboardProps
                         <Button onClick={() => navigate('/parent/children')}>Liste des stagiaires</Button>
                     </div>
                     {analytics?.ai.recommendations?.length ? (
-                        <div className="mt-4 rounded-lg border border-indigo-200 bg-indigo-50 p-3">
+                        <div className="mt-4 rounded-lg border border-indigo-200 bg-indigo-500/10 p-3">
                             <p className="text-sm font-semibold text-indigo-900">Recommandations intelligentes</p>
-                            <ul className="mt-2 space-y-1 text-xs text-indigo-800">
+                            <ul className="mt-2 space-y-1 text-xs text-indigo-400">
                                 {analytics.ai.recommendations.map((recommendation) => (
                                     <li key={recommendation}>- {recommendation}</li>
                                 ))}

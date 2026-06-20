@@ -1,0 +1,227 @@
+@startuml Architecture_GIMS
+
+title Architecture Générale du Système — GIMS\n(Gestion Intégrée des Modules Scolaires)
+
+skinparam {
+    BackgroundColor white
+    Shadowing true
+    RoundCorner 10
+    ArrowColor #2C3E50
+    BorderColor #34495E
+    DefaultFontColor #2C3E50
+    
+    RectangleBackgroundColor #EBF5FB
+    RectangleBorderColor #2980B9
+    RectangleFontColor #2C3E50
+    
+    DatabaseBackgroundColor #FEF9E7
+    DatabaseBorderColor #F39C12
+    DatabaseFontColor #2C3E50
+    
+    CloudBackgroundColor #F5EEF8
+    CloudBorderColor #8E44AD
+    CloudFontColor #2C3E50
+    
+    NodeBackgroundColor #F2F3F4
+    NodeBorderColor #7F8C8D
+    NodeFontColor #2C3E50
+    
+    ComponentBackgroundColor #D5F5E3
+    ComponentBorderColor #27AE60
+    ComponentFontColor #2C3E50
+    
+    InterfaceBackgroundColor #FADBD8
+    InterfaceBorderColor #E74C3C
+    InterfaceFontColor #2C3E50
+}
+
+' =====================================================
+' CLIENTS / NAVIGATEURS
+' =====================================================
+
+node "Clients" {
+    rectangle "Navigateur Web\n(Desktop / Mobile)" as Browser
+}
+
+' =====================================================
+' FRONTEND - COUCHE PRÉSENTATION
+' =====================================================
+
+node "Frontend SPA — React 19" as Frontend {
+    rectangle "Auth & Profil" as FE_Auth
+    rectangle "Dashboard" as FE_Dashboard
+    rectangle "Structure\nPédagogique" as FE_Structure
+    rectangle "Planning\n& Séances" as FE_Seances
+    rectangle "Présences\n& Assiduité" as FE_Attendance
+    rectangle "Évaluations\n& Notes" as FE_Grades
+    rectangle "Stages" as FE_Stages
+    rectangle "Messagerie\n& Notifications" as FE_Messaging
+    rectangle "Fichiers\nde Cours" as FE_Files
+    rectangle "Feedback\nAnonyme" as FE_Feedback
+    rectangle "Analytics\nCopilot IA" as FE_Analytics
+    rectangle "Boutique\n(Commerce)" as FE_Shop
+    
+    rectangle "État & Cache\n(React Query)" as FE_Cache
+    rectangle "Auth Token\n(mémoire JS)" as FE_Token
+    rectangle "i18n\n(FR / AR)" as FE_I18n
+}
+
+' =====================================================
+' REALTIME / WEBSOCKET
+' =====================================================
+
+node "Temps Réel (Pusher)" as Pusher {
+    rectangle "Channels privés\nuser.{userId}" as WS
+}
+
+' =====================================================
+' BACKEND - API LARAVEL 12
+' =====================================================
+
+node "Backend API — Laravel 12 / PHP 8.2" as Backend {
+    rectangle "Sanctum Auth\n(Bearer / Cookie)" as API_Auth
+    rectangle "Middleware\nCORS, Rate Limit, RBAC" as API_Middleware
+    
+    rectangle "API /api/v1" as API_Gateway {
+        rectangle "Auth" as API_AuthEP
+        rectangle "Dashboard" as API_Dashboard
+        rectangle "Utilisateurs" as API_Users
+        rectangle "Filières & Niveaux" as API_Filieres
+        rectangle "Groupes" as API_Groupes
+        rectangle "Modules" as API_Modules
+        rectangle "Affectations" as API_Affectations
+        rectangle "Séances" as API_Seances
+        rectangle "Présences\n& Absences" as API_Attendance
+        rectangle "Évaluations\n& Notes" as API_Grades
+        rectangle "Progression\n& Syllabus" as API_Progress
+        rectangle "Stages" as API_Stages
+        rectangle "Fichiers" as API_Files
+        rectangle "Messages" as API_Messages
+        rectangle "Notifications" as API_Notifs
+        rectangle "Feedback" as API_Feedback
+        rectangle "Commerce" as API_Shop
+        rectangle "Exports\n(PDF)" as API_Exports
+        rectangle "Analytics" as API_Analytics
+    }
+    
+    rectangle "Services & Jobs" as Services {
+        rectangle "Queue\n(database)" as Queue
+        rectangle "Notifications\n(Email / Base)" as NotifService
+        rectangle "Génération\nPDF (DomPDF)" as PDFService
+    }
+    
+    rectangle "AI Copilot" as AIService {
+        rectangle "Analytics\nEngine" as AI_Engine
+        rectangle "OpenAI\nClient" as AI_Client
+    }
+}
+
+' =====================================================
+' COUCHE STOCKAGE & DONNÉES
+' =====================================================
+
+node "Stockage & Données" as Storage {
+    database "MySQL 8\n(school_management)" as DB {
+        node "Tables Système" as DB_System
+        node "Tables Structure\nPédagogique" as DB_Academic
+        node "Tables Personnes\n(Users, Formateurs,\nStagiaires, Parents)" as DB_People
+        node "Tables Planification\n(Affectations, Séances)" as DB_Planning
+        node "Tables Évaluation\n(Évaluations, Notes)" as DB_Grades
+        node "Tables Assiduité\n(Absences, Attendances)" as DB_Attendance
+        node "Tables Progression\n& Ressources" as DB_Progress
+        node "Tables Communication\n(Messages, Notifs,\nFeedback)" as DB_Comms
+        node "Tables Stages" as DB_Stages
+        node "Tables Commerce\n(Produits, Commandes)" as DB_Shop
+        node "Tables Analytics" as DB_Analytics
+        node "Tables Sécurité\n(RBAC, Audit)" as DB_Security
+    }
+    
+    database "Redis\n(Cache / Sessions)" as Redis
+    
+    rectangle "Système de Fichiers\n(storage/app)" as Files
+    
+    rectangle "Stockage Cloud\n(S3 configuré)" as S3
+}
+
+' =====================================================
+' SERVICES EXTERNES
+' =====================================================
+
+cloud "Services Externes" as External {
+    cloud "OpenAI API\n(gpt-4o-mini)" as OpenAI
+    cloud "Email\n(Log / Postmark\n/ Resend / SES)" as Email
+    cloud "Pusher\n(WebSocket)" as PusherCloud
+}
+
+' =====================================================
+' FLUX - COMMUNICATIONS
+' =====================================================
+
+' Flux principaux
+Browser --> Frontend : "HTTPS\n(React SPA)"
+
+Frontend --> Backend : "REST / JSON\nBearer Token\n(withCredentials)"
+Frontend --> Pusher : "WebSocket\n(private user channels)"
+
+Backend --> DB : "Eloquent ORM\nMySQL 8"
+Backend --> Redis : "Cache / Sessions"
+Backend --> Files : "Stockage local"
+Backend --> PusherCloud : "Broadcast\nd'événements"
+
+Backend --> OpenAI : "API OpenAI\n(Analytics Copilot)"
+Backend --> Email : "Mail driver\n(notifications)"
+
+Files --> S3 : "Sync optionnel"
+
+' Flux internes Frontend
+FE_Auth --> FE_Token
+FE_Auth --> FE_I18n
+FE_Dashboard --> FE_Cache
+FE_Attendance --> FE_Cache
+FE_Grades --> FE_Cache
+FE_Analytics --> FE_Cache
+
+' Flux internes Backend
+API_Gateway --> API_Auth
+API_Gateway --> API_Middleware
+Queue --> NotifService
+NotifService --> API_Notifs
+AI_Engine --> AI_Client
+AI_Client --> API_Analytics
+
+' =====================================================
+' LÉGENDE & NOTES
+' =====================================================
+
+note top of Frontend
+  **Vite 7 · TypeScript 5.9 · Tailwind 3**
+  react-hook-form + Zod (formulaires)
+  TanStack React Query (cache serveur)
+  Zustand (état global)
+  Recharts (graphiques)
+  Laravel Echo (WebSocket client)
+end note
+
+note top of Backend
+  **Laravel 12 · Sanctum · Eloquent**
+  Architecture REST modulaire
+  Queue database (jobs asynchrones)
+  RBAC (rôles & permissions)
+  SoftDeletes sur toutes les tables métier
+end note
+
+note top of DB
+  **54 tables**
+  Migration SQLite → MySQL 8
+  utf8mb4 · Moteur InnoDB
+end note
+
+note right of AI_Engine
+  **Analytics Copilot**
+  L'IA ne génère JAMAIS
+  de SQL directement.
+  Requêtes construites via
+  moteur interne sécurisé.
+end note
+
+@enduml

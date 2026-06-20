@@ -270,6 +270,20 @@ function normalizeByRole(role: DashboardResponse['role'], data: unknown): unknow
     }
 }
 
+export interface RecentAbsencesResponse {
+    absence_rate_by_group_module: {
+        group_id: number;
+        group_label: string;
+        module_id: number;
+        module_code: string;
+        module_label: string;
+        total_count: number;
+        absent_count: number;
+        absence_rate_percent: number;
+        is_risk: boolean;
+    }[];
+}
+
 export const dashboardService = {
     async getDashboard(fallbackRole?: string): Promise<DashboardResponse> {
         const res = await api.get<{ role?: string; data?: unknown } | { data: { role?: string; data?: unknown } }>('/dashboard');
@@ -288,5 +302,22 @@ export const dashboardService = {
         }
 
         return { role, data: normalizeByRole(role, payload.data) };
+    },
+    async getRecentAbsences(): Promise<RecentAbsencesResponse> {
+        // First try to hit a dedicated endpoint if it exists
+        try {
+            const res = await api.get<RecentAbsencesResponse>('/dashboard/admin/recent-absences');
+            return res.data;
+        } catch (error: any) {
+            // Fallback: If 404, we fetch the monolithic dashboard and extract it to prevent breaking.
+            if (error?.response?.status === 404) {
+                const fullDashboard = await dashboardService.getDashboard('admin');
+                const adminData = fullDashboard.data as AdminDashboardData;
+                return {
+                    absence_rate_by_group_module: adminData.attendance?.absence_rate_by_group_module || [],
+                };
+            }
+            throw error;
+        }
     },
 };

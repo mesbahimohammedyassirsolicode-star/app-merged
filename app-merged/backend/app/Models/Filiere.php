@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\AnneeScolaire;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,21 +56,35 @@ class Filiere extends Model
 
     public function ensureMinimumGroups(int $minimum = 2): void
     {
-        $existingCount = $this->groupes()->count();
-        $missingCount = max(0, $minimum - $existingCount);
+        $targetGroups = collect([
+            1 => '1ère année',
+            2 => '2ème année',
+        ])->take(max(0, $minimum));
 
-        if ($missingCount === 0) {
+        if ($targetGroups->isEmpty()) {
             return;
         }
 
-        $baseName = $this->code ?: 'FILIERE-'.$this->getKey();
+        $academicYearId = AnneeScolaire::query()->where('is_current', true)->value('id')
+            ?? AnneeScolaire::query()->orderByDesc('year_start')->value('id');
 
-        for ($index = $existingCount + 1; $index <= $existingCount + $missingCount; $index++) {
-            $groupName = sprintf('%s-G%d', $baseName, $index);
+        foreach ($targetGroups as $yearLevel => $label) {
+            $exists = $this->groupes()
+                ->where('year_level', $yearLevel)
+                ->orWhere('label', $label)
+                ->exists();
+
+            if ($exists) {
+                continue;
+            }
 
             $this->groupes()->create([
-                'name' => $groupName,
-                'label' => 'Group '.$index,
+                'niveau_id' => $this->niveau_id,
+                'annee_scolaire_id' => $academicYearId,
+                'name' => $label,
+                'label' => $label,
+                'year_level' => $yearLevel,
+                'capacity' => 30,
             ]);
         }
     }

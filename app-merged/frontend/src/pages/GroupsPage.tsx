@@ -51,6 +51,8 @@ function buildFilieresFromGroups(groups: Groupe[]): Filiere[] {
   return Array.from(byFiliere.values()).sort((a, b) => a.label.localeCompare(b.label));
 }
 
+import PageHeader from '../components/layout/PageHeader';
+
 export default function GroupsPage() {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -108,41 +110,34 @@ export default function GroupsPage() {
 
   return (
     <div className="space-y-8 pb-10">
-      {/* Header Section */}
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between rounded-2xl bg-white px-6 py-6 shadow-sm border border-gray-100">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight text-gray-900">{t('nav.groups', 'Gestion des Groupes')}</h1>
-          <p className="text-sm font-medium text-gray-500 mt-2">
-            Gérez vos filières et les groupes d'étudiants associés au sein du système.
-          </p>
-        </div>
-
-        {/* Search Bar */}
-        <div className="relative w-full sm:w-80">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-            <Search className="h-5 w-5 text-gray-400" />
+      <PageHeader 
+        title={t('nav.groups', 'Gestion des Groupes')}
+        subtitle="Gérez vos filières et les groupes d'étudiants associés au sein du système."
+        actions={
+          <div className="relative w-full sm:w-80">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-theme-text-secondary" />
+            <input
+              type="text"
+              className="block w-full rounded-xl border-theme-border bg-theme-surface py-2.5 pl-11 pr-4 text-sm font-medium text-theme-text-primary transition-all focus:border-blue-500/50 focus:bg-theme-surface focus:ring-4 focus:ring-blue-500/10 placeholder:text-theme-text-secondary"
+              placeholder="Rechercher..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-          <input
-            type="text"
-            className="block w-full rounded-xl border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm font-medium text-gray-900 transition-all focus:border-primary-500 focus:bg-white focus:ring-4 focus:ring-primary-500/10 placeholder:text-gray-400"
-            placeholder="Rechercher une filière ou un groupe..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </div>
+        }
+      />
 
       {isLoading ? (
         <div className="space-y-6 animate-pulse mt-8">
           {[1, 2, 3].map((skeleton) => (
-            <div key={skeleton} className="h-32 rounded-2xl bg-gray-100 border border-gray-200/60" />
+            <div key={skeleton} className="h-32 rounded-2xl bg-theme-surface border border-theme-border" />
           ))}
         </div>
       ) : error ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-10 text-center text-red-600 flex flex-col items-center justify-center gap-3">
-          <AlertCircle className="h-10 w-10 text-red-500 mb-2" />
-          <h3 className="font-bold text-lg">Impossible de charger les données</h3>
-          <p className="text-sm font-medium text-red-500/80">Veuillez vérifier votre connexion internet ou réessayer plus tard.</p>
+        <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-10 text-center text-rose-500 flex flex-col items-center justify-center gap-3 backdrop-blur-md">
+          <AlertCircle className="h-10 w-10 text-rose-500 mb-2" />
+          <h3 className="font-bold text-lg text-theme-text-primary">Impossible de charger les données</h3>
+          <p className="text-sm font-medium text-rose-400/80">Veuillez vérifier votre connexion internet ou réessayer plus tard.</p>
         </div>
       ) : (
         <div className="space-y-6 mt-6">
@@ -156,12 +151,12 @@ export default function GroupsPage() {
           ))}
 
           {isEmpty && (
-            <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-white py-20 px-4 mt-8 shadow-sm">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gray-50 mb-5 shadow-inner">
-                <Search className="h-10 w-10 text-gray-400" />
+            <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-theme-border bg-theme-surface py-20 px-4 mt-8 backdrop-blur-md">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-theme-surface mb-5 shadow-inner">
+                <Search className="h-10 w-10 text-theme-text-secondary" />
               </div>
-              <h3 className="text-xl font-extrabold text-gray-900 mb-2">Aucun résultat trouvé</h3>
-              <p className="text-center text-base font-medium text-gray-500 max-w-sm">
+              <h3 className="text-xl font-bold text-theme-text-primary mb-2">Aucun résultat trouvé</h3>
+              <p className="text-center text-base font-medium text-theme-text-secondary max-w-sm">
                 {searchTerm ?
                   "Nous n'avons trouvé aucune filière ou groupe correspondant à votre recherche." :
                   "Il n'y a actuellement aucune filière ou groupe enregistré dans le système."}
@@ -169,7 +164,7 @@ export default function GroupsPage() {
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm('')}
-                  className="mt-6 font-semibold text-primary-600 hover:text-primary-700 hover:underline transition-all"
+                  className="mt-6 font-semibold text-blue-400 hover:text-blue-300 transition-all"
                 >
                   Effacer la recherche
                 </button>
@@ -179,9 +174,9 @@ export default function GroupsPage() {
 
           {!isEmpty && !searchTerm && (
             <div className="flex flex-col items-center justify-center py-6 mt-4">
-              <div className="h-px w-24 bg-gray-200 mb-4 rounded-full"></div>
-              <p className="text-sm font-semibold text-gray-400">
-                Total de <span className="text-gray-500">{filieres.length}</span> filière{filieres.length !== 1 ? 's' : ''} et <span className="text-gray-500">{totalGroups}</span> groupe{totalGroups !== 1 ? 's' : ''}
+              <div className="h-px w-24 bg-theme-surface mb-4 rounded-full"></div>
+              <p className="text-sm font-semibold text-theme-text-secondary">
+                Total de <span className="text-theme-text-secondary">{filieres.length}</span> filière{filieres.length !== 1 ? 's' : ''} et <span className="text-theme-text-secondary">{totalGroups}</span> groupe{totalGroups !== 1 ? 's' : ''}
               </p>
             </div>
           )}

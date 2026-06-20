@@ -33,15 +33,15 @@ export default function GroupDetailPage() {
       {isLoading ? (
         <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary-600" /></div>
       ) : !isValidId ? (
-        <p className="text-gray-500">ID de groupe invalide.</p>
+        <p className="text-theme-text-secondary">ID de groupe invalide.</p>
       ) : error ? (
-        <p className="text-gray-500">Impossible de charger le groupe.</p>
+        <p className="text-theme-text-secondary">Impossible de charger le groupe.</p>
       ) : data ? (
         <Card>
           <CardHeader>
             <CardTitle>{data.label}</CardTitle>
           </CardHeader>
-          <CardContent className="text-sm text-gray-600">
+          <CardContent className="text-sm text-theme-text-secondary">
             <p>Filière : {data.filiere?.label}</p>
             <p>Année : {data.annee_scolaire?.label ?? data.anneeScolaire?.label}</p>
             <p>Capacité : {data.capacity}</p>

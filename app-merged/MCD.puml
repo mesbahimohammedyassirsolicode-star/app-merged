@@ -1,0 +1,83 @@
+@startuml MCD_Cabinet_Medical
+
+title MCD — Modèle Conceptuel de Données\nCabinet Médical Dr. Dghar Mohamed
+
+skinparam {
+    BackgroundColor white
+    RoundCorner 10
+    ArrowColor #2C3E50
+    EntityBackgroundColor #FEF9E7
+    EntityBorderColor #F39C12
+    EntityFontColor #2C3E50
+    NoteBackgroundColor #E8F8F5
+    NoteBorderColor #1ABC9C
+}
+
+' =====================================================
+' ENTITES
+' =====================================================
+
+entity "Patient" as Patient {
+    * **nom** : VARCHAR(100)
+    --
+    email : VARCHAR(100)
+    telephone : VARCHAR(50)
+    cni : VARCHAR(20)
+}
+
+entity "RendezVous" as RDV {
+    * **id** : INTEGER
+    --
+    date_rdv : DATE
+    message : TEXT
+    document_medical : VARCHAR(255)
+    reference : VARCHAR(100)
+    jeton_public : VARCHAR(64)
+    statut : ENUM(pending, confirmed, canceled)
+    date_creation : DATETIME
+}
+
+entity "Service" as Service {
+    * **id** : INTEGER
+    --
+    nom : VARCHAR(255)
+    prix : DECIMAL(10,2)
+}
+
+entity "CreneauHoraire" as Creneau {
+    * **id** : INTEGER
+    --
+    jour : VARCHAR(20)
+    heure_debut : TIME
+    heure_fin : TIME
+    capacite_max : INTEGER
+}
+
+entity "Exception" as Exception {
+    * **id** : INTEGER
+    --
+    date_exception : DATE
+    motif : VARCHAR(255)
+}
+
+' =====================================================
+' ASSOCIATIONS & CARDINALITES
+' =====================================================
+
+Patient ||--o{ RDV : "effectue"
+
+Service ||--o{ RDV : "concerne"
+
+Creneau ||--o{ RDV : "réservé pour"
+
+Creneau ||--o{ Exception : "bloqué par"
+
+note right of RDV
+  **Workflow de confirmation**
+  - statut : pending → confirmed / canceled
+  - jeton_public + référence : suivi public
+  - Email de confirmation + QR Code générés
+    lors du passage à "confirmed"
+end note
+
+@enduml

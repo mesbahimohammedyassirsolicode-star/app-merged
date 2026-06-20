@@ -19,9 +19,14 @@ export interface NotificationsMeta {
   unread_count: number;
 }
 
+export interface NotificationsListResult {
+  items: Notification[];
+  meta: NotificationsMeta;
+}
+
 export const notificationsApi = {
   list: (params?: { page?: number; per_page?: number }) =>
-    api.get<ApiResponse<Notification[]>>('/notifications', { params }).then((res) => ({
+    api.get<ApiResponse<Notification[]>>('/notifications', { params }).then((res): NotificationsListResult => ({
       items: unwrapData(res),
       meta: unwrapMeta(res) as NotificationsMeta,
     })),

@@ -1,10 +1,9 @@
-import AiAssistant from '../components/assistant/AiAssistant';
+import { CopilotPanel } from '../features/copilot/widgets/CopilotPanel';
 
 export default function AiAssistantPage() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">AI Assistant</h1>
-      <AiAssistant />
+    <div className="flex flex-col h-[calc(100vh-5rem)] -m-4 sm:-m-6 lg:-m-8 pb-0">
+      <CopilotPanel />
     </div>
   );
 }

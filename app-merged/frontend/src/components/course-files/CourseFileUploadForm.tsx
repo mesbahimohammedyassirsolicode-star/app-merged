@@ -98,15 +98,15 @@ export default function CourseFileUploadForm({
 
 
   return (
-    <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden transition-all">
-      <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2 text-gray-800">
+    <Card className="border border-theme-border shadow-sm rounded-2xl overflow-hidden transition-all">
+      <CardHeader className="bg-theme-surface border-b border-theme-border pb-4">
+        <CardTitle className="text-lg font-semibold flex items-center gap-2 text-theme-text-primary">
           <div className="p-2 bg-primary-100 rounded-lg">
             <Upload className="h-5 w-5 text-primary-600" />
           </div>
           Nouveau fichier de cours
         </CardTitle>
-        <p className="text-sm text-gray-500 mt-1.5">
+        <p className="text-sm text-theme-text-secondary mt-1.5">
           Partagez un document pour une filière et un module spécifiques.
         </p>
       </CardHeader>
@@ -115,7 +115,7 @@ export default function CourseFileUploadForm({
           {/* Drag & Drop Zone */}
           <div
             className={`relative flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-xl transition-colors cursor-pointer
-             ${isDragging ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-primary-300 hover:bg-gray-50'}
+             ${isDragging ? 'border-primary-500 bg-primary-50' : 'border-theme-border hover:border-primary-300 hover:bg-theme-surface'}
              ${file ? 'border-success-500 bg-success-50/10' : ''}
              `}
             onDragOver={onDragOver}
@@ -134,22 +134,22 @@ export default function CourseFileUploadForm({
                 <div className="p-4 bg-primary-50 rounded-full mb-3">
                   <Upload className="h-8 w-8 text-primary-500" />
                 </div>
-                <p className="text-sm font-medium text-gray-700">Cliquez ou glissez-déposez votre fichier ici</p>
-                <p className="text-xs text-gray-500 mt-1">PDF, Word, Excel, PowerPoint, MP4, etc. (Max: 50MB)</p>
+                <p className="text-sm font-medium text-theme-text-secondary">Cliquez ou glissez-déposez votre fichier ici</p>
+                <p className="text-xs text-theme-text-secondary mt-1">PDF, Word, Excel, PowerPoint, MP4, etc. (Max: 50MB)</p>
               </>
             ) : (
-              <div className="flex items-center gap-4 w-full bg-white p-4 rounded-lg shadow-sm border border-gray-100" onClick={(e) => e.stopPropagation()}>
-                <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
+              <div className="flex items-center gap-4 w-full glass-panel p-4 rounded-lg shadow-sm border border-theme-border" onClick={(e) => e.stopPropagation()}>
+                <div className="p-3 bg-blue-500/10 text-blue-400 rounded-lg">
                   <FileIcon className="h-6 w-6" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{file.name}</p>
-                  <p className="text-xs text-gray-500">{formatBytes(file.size)}</p>
+                  <p className="text-sm font-medium text-white truncate">{file.name}</p>
+                  <p className="text-xs text-theme-text-secondary">{formatBytes(file.size)}</p>
                 </div>
                 <button
                   type="button"
                   onClick={removeFile}
-                  className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                  className="p-2 text-theme-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -159,10 +159,10 @@ export default function CourseFileUploadForm({
 
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="filiere" className="text-sm font-medium text-gray-700">Filière <span className="text-red-500">*</span></Label>
+              <Label htmlFor="filiere" className="text-sm font-medium text-theme-text-secondary">Filière <span className="text-red-500">*</span></Label>
               <select
                 id="filiere"
-                className="flex h-11 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                className="flex h-11 w-full rounded-lg border border-theme-border glass-panel px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 value={filiereId}
                 onChange={(e) => {
                   setFiliereId(e.target.value);
@@ -180,10 +180,10 @@ export default function CourseFileUploadForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="module" className="text-sm font-medium text-gray-700">Module <span className="text-red-500">*</span></Label>
+              <Label htmlFor="module" className="text-sm font-medium text-theme-text-secondary">Module <span className="text-red-500">*</span></Label>
               <select
                 id="module"
-                className="flex h-11 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 disabled:bg-gray-50 disabled:text-gray-400 transition-colors"
+                className="flex h-11 w-full rounded-lg border border-theme-border glass-panel px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 disabled:bg-theme-surface disabled:text-theme-text-secondary transition-colors"
                 value={moduleId}
                 onChange={(e) => setModuleId(e.target.value)}
                 disabled={!filiereId}
@@ -200,7 +200,7 @@ export default function CourseFileUploadForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-sm font-medium text-gray-700">Titre affiché <span className="text-gray-400 font-normal">(Optionnel)</span></Label>
+            <Label htmlFor="title" className="text-sm font-medium text-theme-text-secondary">Titre affiché <span className="text-theme-text-secondary font-normal">(Optionnel)</span></Label>
             <Input
               id="title"
               value={title}
@@ -211,14 +211,14 @@ export default function CourseFileUploadForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-medium text-gray-700">Description <span className="text-gray-400 font-normal">(Optionnel)</span></Label>
+            <Label htmlFor="description" className="text-sm font-medium text-theme-text-secondary">Description <span className="text-theme-text-secondary font-normal">(Optionnel)</span></Label>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="Ajoutez des détails sur le fichier..."
-              className="flex w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+              className="flex w-full rounded-lg border border-theme-border glass-panel px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
             />
           </div>
 
